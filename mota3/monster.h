@@ -16,13 +16,19 @@ public:
 	int getHp() {return hp;}
 	bool beAttacked(int hero_atk) {hp-=special==2?1:hero_atk-def;return hp<=0;}
 	int getAtk() {return atk;}
-	int getDef() {return def;}
-	int getMoney() {return money;}
-	int getExperience() {return experience;}
+	int getDef();
+	int getMoney() {
+		int m=money;
+		for (int i=0;i<times;i++) m/=2;
+		return m;
+	}
+	int getTimes() {return times;}
+	void setTimes(int x) {times=x;}
 	int getSpecial() {return special;}
 private:
-	char name[30];
-	int id,hp,atk,def,money,experience,special;
+	wchar_t name[30];
+	int id,hp,atk,def,money,special;
+	int times;
 	int state,position;
 	hgeSprite *monster[4];
 };

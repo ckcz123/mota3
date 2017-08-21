@@ -80,7 +80,6 @@ void save(int id)
 	consts.save(savefile);
 	hero.save(savefile);
 	for(int i=0;i<consts.map_floornum;i++)map_floor[i].save(savefile);
-	for(int i=31;i<=consts.special_floornum;i++)map_floor[i].save(savefile);
 	fclose(savefile);
 	consts.setMsg(L"存档成功！");
 }
@@ -93,33 +92,42 @@ void load(int id)
 	consts.load(loadfile);
 	hero.load(loadfile);
 	for(int i=0;i<consts.map_floornum;i++)map_floor[i].load(loadfile);
-	for(int i=31;i<=consts.special_floornum;i++)map_floor[i].load(loadfile);
 	fclose(loadfile);
 	consts.setMsg(L"读档成功！");
 }
-void showMessage(const wchar_t *s, const wchar_t *_name=NULL) // 显示提示
+void showMessage(const wchar_t *_s) // 显示提示
 {
-	int l=consts.lines, 
-		left=16+consts.ScreenLeft, right=consts.map_width*32+consts.ScreenLeft-16,
-		top=consts.map_height*32-12-25*l, bottom=consts.map_height*32-8;
+
+	wchar_t s[500];
+	wcscpy_s(s, _s);
+
+	// cal lines
+	int l=1;
+	for (wchar_t* p=s; *p!=L'\0';p++) {
+		if (*p==L'\n') l++;
+	}
+	if (l<6) l=6;
+
+	int left=16+consts.ScreenLeft, right=consts.map_width*32+consts.ScreenLeft-16,
+		top=consts.map_height*32-12-28*l, bottom=consts.map_height*32-8;
 	hgeSprite *s_temp;
 	s_temp=new hgeSprite(consts.ht_skin, 0, 0, 128, 128);
 	s_temp->SetColor(0xCCFFFFFF);
 	s_temp->RenderStretch(left, top, right, bottom);
 	GfxFont *f=new GfxFont(L"楷体", 22);
-	f->Print(left+8, top+8, L"%s", s);
 
-	wchar_t name[200]=L"";
-	if (_name!=NULL) {
-		wcscpy_s(name, _name);
+	// get name
+	wchar_t* pos=s;
+	while (*pos!=L'\t' && *pos!=L'\0') *pos++;
+	if (*pos==L'\t') {
+		*pos=L'\0';
+		s_temp->RenderStretch(left, top-40, left+110, top-2);
+		f->Print(left+12, top-33, L"%s", s);
+		pos++;
 	}
-	else if (consts.name.length()!=0) {
-		wcscpy_s(name, consts.name.c_str());
-	}
-	if (wcslen(name)!=0) {
-		s_temp->RenderStretch(left, top-40, left+100, top-2);
-		f->Print(left+8, top-33, L"%s", name);
-	}
+	else pos=s;
+
+	f->Print(left+12, top+12, L"%s", pos);
 
 	delete f;
 	delete s_temp;
@@ -132,13 +140,8 @@ void init()
 	// 读入地图
 	FILE *map_infile;
 	fopen_s(&map_infile,"Res/map.dat","r");
+	fscanf_s(map_infile, "%d", &consts.map_floornum);
 	for(int i=0;i<consts.map_floornum;i++)
-	{
-		int ch[30][30];
-		for(int j=0;j<consts.map_height;j++)for(int k=0;k<consts.map_width;k++)fscanf_s(map_infile,"%d",&ch[j][k]);
-		map_floor[i].init(i,ch);
-	}
-	for(int i=31;i<=consts.special_floornum;i++)
 	{
 		int ch[30][30];
 		for(int j=0;j<consts.map_height;j++)for(int k=0;k<consts.map_width;k++)fscanf_s(map_infile,"%d",&ch[j][k]);
@@ -231,8 +234,9 @@ bool frameFunc()
 			consts.nowcnt++;
 			consts.lasttime=clock();
 		}
-		if (consts.nowcnt>=consts.hint.size())
-			consts.msg=consts.MESSAGE_NONE;
+		if (consts.nowcnt>=consts.hint.size()) {
+			consts.finishHint();
+		}
 	}
 
 	// 存档
@@ -309,8 +313,10 @@ bool frameFunc()
 
 	if(consts.msg==consts.MESSAGE_NPC)
 	{
-		int npcid=map_floor[hero.getNowFloor()].getinfo(hero.nextY(),hero.nextX())->getNpcID();
+		int npcid=map_floor[hero.getNowFloor()].getinfo(hero.nextY(),hero.nextX())->getNpc()->getId();
 
+		hero.npc();
+		/*
 		if (npcid>=40 && npcid<=44)
 			hero.npc();
 
@@ -335,6 +341,7 @@ bool frameFunc()
 			if(consts.hge->Input_GetKeyState(HGEK_1)) hero.npc(1);
 			else hero.npc();
 		}
+		*/
 	}
 
 	if ((consts.msg==consts.MESSAGE_FLYING || consts.msg==consts.MESSAGE_NPC
@@ -388,8 +395,8 @@ bool renderFunc()
 			L"而自从塔出现后，战局陡然发生了变\n化。怪物们竟然拥有了不死之身！",
 			L"无论帝国的武士们用什么方法斩杀了\n怪物，一转头却又会发现怪物好端端\n就在那里，只有自己身上的血迹才能\n证明这场战斗确实发生过。",
 			L"毫无疑问，正是这座塔的出现，才导\n致怪物们拥有了不死之身的能力。\n因此，帝国决定派遣勇敢的武士，想\n办法绕过防线，偷入塔中，一定要找\n到这座塔的秘密。",
-			L"然而，进去的人却再也没有回来。\n而你，作为第127个勇士，勇敢地接\n受了使命，想办法闯入了这座塔。",
-			L"而我们的故事，也就这样开始了......"
+			L"然而，进去的人却再也没有回来。\n而你，作为第1127个勇士，勇敢地接\n受了使命，想办法闯入了这座塔。",
+			L"我们的故事，也就这样开始了......"
 		};
 
 		GfxFont *f=new GfxFont(L"楷体", 24);
@@ -409,8 +416,7 @@ bool renderFunc()
 	float mx,my; // 鼠标位置
 	consts.hge->Input_GetMousePos(&mx,&my);
 	int x=(mx-consts.ScreenLeft)/32,y=my/32;
-	if(consts.battling)consts.monster_battling->printInfo();
-	else if (consts.book && x>=0 && x<consts.map_width)map_floor[hero.getNowFloor()].printMonsterInfo(x,y);
+	if (consts.book && x>=0 && x<consts.map_width)map_floor[hero.getNowFloor()].printMonsterInfo(x,y);
 
 	switch (consts.msg)
 	{
@@ -477,24 +483,7 @@ bool renderFunc()
 		break;
 	}
 	if (consts.msg==consts.MESSAGE_NPC) {
-		int npcid=map_floor[hero.getNowFloor()].getinfo(hero.nextY(),hero.nextX())->getNpcID();
-		int npctime=map_floor[hero.getNowFloor()].getinfo(hero.nextY(),hero.nextX())->getNpcVisit();
-		if (npcid==45)
-			showMessage(L"你想用经验提升你的能力吗？\n[1] 提升一级 （100经验）\n[2] 攻击+5 （30经验）\n[3] 防御+5 （30经验）\n[ENTER] 退出");
-		if (npcid==46)
-			showMessage(L"你想购买钥匙吗？\n[1] 黄钥匙 （10金币）\n[2] 蓝钥匙 （50金币）\n[3] 红钥匙 （100金币）\n[ENTER] 退出");
-		if (npcid==47)
-			showMessage(L"你可以用25金币：\n[1] 生命+400\n[2] 攻击+4\n[3] 防御+4\n[ENTER] 退出");
-		if (npcid==48)
-			showMessage(L"你可以用100金币：\n[1] 生命+2000\n[2] 攻击+20\n[3] 防御+20\n[ENTER] 退出");
-		if (npcid==49)
-			showMessage(L"你想用经验提升你的能力吗？\n[1] 提升三级 （270经验）\n[2] 攻击+17 （95经验）\n[3] 防御+17 （95经验）\n[ENTER] 退出");
-		if (npcid==50)
-			showMessage(L"你有多余的钥匙要出售吗？\n[1] 黄钥匙 （7金币）\n[2] 蓝钥匙 （35金币）\n[3] 红钥匙 （70金币）\n[ENTER] 退出");
-		if (npcid==53 && npctime==0)
-			showMessage(L"500点经验换取120点攻击力，\n换吗？\n[1] 换\n[ENTER] 不要");
-		if (npcid==54 && npctime==0)
-			showMessage(L"500点金币换取120点防御力，\n换吗？\n[1] 换\n[ENTER] 不要");
+		c_map_npc* npc=map_floor[hero.getNowFloor()].getinfo(hero.nextY(),hero.nextX())->getNpc();
 	}
 	consts.hge->Gfx_EndScene();
 	return false;
@@ -507,7 +496,7 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int)
 	consts.hge->System_SetState(HGE_FRAMEFUNC,frameFunc);
 	consts.hge->System_SetState(HGE_RENDERFUNC,renderFunc);
 	consts.hge->System_SetState(HGE_USESOUND,true);
-	consts.hge->System_SetState(HGE_TITLE,"魔塔");
+	consts.hge->System_SetState(HGE_TITLE,"重生塔 By Sky_天空的梦");
 	consts.hge->System_SetState(HGE_WINDOWED,true);
 	consts.hge->System_SetState(HGE_HIDEMOUSE,false);
 	consts.hge->System_SetState(HGE_SCREENHEIGHT,32*consts.map_height);

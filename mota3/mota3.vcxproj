@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="meaning.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>

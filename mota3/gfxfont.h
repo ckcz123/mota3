@@ -70,7 +70,7 @@ public:
 
 		m_nFontSize=static_cast<float>(nFaceSize);
 		m_nKerningWidth=0;
-		m_nKerningHeight=0;
+		m_nKerningHeight=3;
 
 		m_pSprite=new hgeSprite(0, 0, 0, 0, 0);
 		m_pSprite->SetColor(ARGB(255, 255, 255, 255));

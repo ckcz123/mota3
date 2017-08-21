@@ -1,31 +1,30 @@
 #include "stdafx.h"
 
+// 地图信息
+extern c_map_floor map_floor[50];
+
+// 勇士信息
+extern c_hero hero;
+
 constants::constants()
 {
-	yellow_flag=blue_flag=red_flag=attack_flag=defence_flag=big_flag=small_flag=false;
 	hge=NULL;
 	volume=30;
 	bgmvolume=100;
 	ScreenLeft=240;
 	music=true;
-	map_width=11;map_height=11;
-	map_floornum=22;
-	special_floornum=45;
+	map_width=13;map_height=13;
 }
 
 void constants::init()
 {
-	canfly=book=stick=cross=trueend=moving=opening=battling=flooring=false;
+	canfly=book=stick=cross=trueend=moving=opening=flooring=false;
 	lefttime=100.0;
 	playtime=0.0;
 	step=0;
 	hard=0;
-	time_move=time_open=time_animation=time_battle=time_floor=0;
-	isMyTurn=true;
-	beatStarted=false;
+	time_move=time_open=time_animation=time_floor=0;
 	msg=MESSAGE_START;
-	lines=6;
-	offset=0;
 	for (int i=0;i<100;i++) sd[i].hp=0;
 }
 void constants::loadResources()
@@ -45,6 +44,9 @@ void constants::loadResources()
 	//ht_map
 	s_ground=new hgeSprite(ht_map,0,0,32,32);
 	s_wall=new hgeSprite(ht_map,32,0,32,32);
+	s_wall_hidden=new hgeSprite(ht_map,32,0,32,32);
+	s_wall_hidden->SetColor(0xE2FFFFFF);
+	s_wall2=new hgeSprite(ht_map,64,0,32,32);
 	s_water=new hgeSprite(ht_map,32,32,32,32);
 	s_sky=new hgeSprite(ht_map,0,32,32,32);
 	s_lightning=new hgeSprite(ht_npc,0,128,32,32);
@@ -120,37 +122,26 @@ void constants::destroy()
 	delete hgef;
 }
 
-void constants::setMsg(const wchar_t* s[50], wchar_t* _name, int _lines)
+void constants::setMsg(const wchar_t* s[50])
 {
 	hint.clear();
 	for (int i=0;i<50;i++) {
 		if (s[i]==NULL) break;
 		hint.push_back(wstring(s[i]));
 	}
-	if (_name==NULL)
-		name=wstring();
-	else 
-		name=wstring(_name);
 
 	lasttime=clock();
 	nowcnt=0;
-	lines=_lines;
 	msg=MESSAGE_HINT;
 }
 
-void constants::setMsg(const wchar_t* s, wchar_t* _name, int _lines) 
+void constants::setMsg(const wchar_t* s) 
 {
 	hint.clear();
 	hint.push_back(wstring(s));
 
-	if (_name==NULL)
-		name=wstring();
-	else 
-		name=wstring(_name);
-
 	lasttime=clock();
 	nowcnt=0;
-	lines=_lines;
 	msg=MESSAGE_HINT;
 }
 
@@ -194,61 +185,120 @@ void constants::goOn(c_hero* hero, c_map_floor* currFloor, float dt)
 		currFloor->animation();
 	}
 
-	if(battling) // 战斗
-	{
-		if (!beatStarted)
-		{
-			monster_life=monster_battling->getHp();
-			if(monster_battling->getSpecial()==1)
-				hero->specialDamage();
-		}
-		beatStarted=true;
-		time_battle+=dt;
-		if(time_battle>=0.05)
-		{
-			time_battle-=0.05;
-			if(isMyTurn)
-			{
-				if(!hero->attack(*monster_battling))
-				{
-					battling=false;
-					beatStarted=false;
-					if (monster_battling->getId()==38) {
-						setMsg(L"？？？：\n你...竟然赢了我！\n不过，这座塔马上就要倒了，\n你们都和我一起陪葬吧！");
-						lefttime=70.00;
-						canfly=false;
-					}
-					hero->addHp(hero->getSpeLife(monster_life));
-					monster_battling->init(0);
-				}
-				else isMyTurn=false;
-			}
-			else 
-			{
-				hero->beAttacked(*monster_battling);
-				isMyTurn=true;
-			}
-		}
-	}
-
 	if (msg!=MESSAGE_WIN && lefttime<80 && lefttime>=0) lefttime-=dt;
 	if (lefttime<0) {
 		msg=MESSAGE_LOSE;
 		lefttime=0;
 	}
 }
+void constants::finishHint()
+{
+	if (map_npc!=NULL && map_npc->getId()!=0) 
+	{
+		switch (map_npc->getId())
+		{
+		case 41:
+			{
+				book=true;
+				hge->Effect_PlayEx(he_GetItem, volume);
+				const wchar_t* msg[50]={
+					L"获得怪物手册。",
+					L"徘徊之影\t这个是怪物手册，你可以将鼠标移动\n到怪物身上查看怪物的各项属性。",
+					L"勇士\t啊谢谢，这个帮大忙了！",
+					L"徘徊之影\t不客气。下面我为你介绍一下我们摸\n索出来的这座塔的一些特点，希望能\n给你一些帮助。",
+					L"勇士\t哎好的，您说~",
+					L"徘徊之影\t这座塔最大的特点就是怪物都是可以\n重生的。经我们研究发现，当你在一\n场战斗中打败怪物后，如果这场战斗\n不是无伤，且你身后是空地的话，怪\n物将在你身后重生。重生后的怪物的\n攻防血都是原本数值，但是打掉后得\n到的金币却变成了一半。",
+					L"勇士\t原属性重生？金币变成一半？这... \n这怎么打？",
+					L"徘徊之影\t你现在后悔还来得及哦。",
+					L"勇士\t不，再大的挑战我也要攻克！",
+					L"徘徊之影\t好吧，反正你注意这一点，如何克制\n怪物的重生或许是本塔的最大难点。",
+					L"勇士\t好的好的，我记下了。还有吗？",
+					L"徘徊之影\t嗯... 因为我比较弱，没闯几层就挂\n了，因此并不知道其他什么内容。\n不过，在这座塔里，像我这样的徘徊\n者应该还有很多，如果你碰见了他们\n，也许可以问问更多信息呢。",
+					L"勇士\t好的好的，谢谢您！我会加油的！我\n会毁了这座塔，将你们都解脱出来，\n捍卫我大青叶帝国的荣耀！",
+					L"徘徊之影\t加油吧小伙子，我看好你！"
+				};
+				setMsg(msg);
+				break;
+			}
+		case 42:
+			{
+				// 已拯救
+				if (map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->getId()==43)
+				{
+					if (stick)
+					{
+						map_npc->init(0);
+						map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->init(0);
+						msg=MESSAGE_NONE;
+					}
+					else
+					{
+						stick=true;
+						hge->Effect_PlayEx(he_GetItem, volume);
+						const wchar_t* msg[50]={
+							L"获得神秘魔杖！",
+							L"徘徊之影\t这是我研究出来的神秘魔杖，它可以\n将某一个空地上放置一个标记，这样\n怪物就不能在标记处重生啦。\n不过，它只能用十次，用的好的话也\n许能大大帮助你的探索哟~\n\n[X]键使用。\n",
+							L"勇士\t谢谢您，您帮了我大忙啦！",
+							L"徘徊之影\t不客气，我相信你一定能摸清楚这座\n塔的秘密的！",
+							L"勇士\t好的，我会加油的！",
+							L"徘徊之影\t儿啊，快离开这座塔吧，你妈妈已经\n死了，只剩下这一缕亡魂没有消散。\n你还年轻，未来的路还很长，快离开\n吧，娶个好姑娘过平静的生活，忘了\n这座塔吧，这不是你应该来的地方。",
+							L"杰克\t妈妈......",
+							L"徘徊之影\t快走！我让你走！离开这座塔！",
+							L"杰克\t妈妈......\n\n（哭）好，我这就走...",
+							L"徘徊之影\t别再回来了，去吧，去吧......\n\n我的执念也该消散了，勇士，祝你\n好运！"
+						};
+						setMsg(msg);
+						return;
+					}
 
+				}
+
+				break;
+			}
+		case 43:
+			{
+				map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->init(43);
+				map_npc->init(0);
+				msg=MESSAGE_NONE;
+				break;
+			}
+
+		default:
+			break;
+		}
+		
+	}
+	else
+		msg=MESSAGE_NONE;
+	map_npc=NULL;
+}
 void constants::printInfo()
 {
 	if (lefttime<80)
 		hgef->printf(ScreenLeft+16,16,HGETEXT_LEFT,"%.2f",lefttime);
-	s_step->Render(ScreenLeft+map_width*32+16, 308);
-	hgef->printf(ScreenLeft+map_width*32+60, 310, HGETEXT_LEFT, "%d", step);
+	s_step->Render(ScreenLeft+map_width*32+24, 340);
+	hgef->printf(ScreenLeft+map_width*32+68, 340, HGETEXT_LEFT, "%d", step);
 	int ptm=playtime;
-	s_time->Render(ScreenLeft+map_width*32+16,264);
+	s_time->Render(ScreenLeft+map_width*32+24, 298);
 	if (ptm>=3600)
-		hgef->printf(ScreenLeft+map_width*32+60,268,HGETEXT_LEFT,"%02d : %02d : %02d",ptm/3600, (ptm/60)%60, ptm%60);
-	else hgef->printf(ScreenLeft+map_width*32+60,268,HGETEXT_LEFT,"%02d : %02d", ptm/60, ptm%60);
+		hgef->printf(ScreenLeft+map_width*32+68, 298, HGETEXT_LEFT, "%02d : %02d : %02d", ptm/3600, (ptm/60)%60, ptm%60);
+	else hgef->printf(ScreenLeft+map_width*32+68, 298, HGETEXT_LEFT, "%02d : %02d", ptm/60, ptm%60);
+
+	GfxFont *f=new GfxFont(L"楷体", 24, true);
+	if (hard==1) {
+		f->SetColor(0xFF00FF00);
+		f->Print(64, 356, L"简单难度");
+	}
+	else if (hard==2) {
+		f->SetColor(0xFF96CDCD);
+		f->Print(64, 356, L"普通难度");
+	}
+	else if (hard==3) {
+		f->SetColor(0xFFFF0000);
+		f->Print(64, 356, L"困难难度");
+	}
+	delete f;
+
 }
 
 void constants::save(FILE* f) 
@@ -264,5 +314,5 @@ void constants::load(FILE* f)
 	book=_book==1;
 	stick=_stick==1;
 	cross=_cross==1;
-	trueend=moving=opening=battling=flooring=false;
+	trueend=moving=opening=flooring=false;
 }

@@ -30,19 +30,18 @@ public:
 	void init();
 	void loadResources();
 	void destroy();
-	void setMsg(const wchar_t*[50], wchar_t* _name=NULL, int lines=6);
-	void setMsg(const wchar_t*, wchar_t* _name=NULL, int lines=6);
-	bool isFree() {return !moving && !opening && !battling && !flooring && msg==MESSAGE_NONE;}
+	void setMsg(const wchar_t*[50]);
+	void setMsg(const wchar_t*);
+	bool isFree() {return !moving && !opening && !flooring && msg==MESSAGE_NONE && clock()-lasttime>150;}
 	void goOn(c_hero*, c_map_floor*, float);
 	void save(FILE*);
 	void load(FILE*);
+	void finishHint();
 	void printInfo();
 
 	int msg;
 	vector<wstring> hint;
-	wstring name;
 	int nowcnt;
-	int lines;
 	long lasttime;
 
 	float playtime;
@@ -52,9 +51,8 @@ public:
 	int hard;
 
 	bool canfly,book,stick,cross,trueend;
-	bool attack_flag,defence_flag,yellow_flag,blue_flag,red_flag,small_flag,big_flag;
-	bool moving,opening,battling,flooring,music;
-	int map_floornum,map_height,map_width,volume,bgmvolume,ScreenLeft,special_floornum;
+	bool moving,opening,flooring,music;
+	int map_floornum,map_height,map_width,volume,bgmvolume,ScreenLeft;
 
 	savedata sd[100];
 	int wanttosave;
@@ -63,10 +61,9 @@ public:
 
 	// 正在打开的门
 	c_map_door *map_openingdoor;
-	// 正在战斗的怪物
-	c_monster *monster_battling;
-	// 正在战斗怪物的原始生命值
-	int monster_life;
+
+	// 正在对话的npc
+	c_map_npc *map_npc;
 
 	// HGE
 	HGE *hge;
@@ -79,7 +76,7 @@ public:
 	HCHANNEL hc_Music;
 
 	//各种图块
-	hgeSprite *s_ground,*s_wall,*s_water,*s_sky,*s_lightning,*s_barrier;
+	hgeSprite *s_ground,*s_wall,*s_wall2,*s_wall_hidden,*s_water,*s_sky,*s_lightning,*s_barrier;
 	hgeSprite *s_redjewel,*s_bluejewel,*s_redkey,*s_bluekey,*s_yellowkey,*s_allkey;
 	hgeSprite *s_redpotion,*s_bluepotion,*s_coin,*s_fly,*s_fly2,*s_cross,*s_floor,*s_stick,*s_drink;
 	hgeSprite *s_sword1,*s_shield1,*s_sword2,*s_shield2,*s_sword3,*s_shield3;
@@ -94,8 +91,6 @@ public:
 	hgeFont *hgef;
 
 	// 其他常量
-	float time_move,time_open,time_animation,time_battle,time_floor,offset;
-	// 轮数和是否开始
-	bool isMyTurn, beatStarted;
+	float time_move,time_open,time_animation,time_floor;
 
 };
