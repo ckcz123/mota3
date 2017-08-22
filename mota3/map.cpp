@@ -208,11 +208,11 @@ void c_map_point::load(FILE* f)
 {
 	int d,m,t1,n,t2;
 	fscanf_s(f,"%d %d %d %d %d %d %d %d\n",&type,&item,&d,&m,&t1,&n,&t2,&special);
+	door.init(d);
 	monster.init(m);
 	monster.setTimes(t1);
-	door.init(d);
 	npc.init(n);
-	npc.setVisit(2);
+	npc.setVisit(t2);
 }
 void c_map_floor::init(int d,int ch[30][30])
 {
@@ -322,7 +322,7 @@ void c_map_floor::save(FILE* f)
 }
 void c_map_floor::load(FILE* f)
 {
-	fscanf_s(f,"%d %d %d %d\n",&dx,&dy,&ux,&uy);
+	fscanf_s(f,"%d %d %d %d",&dx,&dy,&ux,&uy);
 	for(int i=0;i<consts.map_height;i++)
 	{
 		for(int j=0;j<consts.map_width;j++)

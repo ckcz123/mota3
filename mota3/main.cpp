@@ -55,7 +55,7 @@ void loadsave()
 	FILE *savefile;
 	constants tmpcon;
 	c_hero tmphero;
-	for (int i=0;i<10;i++) {
+	for (int i=0;i<100;i++) {
 		char s[100]="";
 		sprintf_s(s,"Save/save%d.dat",i);
 		int err=fopen_s(&savefile,s,"r");
@@ -64,7 +64,7 @@ void loadsave()
 		else {
 			tmpcon.load(savefile);
 			tmphero.load(savefile);
-			consts.sd[i].init(tmphero.getHP(), tmphero.getAtk(), tmphero.getDef(), tmphero.getNowFloor());
+			consts.sd[i].init(tmphero.getHP(), tmphero.getAtk(), tmphero.getDef(), tmphero.getNowFloor(), tmpcon.hard);
 			fclose(savefile);
 		}
 	}
@@ -121,7 +121,7 @@ void showMessage(const wchar_t *_s) // 显示提示
 	while (*pos!=L'\t' && *pos!=L'\0') *pos++;
 	if (*pos==L'\t') {
 		*pos=L'\0';
-		s_temp->RenderStretch(left, top-40, left+110, top-2);
+		s_temp->RenderStretch(left, top-40, left+25+f->GetTextSize(s).cx, top-2);
 		f->Print(left+12, top-33, L"%s", s);
 		pos++;
 	}
@@ -157,8 +157,7 @@ bool frameFunc()
 	if(consts.isFree() && consts.hge->Input_GetKeyState(HGEK_LEFT) && hero.canMove(1))consts.moving=true;
 	if(consts.isFree() && consts.hge->Input_GetKeyState(HGEK_RIGHT) && hero.canMove(2))consts.moving=true;
 	if(consts.isFree() && consts.hge->Input_GetKeyState(HGEK_UP) && hero.canMove(3))consts.moving=true;
-	if(consts.hge->Input_GetKeyState(HGEK_Q) && consts.isFree()) consts.msg=consts.MESSAGE_QUIT;
-	if(consts.hge->Input_GetKeyState(HGEK_R) && consts.isFree()) consts.msg=consts.MESSAGE_RESTART;
+	if(consts.hge->Input_GetKeyState(HGEK_Q) && consts.isFree()) consts.msg=consts.MESSAGE_RESTART;
 	if(consts.hge->Input_GetKeyState(HGEK_S) && consts.isFree()) {
 		if (hero.getNowFloor()>=30 && !hero.nearStair()) {
 			consts.setMsg(L"只有在楼梯边才能存档！");
@@ -172,14 +171,11 @@ bool frameFunc()
 		loadsave();
 		consts.msg=consts.MESSAGE_LOAD;
 	}
-	if(consts.hge->Input_GetKeyState(HGEK_F) && consts.isFree()) {
-		if (hero.getNowFloor()>=30) consts.setMsg(L"这里不能使用飞行器！");
-		else if (consts.canfly) { 
+	if(consts.hge->Input_GetKeyState(HGEK_G) && consts.isFree()) {
+		if (consts.canfly) { 
 			if (hero.getNowFloor()==21) consts.setMsg(L"飞行器好像在这层楼失效了！");
 			else consts.msg=consts.MESSAGE_FLYING;
 		}
-		else if (consts.lefttime<80) consts.setMsg(L"飞行器好像遗失了！");
-		else consts.setMsg(L"你需要先获得飞行器！");
 	}
 	if(consts.hge->Input_GetKeyState(HGEK_M) && consts.isFree()) {
 		consts.music=!consts.music;
@@ -193,6 +189,7 @@ bool frameFunc()
 			consts.msg=consts.MESSAGE_CHOOSE_HARD;
 		}
 		else if (consts.hge->Input_GetKeyState(HGEK_2)) {
+			loadsave();
 			consts.msg=consts.MESSAGE_LOAD;
 		}
 		else if (consts.hge->Input_GetKeyState(HGEK_3)) {
@@ -244,7 +241,7 @@ bool frameFunc()
 	{
 		if(consts.hge->Input_GetKeyState(HGEK_DOWN) && clock()-consts.lasttime>200) {
 			consts.wanttosave++;
-			if (consts.wanttosave>=10) consts.wanttosave=9;
+			if (consts.wanttosave>=100) consts.wanttosave=99;
 			consts.lasttime=clock();
 		}
 		else if(consts.hge->Input_GetKeyState(HGEK_UP) && clock()-consts.lasttime>200) {
@@ -263,7 +260,7 @@ bool frameFunc()
 	{
 		if(consts.hge->Input_GetKeyState(HGEK_DOWN) && clock()-consts.lasttime>200) {
 			consts.wanttosave++;
-			if (consts.wanttosave>=10) consts.wanttosave=9;
+			if (consts.wanttosave>=100) consts.wanttosave=9;
 			consts.lasttime=clock();
 		}
 		else if(consts.hge->Input_GetKeyState(HGEK_UP) && clock()-consts.lasttime>200) {
@@ -271,21 +268,25 @@ bool frameFunc()
 			if (consts.wanttosave<0) consts.wanttosave=0;
 			consts.lasttime=clock();
 		}
-		else if(consts.hge->Input_GetKeyState(HGEK_ESCAPE))
-			consts.msg=consts.MESSAGE_NONE;
+		else if(consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
+			if (consts.hard==0) consts.msg=consts.MESSAGE_START;
+			else consts.msg=consts.MESSAGE_NONE;
+		}
 		else if(consts.hge->Input_GetKeyState(HGEK_ENTER)) {
-			if (consts.sd[consts.wanttosave].hp<0)
-				consts.setMsg(L"无效的存档。");
-			else load(consts.wanttosave);
+			if (consts.sd[consts.wanttosave].hp>=0)
+				load(consts.wanttosave);
 		}
 	}
 
 	// 胜利or失败
-	if ((consts.msg==consts.MESSAGE_WIN || consts.msg==consts.MESSAGE_LOSE) && consts.hge->Input_GetKeyState(HGEK_ENTER)) return true;
-	// 退出
-	if (consts.msg==consts.MESSAGE_QUIT && consts.hge->Input_GetKeyState(HGEK_SPACE)) return true;
+	if (consts.msg==consts.MESSAGE_WIN && consts.hge->Input_GetKeyState(HGEK_ENTER)) consts.msg=consts.MESSAGE_START;
 	// 重新开始
-	if (consts.msg==consts.MESSAGE_RESTART && consts.hge->Input_GetKeyState(HGEK_SPACE)) init();
+	if (consts.msg==consts.MESSAGE_RESTART) {
+		if (consts.hge->Input_GetKeyState(HGEK_ENTER))
+			init();
+		else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE))
+			consts.msg=consts.MESSAGE_NONE;
+	}
 
 	// 正在飞行
 	if(consts.msg==consts.MESSAGE_FLYING)
@@ -344,8 +345,7 @@ bool frameFunc()
 		*/
 	}
 
-	if ((consts.msg==consts.MESSAGE_FLYING || consts.msg==consts.MESSAGE_NPC
-			|| consts.msg==consts.MESSAGE_QUIT || consts.msg==consts.MESSAGE_RESTART) && consts.hge->Input_GetKeyState(HGEK_ENTER))
+	if ((consts.msg==consts.MESSAGE_FLYING || consts.msg==consts.MESSAGE_NPC) && consts.hge->Input_GetKeyState(HGEK_ENTER))
 		consts.msg=consts.MESSAGE_NONE;
 
 	consts.goOn(&hero, &map_floor[hero.getNowFloor()], dt);
@@ -403,7 +403,38 @@ bool renderFunc()
 		f->SetKerningHeight(8);
 		f->Render(consts.ScreenLeft+8, 32*consts.map_height*0.3, msg[consts.nowcnt]);
 		delete f;
+
+		f=new GfxFont(L"楷体", 24, true);
+		if (consts.hard==1) {
+			f->SetColor(0xFF00FF00);
+			f->Print(64, 356, L"简单难度");
+		}
+		else if (consts.hard==2) {
+			f->SetColor(0xFF96CDCD);
+			f->Print(64, 356, L"普通难度");
+		}
+		else if (consts.hard==3) {
+			f->SetColor(0xFFFF0000);
+			f->Print(64, 356, L"困难难度");
+		}
+		delete f;
 		consts.hge->Gfx_EndScene();
+
+		return false;
+	}
+	if (consts.msg==consts.MESSAGE_LOAD && consts.hard==0) {
+		wchar_t ss[200];
+		savedata* sd=&consts.sd[consts.wanttosave];
+		if (sd->hp<0)
+			wsprintf(ss,L"读取存档 %d\n(无效的存档)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消", consts.wanttosave+1);
+		else
+			wsprintf(ss,L"读取存档 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消",
+			consts.wanttosave+1, consts.getHardText(sd->hard), sd->now_floor, sd->hp,
+			sd->atk, sd->def);
+		showMessage(ss);
+		
+		consts.hge->Gfx_EndScene();
+
 		return false;
 	}
 
@@ -420,20 +451,11 @@ bool renderFunc()
 
 	switch (consts.msg)
 	{
-	case consts.MESSAGE_QUIT:
-		showMessage(L"你想退出游戏吗？\n\n[ENTER] 继续游戏\n[SPACE] 退出游戏");
-		break;
 	case consts.MESSAGE_RESTART:
-		showMessage(L"你想重新开始吗？\n\n[ENTER] 继续游戏\n[SPACE] 重新开始");
-		break;;
-	case consts.MESSAGE_WIN:
-		if (consts.trueend) 
-			showMessage(L"在仙子的祝福下，YY和XX\n同学顺利地从塔中逃生。从此\n，两人相亲相爱，度过了幸福\n的一生。\n\nTRUE END.");
-		else 
-			showMessage(L"YY和XX同学顺利地从塔中\n逃生，从此过上了快乐幸福的\n生活。\n\nHAPPY END.");
+		showMessage(L"你想返回主界面吗？\n\n[ENTER] 确认\n[ESC] 取消");
 		break;
-	case consts.MESSAGE_LOSE:
-		showMessage(L"塔倒了，YY和XX同学最终\n还是没有冲出来；但是直到最\n后他们的手还是拉在一起的，\n紧紧也没分开。\n\nNORMAL END.");
+	case consts.MESSAGE_WIN:
+		showMessage(L"YY和XX同学顺利地从塔中\n逃生，从此过上了快乐幸福的\n生活。\n\nHAPPY END.");
 		break;
 	case consts.MESSAGE_HINT:
 		showMessage(consts.hint.at(consts.nowcnt).c_str());
@@ -441,34 +463,27 @@ bool renderFunc()
 	case consts.MESSAGE_SAVE:
 		{
 			wchar_t ss[200];
-			if (consts.sd[consts.wanttosave].hp<0)
+			savedata* sd=&consts.sd[consts.wanttosave];
+			if (sd->hp<0)
 				wsprintf(ss,L"存档到文件 %d\n(空白)\n\n[↑] [↓] 更改存档位置\n[ENTER] 确认存档\n[ESC] 取消", consts.wanttosave+1);
 			else
-				if (consts.sd[consts.wanttosave].now_floor<30)
-					wsprintf(ss,L"存档到文件 %d\n(F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改存档位置\n[ENTER] 确认存档\n[ESC] 取消",
-						consts.wanttosave+1, consts.sd[consts.wanttosave].now_floor, consts.sd[consts.wanttosave].hp,
-						consts.sd[consts.wanttosave].atk, consts.sd[consts.wanttosave].def);
-				else
-					wsprintf(ss,L"存档到文件 %d\n(F???/HP%d/A%d/D%d)\n\n[↑] [↓] 更改存档位置\n[ENTER] 确认存档\n[ESC] 取消",
-					consts.wanttosave+1, consts.sd[consts.wanttosave].hp,
-					consts.sd[consts.wanttosave].atk, consts.sd[consts.wanttosave].def);
+				wsprintf(ss,L"存档到文件 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改存档位置\n[ENTER] 确认存档\n[ESC] 取消",
+				consts.wanttosave+1, consts.getHardText(sd->hard), sd->now_floor, sd->hp,
+				sd->atk, sd->def);
 			showMessage(ss);
+			break;
 			break;
 		}
 	case consts.MESSAGE_LOAD:
 		{
 			wchar_t ss[200];
-			if (consts.sd[consts.wanttosave].hp<0)
+			savedata* sd=&consts.sd[consts.wanttosave];
+			if (sd->hp<0)
 				wsprintf(ss,L"读取存档 %d\n(无效的存档)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消", consts.wanttosave+1);
 			else
-				if (consts.sd[consts.wanttosave].now_floor<30)
-					wsprintf(ss,L"读取存档 %d\n(F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消",
-						consts.wanttosave+1, consts.sd[consts.wanttosave].now_floor, consts.sd[consts.wanttosave].hp,
-						consts.sd[consts.wanttosave].atk, consts.sd[consts.wanttosave].def);
-				else
-					wsprintf(ss,L"读取存档 %d\n(F???/HP%d/A%d/D%d)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消",
-						consts.wanttosave+1, consts.sd[consts.wanttosave].hp,
-						consts.sd[consts.wanttosave].atk, consts.sd[consts.wanttosave].def);
+				wsprintf(ss,L"读取存档 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消",
+						consts.wanttosave+1, consts.getHardText(sd->hard), sd->now_floor, sd->hp,
+						sd->atk, sd->def);
 			showMessage(ss);
 			break;
 		}

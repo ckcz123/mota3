@@ -18,13 +18,13 @@ constants::constants()
 
 void constants::init()
 {
-	canfly=book=stick=cross=trueend=moving=opening=flooring=false;
-	lefttime=100.0;
+	canfly=book=moving=opening=flooring=false;
 	playtime=0.0;
 	step=0;
 	hard=0;
 	time_move=time_open=time_animation=time_floor=0;
 	msg=MESSAGE_START;
+	wand=-1;
 	for (int i=0;i<100;i++) sd[i].hp=0;
 }
 void constants::loadResources()
@@ -184,12 +184,6 @@ void constants::goOn(c_hero* hero, c_map_floor* currFloor, float dt)
 		time_animation-=0.1;
 		currFloor->animation();
 	}
-
-	if (msg!=MESSAGE_WIN && lefttime<80 && lefttime>=0) lefttime-=dt;
-	if (lefttime<0) {
-		msg=MESSAGE_LOSE;
-		lefttime=0;
-	}
 }
 void constants::finishHint()
 {
@@ -215,6 +209,8 @@ void constants::finishHint()
 					L"勇士\t好的好的，我记下了。还有吗？",
 					L"徘徊之影\t嗯... 因为我比较弱，没闯几层就挂\n了，因此并不知道其他什么内容。\n不过，在这座塔里，像我这样的徘徊\n者应该还有很多，如果你碰见了他们\n，也许可以问问更多信息呢。",
 					L"勇士\t好的好的，谢谢您！我会加油的！我\n会毁了这座塔，将你们都解脱出来，\n捍卫我大青叶帝国的荣耀！",
+					L"系统提示\t本塔快捷键如下：\nS: 存档\nL: 读档\nP: 查看当前MAX\nM: 音乐开关\nQ: 返回主界面\n其他各项道具使用的快捷键在拿到时\n会给予提示。",
+					L"系统提示\t本塔由Sky_天空的梦使用C++编写而成\n，代码开源在：\nhttps://github.com/ckcz123/mota3/\n\n如有问题，请于发布帖下进行回复和\n反馈，谢谢支持！",
 					L"徘徊之影\t加油吧小伙子，我看好你！"
 				};
 				setMsg(msg);
@@ -225,7 +221,7 @@ void constants::finishHint()
 				// 已拯救
 				if (map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->getId()==43)
 				{
-					if (stick)
+					if (wand>=0)
 					{
 						map_npc->init(0);
 						map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->init(0);
@@ -233,7 +229,7 @@ void constants::finishHint()
 					}
 					else
 					{
-						stick=true;
+						wand=0;
 						hge->Effect_PlayEx(he_GetItem, volume);
 						const wchar_t* msg[50]={
 							L"获得神秘魔杖！",
@@ -274,8 +270,6 @@ void constants::finishHint()
 }
 void constants::printInfo()
 {
-	if (lefttime<80)
-		hgef->printf(ScreenLeft+16,16,HGETEXT_LEFT,"%.2f",lefttime);
 	s_step->Render(ScreenLeft+map_width*32+24, 340);
 	hgef->printf(ScreenLeft+map_width*32+68, 340, HGETEXT_LEFT, "%d", step);
 	int ptm=playtime;
@@ -303,16 +297,14 @@ void constants::printInfo()
 
 void constants::save(FILE* f) 
 {
-	fprintf_s(f, "%d %d %d %d %d %d %d %d %.2f %.2f\n", map_floornum, map_width, map_height, canfly?1:0, book?1:0, stick?1:0, cross?1:0, step, lefttime, playtime);
+	fprintf_s(f, "%d %d %d %d %d %d %.2f\n", map_floornum, canfly?1:0, book?1:0, wand, step, hard, playtime);
 }
 
 void constants::load(FILE* f)
 {
-	int _fly, _book, _stick, _cross;
-	fscanf_s(f, "%d %d %d %d %d %d %d %d %f %f", &map_floornum, &map_width, &map_height, &_fly, &_book, &_stick, &_cross, &step, &lefttime, &playtime);
+	int _fly, _book;
+	fscanf_s(f, "%d %d %d %d %d %d %f", &map_floornum, &_fly, &_book, &wand, &step, &hard, &playtime);
 	canfly=_fly==1;
 	book=_book==1;
-	stick=_stick==1;
-	cross=_cross==1;
-	trueend=moving=opening=flooring=false;
+	moving=opening=flooring=false;
 }

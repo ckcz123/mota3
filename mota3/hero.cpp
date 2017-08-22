@@ -229,11 +229,6 @@ void c_hero::beat(c_monster* monster)
 	hp-=d;
 	if (consts.music)
 		consts.hge->Effect_PlayEx(consts.he_Attack, consts.volume);
-	if (hp<=0) {
-		hp=0;
-		consts.msg=consts.MESSAGE_LOSE;
-		return;
-	}
 
 	money+=monster->getMoney();
 
@@ -274,6 +269,11 @@ void c_hero::beat(c_monster* monster)
 		if (canopen) {
 			map_floor[now_floor].getinfo(2,1)->openSpecial();
 		}
+	}
+	if (now_floor==5 && id==15 && !map_floor[now_floor].hasMonster(15)) {
+		// 5Â¥¿ªÃÅ
+		map_floor[now_floor].getinfo(3,6)->openSpecial();
+
 	}
 
 	consts.lasttime=clock();
@@ -389,7 +389,7 @@ void c_hero::save(FILE* f)
 }
 void c_hero::load(FILE* f)
 {
-	fscanf_s(f,"%d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+	fscanf_s(f,"%d %d %d %d %d %d %d %d %d %d %d %d %d",
 		&hp,&atk,&def,&money,&redkey,&bluekey,&yellowkey,&x,&y,&face,&now_floor,&max_floor,&fly_floor);
 }
 

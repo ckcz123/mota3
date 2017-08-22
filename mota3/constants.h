@@ -5,20 +5,18 @@
 
 struct savedata
 {
-	int hp, atk, def, now_floor;
-	void init(int _hp, int _atk, int _def, int _nowf) {hp=_hp;atk=_atk;def=_def;now_floor=_nowf;}
+	int hp, atk, def, now_floor, hard;
+	void init(int _hp, int _atk, int _def, int _nowf, int _hard) {hp=_hp;atk=_atk;def=_def;now_floor=_nowf;hard=_hard;}
 };
 
 class constants
 {
 public:
 	static const int MESSAGE_NONE = 0;
-	static const int MESSAGE_QUIT = 1;
 	static const int MESSAGE_RESTART = 2;
 	static const int MESSAGE_SAVE = 3;
 	static const int MESSAGE_LOAD = 4;
 	static const int MESSAGE_WIN = 5;
-	static const int MESSAGE_LOSE = 6;
 	static const int MESSAGE_FLYING = 7;
 	static const int MESSAGE_NPC = 8;
 	static const int MESSAGE_HINT = 9;
@@ -33,6 +31,9 @@ public:
 	void setMsg(const wchar_t*[50]);
 	void setMsg(const wchar_t*);
 	bool isFree() {return !moving && !opening && !flooring && msg==MESSAGE_NONE && clock()-lasttime>150;}
+	wchar_t* getHardText(int h) {
+		return h==1?L"简单":h==2?L"普通":h==3?L"困难":L"";
+	}
 	void goOn(c_hero*, c_map_floor*, float);
 	void save(FILE*);
 	void load(FILE*);
@@ -50,14 +51,15 @@ public:
 	// 难度，1简单2普通3困难
 	int hard;
 
-	bool canfly,book,stick,cross,trueend;
+	bool canfly,book;
+	// 魔杖
+	int wand;
+
 	bool moving,opening,flooring,music;
 	int map_floornum,map_height,map_width,volume,bgmvolume,ScreenLeft;
 
 	savedata sd[100];
 	int wanttosave;
-
-	float lefttime;
 
 	// 正在打开的门
 	c_map_door *map_openingdoor;
