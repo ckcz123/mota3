@@ -17,7 +17,7 @@ void c_monster::init(int t)
 	{
 	case 1:wcscpy_s(name,L"绿色史莱姆");position=0;hp=75;atk=15;def=5;money=1;break;
 	case 2:wcscpy_s(name,L"红色史莱姆");position=1;hp=100;atk=20;def=3;money=2;break;
-	case 3:wcscpy_s(name,L"青头怪");position=2;hp=150;atk=35;def=9;money=5;break;
+	case 3:wcscpy_s(name,L"青头怪");position=2;hp=150;atk=35;def=9;money=4;break;
 	case 4:wcscpy_s(name,L"史莱姆王");position=3;hp=700;atk=250;def=125;money=32;break;
 	case 5:wcscpy_s(name,L"小蝙蝠");position=4;hp=110;atk=30;def=0;money=3;special=1;break;
 	case 6:wcscpy_s(name,L"大蝙蝠");position=5;hp=150;atk=65;def=30;money=10;break;
@@ -27,15 +27,15 @@ void c_monster::init(int t)
 	case 10:wcscpy_s(name,L"高级法师");position=9;hp=1000;atk=200;def=110;money=30;break;
 	case 11:wcscpy_s(name,L"初级巫师");position=10;hp=500;atk=120;def=70;money=20;break;
 	case 12:wcscpy_s(name,L"高级巫师");position=11;hp=1234;atk=400;def=260;money=47;break;
-	case 13:wcscpy_s(name,L"骷髅人");position=12;hp=110;atk=40;def=5;money=7;break;
-	case 14:wcscpy_s(name,L"骷髅士兵");position=13;hp=200;atk=60;def=20;money=11;break;
-	case 15:wcscpy_s(name,L"骷髅队长");position=14;hp=400;atk=90;def=30;money=16;break;
+	case 13:wcscpy_s(name,L"骷髅人");position=12;hp=110;atk=40;def=5;money=5;break;
+	case 14:wcscpy_s(name,L"骷髅士兵");position=13;hp=200;atk=60;def=20;money=9;break;
+	case 15:wcscpy_s(name,L"骷髅队长");position=14;hp=400;atk=90;def=30;money=14;special=1;break;
 	case 16:wcscpy_s(name,L"冥队长");position=15;hp=3000;atk=880;def=790;money=80;break;
 	case 17:wcscpy_s(name,L"兽人");position=16;hp=300;atk=75;def=45;money=13;break;
 	case 18:wcscpy_s(name,L"兽面武士");position=17;hp=900;atk=450;def=330;money=50;break;
-	case 19:wcscpy_s(name,L"石头人");position=18;hp=25;atk=50;def=0;money=9;special=3;break;
+	case 19:wcscpy_s(name,L"石头人");position=18;hp=25;atk=50;def=0;money=8;special=3;break;
 	case 20:wcscpy_s(name,L"影子战士");position=19;hp=3100;atk=1250;def=1050;money=105;break;
-	case 21:wcscpy_s(name,L"初级卫兵");position=20;hp=300;atk=80;def=30;money=14;break;
+	case 21:wcscpy_s(name,L"初级卫兵");position=20;hp=300;atk=80;def=30;money=11;break;
 	case 22:wcscpy_s(name,L"中级卫兵");position=21;hp=1250;atk=500;def=400;money=55;break;
 	case 23:wcscpy_s(name,L"高级卫兵");position=22;hp=1500;atk=560;def=460;money=60;break;
 	case 24:wcscpy_s(name,L"双手剑士");position=23;hp=1200;atk=620;def=520;money=65;break;

@@ -11,18 +11,18 @@ c_hero::c_hero()
 };
 void c_hero::init()
 {
-	hp=1000;
-	atk=10;
-	def=10;
-	money=0;
+	hp=2186;
+	atk=56;
+	def=50;
+	money=389;
+	yellowkey=1;
+	bluekey=1;
 	redkey=0;
-	bluekey=0;
-	yellowkey=0;
 	x=6;
-	y=12;
+	y=0;
 	face=3;
 	move=0;
-	now_floor=0;
+	now_floor=6;
 	max_floor=0;
 	fly_floor=0;
 	for (int i=0; i<4; i++)
@@ -375,8 +375,12 @@ void c_hero::npc(int select)
 		consts.setMsg(L"徘徊之影\t像这种机关门，往往都是需要将其守\n卫怪物全部打死后才会开启。");
 		break;
 	case 46:
-		consts.setMsg(L"徘徊之影\t这座塔每五层都有一个小头目一样的\n存在，而且小头目也是能重生的。");
+		consts.setMsg(L"徘徊之影\t这一区域的红钥匙我找了好久好久都\n没找到，是隐藏在了哪里吗？");
 		break;
+	case 47:
+		{
+
+		}
 	default:
 		consts.setMsg(L"勇士\t这是啥？");
 		break;

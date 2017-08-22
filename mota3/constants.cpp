@@ -19,6 +19,7 @@ constants::constants()
 void constants::init()
 {
 	canfly=book=moving=opening=flooring=false;
+	book=true;
 	playtime=0.0;
 	step=0;
 	hard=0;
@@ -45,7 +46,7 @@ void constants::loadResources()
 	s_ground=new hgeSprite(ht_map,0,0,32,32);
 	s_wall=new hgeSprite(ht_map,32,0,32,32);
 	s_wall_hidden=new hgeSprite(ht_map,32,0,32,32);
-	s_wall_hidden->SetColor(0xE2FFFFFF);
+	s_wall_hidden->SetColor(0xCCFFFFFF);
 	s_wall2=new hgeSprite(ht_map,64,0,32,32);
 	s_water=new hgeSprite(ht_map,32,32,32,32);
 	s_sky=new hgeSprite(ht_map,0,32,32,32);

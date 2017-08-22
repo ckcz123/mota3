@@ -219,7 +219,7 @@ bool frameFunc()
 			consts.lasttime=clock();
 		}
 		if (consts.nowcnt==10) {
-			consts.msg=consts.MESSAGE_NONE;
+			consts.setMsg(L"勇士\t就是这里了，冲进去!");
 			consts.nowcnt=0;
 		}
 	}
@@ -375,11 +375,11 @@ bool renderFunc()
 	}
 	if (consts.msg==consts.MESSAGE_CHOOSE_HARD) {
 		GfxFont *f=new GfxFont(L"楷体", 25);
-		float len=f->GetTextSize(L"[1] 简单难度（嗯").cx;
+		float len=f->GetTextSize(L"[2] 普通（送一黄，减伤5%%）").cx;
 		float left=16*consts.map_width+consts.ScreenLeft-len/2;
 		float height=consts.map_height*32*0.6;
-		f->Print(left, height, L"[1] 简单（减伤15%%）");
-		f->Print(left, height+28, L"[2] 普通（减伤5%%）");
+		f->Print(left, height, L"[1] 简单（送一黄一蓝，减伤15%%）");
+		f->Print(left, height+28, L"[2] 普通（送一黄，减伤5%%）");
 		f->Print(left, height+56, L"[3] 困难");
 		delete f;
 		consts.hge->Gfx_EndScene();

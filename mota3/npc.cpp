@@ -14,6 +14,9 @@ void c_map_npc::init(int t)
 	else if (id==43) {
 		for(int i=0;i<4;i++) npc[i]=new hgeSprite(consts.ht_npc,32*i,64,32,32);
 	}
+	else if (id==47) {
+		for(int i=0;i<4;i++) npc[i]=new hgeSprite(consts.ht_npc,32*i,192,32,32);
+	}
 	else {
 		for(int i=0;i<4;i++) npc[i]=new hgeSprite(consts.ht_npc,32*i,0,32,32);
 	}
