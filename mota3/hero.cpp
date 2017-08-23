@@ -161,6 +161,8 @@ void c_hero::upstair()
 	map_floor[now_floor].getDownPosition(x,y);
 	consts.flooring=true;
 	consts.step++;
+	if (now_floor>=consts.map_floornum)
+		consts.map_floornum=now_floor+1;
 }
 void c_hero::downstair()
 {
@@ -404,6 +406,17 @@ void c_hero::npc(int select)
 			if (select==2) atk+=2;
 			if (select==3) def+=3;
 			map_npc->visitNpc();
+			break;
+		}
+	case 48:
+		{
+			if (money<500) {
+				consts.setMsg(L"½ð±Ò²»×ã¡£");
+				break;
+			}
+			money-=500;
+			redkey++;
+			map_npc->init(0);
 			break;
 		}
 	default:

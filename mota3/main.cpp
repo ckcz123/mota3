@@ -333,6 +333,14 @@ bool frameFunc()
 			}
 			
 		}
+		else if (npcid==48) {
+			if (consts.hge->Input_GetKeyState(HGEK_ENTER)) {
+				hero.npc();
+			}
+			else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
+				consts.msg=consts.MESSAGE_NONE;
+			}
+		}
 		else {
 			hero.npc();
 		}
@@ -526,6 +534,11 @@ bool renderFunc()
 			wchar_t s[200];
 			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 生命+500\n[2] 攻击+2\n[3] 防御+3\n[ESC] 离开", need);
 			showMessage(s);
+		}
+		// 7楼奸商
+		if (id==48) {
+			showMessage(L"奸商\t我有一把红钥匙，400金币就给你。\n\n[ENTER] 要\n[ESC] 离开");
+
 		}
 
 
