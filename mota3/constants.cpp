@@ -19,7 +19,6 @@ constants::constants()
 void constants::init()
 {
 	canfly=book=moving=opening=flooring=false;
-	book=true;
 	playtime=0.0;
 	step=0;
 	hard=0;
@@ -91,6 +90,7 @@ void constants::loadResources()
 	s_shield2=new hgeSprite(ht_icon,0,128,32,32);
 	s_sword3=new hgeSprite(ht_icon,96,96,32,32);
 	s_shield3=new hgeSprite(ht_icon,96,128,32,32);
+	s_wand=new hgeSprite(ht_special,224,800,32,32);
 	//special
 	s_sigh=new hgeSprite(ht_special,192,800,32,32);
 	s_sighed=new hgeSprite(ht_special,192,832,32,32);
@@ -222,7 +222,7 @@ void constants::finishHint()
 				// 已拯救
 				if (map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->getId()==43)
 				{
-					if (wand>=0)
+					if (map_npc->getVisit()>=10)
 					{
 						map_npc->init(0);
 						map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->init(0);
@@ -230,11 +230,9 @@ void constants::finishHint()
 					}
 					else
 					{
-						wand=0;
+						hero.getRedKey();
 						hge->Effect_PlayEx(he_GetItem, volume);
 						const wchar_t* msg[50]={
-							L"获得神秘魔杖！",
-							L"徘徊之影\t这是我研究出来的神秘魔杖，它可以\n将某一个空地上放置一个标记，这样\n怪物就不能在标记处重生啦。\n不过，它只能用十次，用的好的话也\n许能大大帮助你的探索哟~\n\n[X]键使用。\n",
 							L"勇士\t谢谢您，您帮了我大忙啦！",
 							L"徘徊之影\t不客气，我相信你一定能摸清楚这座\n塔的秘密的！",
 							L"勇士\t好的，我会加油的！",
@@ -244,6 +242,7 @@ void constants::finishHint()
 							L"杰克\t妈妈......\n\n（哭）好，我这就走...",
 							L"徘徊之影\t别再回来了，去吧，去吧......\n\n我的执念也该消散了，勇士，祝你\n好运！"
 						};
+						map_npc->setVisit(10);
 						setMsg(msg);
 						return;
 					}
@@ -257,6 +256,18 @@ void constants::finishHint()
 				map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->init(43);
 				map_npc->init(0);
 				msg=MESSAGE_NONE;
+				break;
+			}
+		case 48:
+			{
+				wand=10;
+				hge->Effect_PlayEx(he_GetItem, volume);
+				const wchar_t* msg[50]={
+					L"获得神秘魔杖！\n你可以在任意空地放置一个标记，怪\n物将不能在标记处进行重生。\n\n[X]键使用。",
+					L"徘徊之影\t目前你只能使用10次，不过你可以来\n找我增加它的使用次数，每次增加需\n100金币。",
+					L"勇士\t好的，谢谢您！"
+				};
+				setMsg(msg);
 				break;
 			}
 
@@ -278,6 +289,20 @@ void constants::printInfo()
 	if (ptm>=3600)
 		hgef->printf(ScreenLeft+map_width*32+68, 298, HGETEXT_LEFT, "%02d : %02d : %02d", ptm/3600, (ptm/60)%60, ptm%60);
 	else hgef->printf(ScreenLeft+map_width*32+68, 298, HGETEXT_LEFT, "%02d : %02d", ptm/60, ptm%60);
+
+	// 怪物手册
+	if (book)
+		s_enemyinfo->Render(24, 288);
+	// 飞行器
+	if (canfly) 
+		s_floor->Render(71, 288);
+	// 魔杖
+	if (wand>=0) {
+		s_wand->Render(118, 288);
+		GfxFont* f=new GfxFont(L"楷体", 14, true);
+		f->Print(142, 308, L"%d", wand);
+		delete f;
+	}
 
 	GfxFont *f=new GfxFont(L"楷体", 24, true);
 	if (hard==1) {

@@ -31,7 +31,7 @@ public:
 	c_map_door* getDoor() {return &door;}
 	c_map_npc* getNpc() {return &npc;}
 	c_monster* getMonster() {return &monster;}
-	bool nearStair() {return door.getType()==4 || door.getType()==5;}
+	bool nearStair() {return door.getType()==7 || door.getType()==8;}
 	bool hasMonster(int id=0) {return id==0?monster.getId()!=0:monster.getId()==id;}
 	bool isGround();
 	hgeSprite* getTypeSprite();

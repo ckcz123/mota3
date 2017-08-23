@@ -29,6 +29,11 @@ public:
 	void load(FILE*);//¶Áµµ
 	bool nearStair();
 	bool canReborn();
+	void getYellowKey() {yellowkey++;}
+	void getBlueKey() {bluekey++;}
+	void getRedKey() {redkey++;}
+	int getX() {return x;}
+	int getY() {return y;}
 	int getHP() {return hp;}
 	int getAtk() {return atk;}
 	int getDef() {return def;}

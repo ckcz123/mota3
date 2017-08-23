@@ -173,7 +173,7 @@ bool frameFunc()
 	}
 	if(consts.hge->Input_GetKeyState(HGEK_G) && consts.isFree()) {
 		if (consts.canfly) { 
-			if (hero.getNowFloor()==21) consts.setMsg(L"飞行器好像在这层楼失效了！");
+			if (!hero.nearStair()) consts.setMsg(L"只能在楼梯边才能使用跳楼机！");
 			else consts.msg=consts.MESSAGE_FLYING;
 		}
 	}
@@ -183,6 +183,16 @@ bool frameFunc()
 		if (consts.music) consts.hge->Channel_SetVolume(consts.hc_Music, consts.bgmvolume);
 		else consts.hge->Channel_SetVolume(consts.hc_Music, 0);
 	}
+
+	// 使用魔杖
+	if (consts.isFree() && consts.hge->Input_GetKeyState(HGEK_X) && consts.wand>0) {
+		c_map_point* point=map_floor[hero.getNowFloor()].getinfo(hero.getY(), hero.getX());
+		if (point->isGround()) {
+			point->setSpecial(209);
+			consts.wand--;
+		}
+	}
+
 	if (consts.msg==consts.MESSAGE_START) {
 		if (consts.hge->Input_GetKeyState(HGEK_1)) {
 			consts.lasttime=clock();
@@ -199,11 +209,14 @@ bool frameFunc()
 	if (consts.msg==consts.MESSAGE_CHOOSE_HARD) {
 		if (consts.hge->Input_GetKeyState(HGEK_1) && clock()-consts.lasttime>200) {
 			consts.hard=1;
+			hero.getYellowKey();
+			hero.getBlueKey();
 			consts.msg=consts.MESSAGE_TEXT;
 			consts.nowcnt=0;
 		}
 		else if (consts.hge->Input_GetKeyState(HGEK_2) && clock()-consts.lasttime>200) {
 			consts.hard=2;
+			hero.getYellowKey();
 			consts.msg=consts.MESSAGE_TEXT;
 			consts.nowcnt=0;
 		}
@@ -315,8 +328,9 @@ bool frameFunc()
 
 	if(consts.msg==consts.MESSAGE_NPC)
 	{
-		int npcid=map_floor[hero.getNowFloor()].getinfo(hero.nextY(),hero.nextX())->getNpc()->getId();
-
+		c_map_npc* map_npc=map_floor[hero.getNowFloor()].getinfo(hero.nextY(),hero.nextX())->getNpc();
+		int npcid=map_npc->getId(), npctimes=map_npc->getVisit();
+		
 		// 商店
 		if (npcid==47) {
 			if(consts.hge->Input_GetKeyState(HGEK_1) && clock()-consts.lasttime>200) {
@@ -334,11 +348,16 @@ bool frameFunc()
 			
 		}
 		else if (npcid==48) {
-			if (consts.hge->Input_GetKeyState(HGEK_ENTER)) {
+			if (npctimes==0) {
 				hero.npc();
 			}
-			else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
-				consts.msg=consts.MESSAGE_NONE;
+			else {
+				if (consts.hge->Input_GetKeyState(HGEK_ENTER)) {
+					hero.npc();
+				}
+				else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
+					consts.msg=consts.MESSAGE_NONE;
+				}
 			}
 		}
 		else {
@@ -530,15 +549,16 @@ bool renderFunc()
 
 		// 6楼商店
 		if (id==47) {
-			int need=30+2*times;
+			int need=20+2*times;
 			wchar_t s[200];
 			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 生命+500\n[2] 攻击+2\n[3] 防御+3\n[ESC] 离开", need);
 			showMessage(s);
 		}
 		// 7楼奸商
 		if (id==48) {
-			showMessage(L"奸商\t我有一把红钥匙，400金币就给你。\n\n[ENTER] 要\n[ESC] 离开");
-
+			if (times>0) {
+				showMessage(L"徘徊之影\t100金币一次，可增加魔杖使用次数。\n\n[ENTER] 我要\n[ESC] 离开");
+			}
 		}
 
 

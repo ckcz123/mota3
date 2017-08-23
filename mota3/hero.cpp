@@ -114,6 +114,18 @@ bool c_hero::moveComplete()
 			def+=10;
 			consts.setMsg(L"获得铁盾，防御力+10。");
 			break;
+		case 25:
+			atk+=20;
+			consts.setMsg(L"获得银剑，攻击力+20。");
+			break;
+		case 26:
+			def+=20;
+			consts.setMsg(L"获得银盾，防御力+20。");
+			break;
+		case 27:
+			consts.canfly=true;
+			consts.setMsg(L"获得跳楼机。\n你可以飞往任意比当前层数低的层。\n\n[G]键使用。");
+			break;
 		}
 		int special=map_floor[now_floor].getSpecial(x,y);
 		if (special!=0) {
@@ -223,7 +235,12 @@ int c_hero::getDamage(c_monster* monster) // 打败怪物，返回hp
 	if (hero_def>=mon_atk) return 0;
 	// 先攻
 	int damage=monster->getSpecial()==1?mon_atk-hero_def:0;
-	return damage+(monster->getHp()-1)/(atk-mon_def)*(mon_atk-hero_def);
+	int val=damage+(monster->getHp()-1)/(atk-mon_def)*(mon_atk-hero_def);
+
+	if (consts.hard==1) return val*.85;
+	if (consts.hard==2) return val*.95;
+	return val;
+
 }
 void c_hero::beat(c_monster* monster)
 {
@@ -294,6 +311,14 @@ void c_hero::beat(c_monster* monster)
 		// 6楼商店开门
 		map_floor[now_floor].getinfo(2,9)->openSpecial();
 	}
+	if (now_floor==8 && id==18 && !map_floor[now_floor].hasMonster(18)) {
+		// 8楼花门
+		map_floor[now_floor].getinfo(7,1)->openSpecial();
+	}
+	if (now_floor==10 && !map_floor[now_floor].hasMonster()) {
+		// 10楼机关门
+		map_floor[now_floor].getinfo(3,6)->openSpecial();
+	}
 
 
 	consts.lasttime=clock();
@@ -342,7 +367,7 @@ void c_hero::npc(int select)
 		{
 			// 已经拯救
 			if (map_floor[now_floor].getinfo(1,0)->getNpc()->getId()==43) {
-				consts.setMsg(L"徘徊之影\t谢谢你救了我的儿子！\n\n按照之前所说，我把我在这座塔里的\n研究成果送给你了，请收好。");
+				consts.setMsg(L"徘徊之影\t谢谢你救了我的儿子！\n\n我这里正好有一把红钥匙，也用不着\n了，就送给你好了。");
 				consts.map_npc=map_npc;
 			}
 			else {
@@ -354,15 +379,14 @@ void c_hero::npc(int select)
 						L"徘徊之影\t我知道他是来找妈妈的，可以妈妈只\n希望他平平安安啊！可我还没和他说\n上话，他就被抓起来关在这里了！",
 						L"徘徊之影\t可惜我已是一股执念而已，没有办法\n救他，只能眼睁睁地看着他就这么被\n关着。",
 						L"徘徊之影\t勇士，勇士，快去救救他吧！他还活\n着！他还活着啊！再不救他就要死了\n！我不想这样，我要救他出来，快去\n把他救出来！只能靠你了啊！",
-						L"徘徊之影\t以青叶帝国的名义，我发誓，如果你\n安然无恙地把他救了出来，我就送你\n一个好东西！我这几年我的心血！",
-						L"勇士\t好的，别急别急，我一定会把他救出\n来的！相信我",
+						L"勇士\t好的，别急别急，我一定会把他救出\n来的！相信我。",
 						L"徘徊之影\t嗯.. 我现在只能靠你了..."
 					};
 					consts.setMsg(msg);
 					map_npc->setVisit(1);
 				}
 				else {
-					consts.setMsg(L"徘徊之影\t求求你把我儿子救出来吧！他还活着\n呢！以青叶帝国的名义我发誓，你把\n他安全救出来后我就送你个好东西！");
+					consts.setMsg(L"徘徊之影\t求求你把我儿子救出来吧！他还活着\n呢！");
 				}
 
 
@@ -395,11 +419,11 @@ void c_hero::npc(int select)
 		consts.setMsg(L"徘徊之影\t像这种机关门，往往都是需要将其守\n卫怪物全部打死后才会开启。");
 		break;
 	case 46:
-		consts.setMsg(L"徘徊之影\t这一区域的红钥匙我找了好久好久都\n没找到，是隐藏在了哪里吗？");
+		consts.setMsg(L"徘徊之影\t本塔共有两个商店：本楼和12楼，并\n且两个商店的价格是同步的。");
 		break;
 	case 47:
 		{
-			int need=30+2*npctime;
+			int need=20+2*npctime;
 			if (money<need) break;
 			money-=need;
 			if (select==1) hp+=500;
@@ -410,15 +434,25 @@ void c_hero::npc(int select)
 		}
 	case 48:
 		{
-			if (money<500) {
-				consts.setMsg(L"金币不足。");
+			if (npctime==0) {
+				consts.setMsg(L"徘徊之影\t你竟然找到这来了！那我就送你一个\n好东西吧~");
+				map_npc->visitNpc();
+				consts.map_npc=map_npc;
 				break;
 			}
-			money-=500;
-			redkey++;
-			map_npc->init(0);
-			break;
+			else {
+				if (money<100) {
+					consts.setMsg(L"金币不足。");
+					break;
+				}
+				money-=100;
+				consts.wand++;
+				break;
+			}
 		}
+	case 49:
+		consts.setMsg(L"徘徊之影\t注意你的钥匙数量，多探路。");
+		break;
 	default:
 		consts.setMsg(L"勇士\t这是啥？");
 		break;
@@ -438,11 +472,12 @@ void c_hero::load(FILE* f)
 
 void c_hero::setFlyFloor(int delta)
 {
-	if (delta==0 && now_floor<30) 
+	if (delta==0) 
 		fly_floor=now_floor;
 	else
 	{
+		// 只能飞往当前及以下楼层
 		int tmpfloor=fly_floor+delta;
-		if (tmpfloor<=max_floor && tmpfloor>=0 && tmpfloor<=consts.map_floornum) fly_floor=tmpfloor;
+		if (tmpfloor<=now_floor && tmpfloor>=0) fly_floor=tmpfloor;
 	}
 }
