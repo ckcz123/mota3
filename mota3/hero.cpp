@@ -11,18 +11,18 @@ c_hero::c_hero()
 };
 void c_hero::init()
 {
-	hp=2186;
-	atk=56;
-	def=50;
-	money=389;
-	yellowkey=1;
-	bluekey=1;
+	hp=1000;
+	atk=10;
+	def=10;
+	money=0;
+	yellowkey=0;
+	bluekey=0;
 	redkey=0;
 	x=6;
-	y=0;
+	y=12;
 	face=3;
 	move=0;
-	now_floor=6;
+	now_floor=0;
 	max_floor=0;
 	fly_floor=0;
 	for (int i=0; i<4; i++)
@@ -84,9 +84,9 @@ bool c_hero::moveComplete()
 			hp-=100;
 			if (hp<=0) hp=1;
 			break;
-		case 11:atk+=2*level;
+		case 11:atk+=1+level;
 			break;
-		case 12:def+=2*level;
+		case 12:def+=1+level;
 			break;
 		case 13:
 			consts.book=true;
@@ -273,8 +273,26 @@ void c_hero::beat(c_monster* monster)
 	if (now_floor==5 && id==15 && !map_floor[now_floor].hasMonster(15)) {
 		// 5楼开门
 		map_floor[now_floor].getinfo(3,6)->openSpecial();
-
 	}
+	if (now_floor==6 && x>=4 && x<=6 && y>=6 && y<=8) {
+		// 6楼中间开门
+		bool canopen=true;
+		for (int i=4;i<=6;i++) {
+			for (int j=6;j<=8;j++) {
+				if (map_floor[now_floor].getinfo(j,i)->hasMonster()) {
+					canopen=false;
+				}
+			}
+		}
+		if (canopen) {
+			map_floor[now_floor].getinfo(7,7)->openSpecial();
+		}
+	}
+	if (now_floor==6 && id==17 && !map_floor[now_floor].hasMonster(17)) {
+		// 6楼商店开门
+		map_floor[now_floor].getinfo(2,9)->openSpecial();
+	}
+
 
 	consts.lasttime=clock();
 }
@@ -379,12 +397,20 @@ void c_hero::npc(int select)
 		break;
 	case 47:
 		{
-
+			int need=30+2*npctime;
+			if (money<need) break;
+			money-=need;
+			if (select==1) hp+=500;
+			if (select==2) atk+=2;
+			if (select==3) def+=3;
+			map_npc->visitNpc();
+			break;
 		}
 	default:
 		consts.setMsg(L"勇士\t这是啥？");
 		break;
 	}
+	consts.lasttime=clock();
 }
 void c_hero::save(FILE* f)
 {

@@ -10,6 +10,7 @@ public:
 	void changeState();//¸Ä±ä×´Ì¬
 	int getVisit() {return visit;}
 	void setVisit(int t) {visit=t;}
+	void visitNpc() {visit++;}
 private:
 	int id;
 	int state;

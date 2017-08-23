@@ -210,6 +210,7 @@ bool frameFunc()
 		else if (consts.hge->Input_GetKeyState(HGEK_3) && clock()-consts.lasttime>200) {
 			consts.hard=3;
 			consts.msg=consts.MESSAGE_TEXT;
+			consts.msg=consts.MESSAGE_NONE;
 			consts.nowcnt=0;
 		}
 	}
@@ -316,7 +317,25 @@ bool frameFunc()
 	{
 		int npcid=map_floor[hero.getNowFloor()].getinfo(hero.nextY(),hero.nextX())->getNpc()->getId();
 
-		hero.npc();
+		// 商店
+		if (npcid==47) {
+			if(consts.hge->Input_GetKeyState(HGEK_1) && clock()-consts.lasttime>200) {
+				hero.npc(1);
+			}
+			else if(consts.hge->Input_GetKeyState(HGEK_2) && clock()-consts.lasttime>200) {
+				hero.npc(2);
+			}
+			else if(consts.hge->Input_GetKeyState(HGEK_3) && clock()-consts.lasttime>200) {
+				hero.npc(3);
+			}
+			else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
+				consts.msg=consts.MESSAGE_NONE;
+			}
+			
+		}
+		else {
+			hero.npc();
+		}
 		/*
 		if (npcid>=40 && npcid<=44)
 			hero.npc();
@@ -499,6 +518,17 @@ bool renderFunc()
 	}
 	if (consts.msg==consts.MESSAGE_NPC) {
 		c_map_npc* npc=map_floor[hero.getNowFloor()].getinfo(hero.nextY(),hero.nextX())->getNpc();
+		int id=npc->getId(), times=npc->getVisit();
+
+		// 6楼商店
+		if (id==47) {
+			int need=30+2*times;
+			wchar_t s[200];
+			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 生命+500\n[2] 攻击+2\n[3] 防御+3\n[ESC] 离开", need);
+			showMessage(s);
+		}
+
+
 	}
 	consts.hge->Gfx_EndScene();
 	return false;
