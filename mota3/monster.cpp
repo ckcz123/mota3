@@ -20,10 +20,10 @@ void c_monster::init(int t)
 	case 3:wcscpy_s(name,L"青头怪");position=2;hp=150;atk=35;def=9;money=4;break;
 	case 4:wcscpy_s(name,L"史莱姆王");position=3;hp=700;atk=250;def=125;money=32;break;
 	case 5:wcscpy_s(name,L"小蝙蝠");position=4;hp=110;atk=30;def=0;money=3;special=1;break;
-	case 6:wcscpy_s(name,L"大蝙蝠");position=5;hp=170;atk=90;def=40;money=12;break;
+	case 6:wcscpy_s(name,L"大蝙蝠");position=5;hp=170;atk=90;def=40;money=12;special=1;break;
 	case 7:wcscpy_s(name,L"红蝙蝠");position=6;hp=550;atk=160;def=95;money=25;break;
-	case 8:wcscpy_s(name,L"冥灵魔王");position=7;hp=1300;atk=600;def=0;money=30;break;
-	case 9:wcscpy_s(name,L"初级法师");position=8;hp=120;atk=50;def=0;money=6;special=2;break;
+	case 8:wcscpy_s(name,L"冥灵魔王");position=7;hp=1500;atk=750;def=0;money=30;break;
+	case 9:wcscpy_s(name,L"初级法师");position=8;hp=125;atk=50;def=0;money=6;special=2;break;
 	case 10:wcscpy_s(name,L"高级法师");position=9;hp=230;atk=120;def=50;money=16;special=2;break;
 	case 11:wcscpy_s(name,L"初级巫师");position=10;hp=500;atk=120;def=70;money=20;break;
 	case 12:wcscpy_s(name,L"高级巫师");position=11;hp=1234;atk=400;def=260;money=47;break;
@@ -34,9 +34,9 @@ void c_monster::init(int t)
 	case 17:wcscpy_s(name,L"兽人");position=16;hp=250;atk=100;def=35;money=14;break;
 	case 18:wcscpy_s(name,L"兽面武士");position=17;hp=600;atk=170;def=70;money=19;break;
 	case 19:wcscpy_s(name,L"石头人");position=18;hp=25;atk=50;def=0;money=8;special=3;break;
-	case 20:wcscpy_s(name,L"影子战士");position=19;hp=333;atk=140;def=60;money=18;break;
+	case 20:wcscpy_s(name,L"影子战士");position=19;hp=333;atk=140;def=60;money=20;break;
 	case 21:wcscpy_s(name,L"初级卫兵");position=20;hp=300;atk=80;def=30;money=11;break;
-	case 22:wcscpy_s(name,L"中级卫兵");position=21;hp=600;atk=120;def=80;money=20;break;
+	case 22:wcscpy_s(name,L"中级卫兵");position=21;hp=600;atk=120;def=80;money=18;break;
 	case 23:wcscpy_s(name,L"高级卫兵");position=22;hp=1500;atk=560;def=460;money=60;break;
 	case 24:wcscpy_s(name,L"双手剑士");position=23;hp=1200;atk=620;def=520;money=65;break;
 	case 25:wcscpy_s(name,L"冥战士");position=24;hp=2000;atk=680;def=590;money=70;break;
