@@ -549,9 +549,9 @@ bool renderFunc()
 
 		// 6楼商店
 		if (id==47) {
-			int need=20+2*times;
+			int need=25+2*times;
 			wchar_t s[200];
-			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 生命+500\n[2] 攻击+2\n[3] 防御+3\n[ESC] 离开", need);
+			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 生命+400\n[2] 攻击+2\n[3] 防御+3\n[ESC] 离开", need);
 			showMessage(s);
 		}
 		// 7楼奸商

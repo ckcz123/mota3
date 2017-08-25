@@ -419,14 +419,14 @@ void c_hero::npc(int select)
 		consts.setMsg(L"徘徊之影\t像这种机关门，往往都是需要将其守\n卫怪物全部打死后才会开启。");
 		break;
 	case 46:
-		consts.setMsg(L"徘徊之影\t本塔共有两个商店：本楼和12楼，并\n且两个商店的价格是同步的。");
+		consts.setMsg(L"徘徊之影\t本塔共有两个商店：6楼和12楼，两\n个商店的关系类似于新新魔塔。");
 		break;
 	case 47:
 		{
-			int need=20+2*npctime;
+			int need=25+2*npctime;
 			if (money<need) break;
 			money-=need;
-			if (select==1) hp+=500;
+			if (select==1) hp+=400;
 			if (select==2) atk+=2;
 			if (select==3) def+=3;
 			map_npc->visitNpc();
