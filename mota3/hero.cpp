@@ -237,8 +237,8 @@ int c_hero::getDamage(c_monster* monster) // 打败怪物，返回hp
 	int damage=monster->getSpecial()==1?mon_atk-hero_def:0;
 	int val=damage+(monster->getHp()-1)/(atk-mon_def)*(mon_atk-hero_def);
 
-	if (consts.hard==1) return val*.85;
-	if (consts.hard==2) return val*.95;
+	if (consts.hard==1) return val*.8;
+	if (consts.hard==2) return val*.92;
 	return val;
 
 }
@@ -366,64 +366,15 @@ void c_hero::npc(int select)
 			break;
 		}
 	case 42:
-		{
-			// 已经拯救
-			if (map_floor[now_floor].getinfo(1,0)->getNpc()->getId()==43) {
-				consts.setMsg(L"徘徊之影\t谢谢你救了我的儿子！\n\n我这里正好有一把红钥匙，也用不着\n了，就送给你好了。");
-				consts.map_npc=map_npc;
-			}
-			else {
-				if (npctime==0) {
-					const wchar_t* msg[50]={
-						L"徘徊之影\t儿啊，儿啊，我的儿啊！",
-						L"勇士\t怎么了，发生什么了？",
-						L"徘徊之影\t我几年前为了养活家里人，而进入这\n座塔冒险，希望能得到国王的赏金。\n但我却不幸陷落在了这里。没想到，\n前几天，我的儿子也进来了！他竟然\n来了！",
-						L"徘徊之影\t我知道他是来找妈妈的，可以妈妈只\n希望他平平安安啊！可我还没和他说\n上话，他就被抓起来关在这里了！",
-						L"徘徊之影\t可惜我已是一股执念而已，没有办法\n救他，只能眼睁睁地看着他就这么被\n关着。",
-						L"徘徊之影\t勇士，勇士，快去救救他吧！他还活\n着！他还活着啊！再不救他就要死了\n！我不想这样，我要救他出来，快去\n把他救出来！只能靠你了啊！",
-						L"勇士\t好的，别急别急，我一定会把他救出\n来的！相信我。",
-						L"徘徊之影\t嗯.. 我现在只能靠你了..."
-					};
-					consts.setMsg(msg);
-					map_npc->setVisit(1);
-				}
-				else {
-					consts.setMsg(L"徘徊之影\t求求你把我儿子救出来吧！他还活着\n呢！");
-				}
-
-
-			}
-			break;
-		}
-	case 43:
-		{
-			// 已经拯救
-			if (map_floor[now_floor].getinfo(1,0)->getNpc()->getId()==43) {
-				consts.setMsg(L"杰克\t妈妈... 你怎么成了这个样子...");
-			}
-			else {
-				const wchar_t* msg[50]={
-					L"杰克\t终于有人来了，你是不是来杀我的，\n快杀了我啊我已经受够这地方了！",
-					L"勇士\t不不你误会了，我由你妈妈所托，想\n办法杀了守卫来救你了",
-					L"杰克\t妈妈？她还活着？她在哪？\n\n妈妈，妈妈！",
-					L"勇士\t她就在外面呢，快去找她吧。",
-					L"杰克\t嗯，我这就去找她。谢谢你！\n\n妈妈，妈妈！"
-				};
-				consts.setMsg(msg);
-				consts.map_npc=map_npc;
-			}
-			break;
-		}
-	case 44:
 		consts.setMsg(L"徘徊之影\t这塔里有一些比较容易垮塌的墙壁，\n找到它们也许能让你的过关之路更为\n轻松。");
 		break;
-	case 45:
+	case 43:
 		consts.setMsg(L"徘徊之影\t像这种机关门，往往都是需要将其守\n卫怪物全部打死后才会开启。");
 		break;
-	case 46:
-		consts.setMsg(L"徘徊之影\t本塔共有两个商店：6楼和12楼，两\n个商店的关系类似于新新魔塔。");
+	case 44:
+		consts.setMsg(L"徘徊之影\t在困难难度下，本区域的三个纯血门\n都可以不用开启。你能做到吗？");
 		break;
-	case 47:
+	case 45:
 		{
 			int need=25+2*npctime;
 			if (money<need) break;
@@ -434,7 +385,7 @@ void c_hero::npc(int select)
 			map_npc->visitNpc();
 			break;
 		}
-	case 48:
+	case 46:
 		{
 			if (npctime==0) {
 				consts.setMsg(L"徘徊之影\t你竟然找到这来了！那我就送你一个\n好东西吧~");
@@ -452,7 +403,7 @@ void c_hero::npc(int select)
 				break;
 			}
 		}
-	case 49:
+	case 47:
 		consts.setMsg(L"徘徊之影\t注意你的钥匙数量，多探路。");
 		break;
 	default:

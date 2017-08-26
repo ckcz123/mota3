@@ -225,6 +225,7 @@ bool frameFunc()
 		if (consts.hge->Input_GetKeyState(HGEK_1) && clock()-consts.lasttime>200) {
 			consts.hard=1;
 			hero.getYellowKey();
+			hero.getYellowKey();
 			hero.getBlueKey();
 			consts.msg=consts.MESSAGE_TEXT;
 			consts.nowcnt=0;
@@ -349,7 +350,7 @@ bool frameFunc()
 		int npcid=map_npc->getId(), npctimes=map_npc->getVisit();
 		
 		// 商店
-		if (npcid==47) {
+		if (npcid==45) {
 			if(consts.hge->Input_GetKeyState(HGEK_1) && clock()-consts.lasttime>200) {
 				hero.npc(1);
 			}
@@ -364,7 +365,7 @@ bool frameFunc()
 			}
 			
 		}
-		else if (npcid==48) {
+		else if (npcid==46) {
 			if (npctimes==0) {
 				hero.npc();
 			}
@@ -415,8 +416,8 @@ bool renderFunc()
 		float len=f->GetTextSize(L"[2] 普通（送一黄，减伤5%%）").cx;
 		float left=16*consts.map_width+consts.ScreenLeft-len/2;
 		float height=consts.map_height*32*0.6;
-		f->Print(left, height, L"[1] 简单（送一黄一蓝，减伤15%%）");
-		f->Print(left, height+28, L"[2] 普通（送一黄，减伤5%%）");
+		f->Print(left, height, L"[1] 简单（送二黄一蓝，减伤20%%）");
+		f->Print(left, height+28, L"[2] 普通（送一黄，减伤8%%）");
 		f->Print(left, height+56, L"[3] 困难");
 		delete f;
 		consts.hge->Gfx_EndScene();
@@ -597,14 +598,14 @@ bool renderFunc()
 		int id=npc->getId(), times=npc->getVisit();
 
 		// 6楼商店
-		if (id==47) {
+		if (id==45) {
 			int need=25+2*times;
 			wchar_t s[200];
 			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 生命+400\n[2] 攻击+2\n[3] 防御+3\n[ESC] 离开", need);
 			showMessage(s);
 		}
 		// 7楼奸商
-		if (id==48) {
+		if (id==46) {
 			if (times>0) {
 				showMessage(L"徘徊之影\t100金币一次，可增加魔杖使用次数。\n\n[ENTER] 我要\n[ESC] 离开");
 			}

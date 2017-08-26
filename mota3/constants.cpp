@@ -198,7 +198,8 @@ void constants::finishHint()
 		case 41:
 			{
 				book=true;
-				hge->Effect_PlayEx(he_GetItem, volume);
+				if (music)
+					hge->Effect_PlayEx(he_GetItem, volume);
 				const wchar_t* msg[50]={
 					L"获得怪物手册。",
 					L"徘徊之影\t这个是怪物手册，你可以将鼠标移动\n到怪物身上查看怪物的各项属性。",
@@ -220,51 +221,11 @@ void constants::finishHint()
 				setMsg(msg);
 				break;
 			}
-		case 42:
-			{
-				// 已拯救
-				if (map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->getId()==43)
-				{
-					if (map_npc->getVisit()>=10)
-					{
-						map_npc->init(0);
-						map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->init(0);
-						msg=MESSAGE_NONE;
-					}
-					else
-					{
-						hero.getRedKey();
-						hge->Effect_PlayEx(he_GetItem, volume);
-						const wchar_t* msg[50]={
-							L"勇士\t谢谢您，您帮了我大忙啦！",
-							L"徘徊之影\t不客气，我相信你一定能摸清楚这座\n塔的秘密的！",
-							L"勇士\t好的，我会加油的！",
-							L"徘徊之影\t儿啊，快离开这座塔吧，你妈妈已经\n死了，只剩下这一缕亡魂没有消散。\n你还年轻，未来的路还很长，快离开\n吧，娶个好姑娘过平静的生活，忘了\n这座塔吧，这不是你应该来的地方。",
-							L"杰克\t妈妈......",
-							L"徘徊之影\t快走！我让你走！离开这座塔！",
-							L"杰克\t妈妈......\n\n（哭）好，我这就走...",
-							L"徘徊之影\t别再回来了，去吧，去吧......\n\n我的执念也该消散了，勇士，祝你\n好运！"
-						};
-						map_npc->setVisit(10);
-						setMsg(msg);
-						return;
-					}
-
-				}
-
-				break;
-			}
-		case 43:
-			{
-				map_floor[hero.getNowFloor()].getinfo(1,0)->getNpc()->init(43);
-				map_npc->init(0);
-				msg=MESSAGE_NONE;
-				break;
-			}
-		case 48:
+		case 46:
 			{
 				wand=10;
-				hge->Effect_PlayEx(he_GetItem, volume);
+				if (music)
+					hge->Effect_PlayEx(he_GetItem, volume);
 				const wchar_t* msg[50]={
 					L"获得神秘魔杖！\n你可以在任意空地放置一个标记，怪\n物将不能在标记处进行重生。\n\n[X]键使用。",
 					L"徘徊之影\t目前你只能使用10次，不过你可以来\n找我增加它的使用次数，每次增加需\n100金币。",
