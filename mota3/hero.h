@@ -27,7 +27,9 @@ public:
 	void npc(int select=0);//Ñ¡Ôñselect
 	void save(FILE*);//´æµµ
 	void load(FILE*);//¶Áµµ
-	bool nearStair();
+	bool nearStair(int t=0);
+	bool nearDownStair() {return nearStair(8);}
+	bool nearUpStair() {return nearStair(7);}
 	bool canReborn();
 	void getYellowKey() {yellowkey++;}
 	void getBlueKey() {bluekey++;}

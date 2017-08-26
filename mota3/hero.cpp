@@ -54,13 +54,14 @@ void c_hero::show()
 {
 	sprites[move][face]->Render(x*32+8*move*dir[0][face]+consts.ScreenLeft, y*32+8*move*dir[1][face]);
 }
-bool c_hero::nearStair()
+bool c_hero::nearStair(int t)
 {
-	if (map_floor[now_floor].getinfo(y,x)->nearStair()) return true;
-	if (x>0 && map_floor[now_floor].getinfo(y,x-1)->nearStair()) return true;
-	if (y>0 && map_floor[now_floor].getinfo(y-1,x)->nearStair()) return true;
-	if (x<consts.map_width-1 && map_floor[now_floor].getinfo(y,x+1)->nearStair()) return true;
-	if (y<consts.map_width-1 && map_floor[now_floor].getinfo(y+1,x)->nearStair()) return true;
+	if (t==0) return nearDownStair() || nearUpStair();
+	if (map_floor[now_floor].getinfo(y,x)->nearStair(t)) return true;
+	if (x>0 && map_floor[now_floor].getinfo(y,x-1)->nearStair(t)) return true;
+	if (y>0 && map_floor[now_floor].getinfo(y-1,x)->nearStair(t)) return true;
+	if (x<consts.map_width-1 && map_floor[now_floor].getinfo(y,x+1)->nearStair(t)) return true;
+	if (y<consts.map_height-1 && map_floor[now_floor].getinfo(y+1,x)->nearStair(t)) return true;
 	return false;
 }
 bool c_hero::moveComplete()
@@ -124,7 +125,7 @@ bool c_hero::moveComplete()
 			break;
 		case 27:
 			consts.canfly=true;
-			consts.setMsg(L"获得跳楼机。\n你可以飞往任意比当前层数低的层。\n\n[G]键使用。");
+			consts.setMsg(L"获得楼层飞行器。\n你可以飞往任意比当前层数低的楼层\n，或比当前层数高且存在通路可达的\n楼层。\n[G]键使用。");
 			break;
 		}
 		int special=map_floor[now_floor].getSpecial(x,y);
@@ -429,8 +430,7 @@ void c_hero::setFlyFloor(int delta)
 		fly_floor=now_floor;
 	else
 	{
-		// 只能飞往当前及以下楼层
 		int tmpfloor=fly_floor+delta;
-		if (tmpfloor<=now_floor && tmpfloor>=0) fly_floor=tmpfloor;
+		if (tmpfloor>=0) fly_floor=tmpfloor;
 	}
 }

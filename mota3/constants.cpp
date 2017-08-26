@@ -28,7 +28,7 @@ void constants::init()
 	msg=MESSAGE_START;
 	wand=-1;
 	starttime=0;
-	for (int i=0;i<100;i++) sd[i].hp=0;
+	for (int i=0;i<1000;i++) sd[i].hp=0;
 }
 void constants::loadResources()
 {

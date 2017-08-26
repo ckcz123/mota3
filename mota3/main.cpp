@@ -58,7 +58,7 @@ void loadsave()
 	FILE *savefile;
 	constants tmpcon;
 	c_hero tmphero;
-	for (int i=0;i<100;i++) {
+	for (int i=0;i<1000;i++) {
 		char s[100]="";
 		sprintf_s(s,"Save/save%d.dat",i);
 		int err=fopen_s(&savefile,s,"r");
@@ -173,13 +173,8 @@ bool frameFunc()
 	if(consts.isFree() && consts.hge->Input_GetKeyState(HGEK_UP) && hero.canMove(3))consts.moving=true;
 	if(consts.hge->Input_GetKeyState(HGEK_Q) && consts.isFree()) consts.msg=consts.MESSAGE_RESTART;
 	if(consts.hge->Input_GetKeyState(HGEK_S) && consts.isFree()) {
-		if (hero.getNowFloor()>=30 && !hero.nearStair()) {
-			consts.setMsg(L"只有在楼梯边才能存档！");
-		}
-		else {
-			loadsave();
-			consts.msg=consts.MESSAGE_SAVE;
-		}
+		loadsave();
+		consts.msg=consts.MESSAGE_SAVE;
 	}
 	if(consts.hge->Input_GetKeyState(HGEK_L) && consts.isFree()) {
 		loadsave();
@@ -188,8 +183,11 @@ bool frameFunc()
 	if (consts.isFree() && consts.hge->Input_GetKeyState(HGEK_P)) consts.getRank();
 	if(consts.hge->Input_GetKeyState(HGEK_G) && consts.isFree()) {
 		if (consts.canfly) { 
-			if (!hero.nearStair()) consts.setMsg(L"只能在楼梯边才能使用跳楼机！");
-			else consts.msg=consts.MESSAGE_FLYING;
+			if (!hero.nearStair()) consts.setMsg(L"只有在楼梯旁才能使用传送器！");
+			else {
+				hero.setFlyFloor();
+				consts.msg=consts.MESSAGE_FLYING;
+			}
 		}
 	}
 	if(consts.hge->Input_GetKeyState(HGEK_M) && consts.isFree()) {
@@ -273,7 +271,7 @@ bool frameFunc()
 	{
 		if(consts.hge->Input_GetKeyState(HGEK_DOWN) && clock()-consts.lasttime>200) {
 			consts.wanttosave++;
-			if (consts.wanttosave>=100) consts.wanttosave=99;
+			if (consts.wanttosave>=1000) consts.wanttosave=999;
 			consts.lasttime=clock();
 		}
 		else if(consts.hge->Input_GetKeyState(HGEK_UP) && clock()-consts.lasttime>200) {
@@ -292,7 +290,7 @@ bool frameFunc()
 	{
 		if(consts.hge->Input_GetKeyState(HGEK_DOWN) && clock()-consts.lasttime>200) {
 			consts.wanttosave++;
-			if (consts.wanttosave>=100) consts.wanttosave=9;
+			if (consts.wanttosave>=1000) consts.wanttosave=999;
 			consts.lasttime=clock();
 		}
 		else if(consts.hge->Input_GetKeyState(HGEK_UP) && clock()-consts.lasttime>200) {
@@ -325,7 +323,9 @@ bool frameFunc()
 	{
 		if(consts.hge->Input_GetKeyState(HGEK_UP) && clock()-consts.lasttime>100)
 		{
-			hero.setFlyFloor(1);
+			if (hero.getFlyFloor()<hero.getNowFloor()+(hero.nearUpStair()?1:0)
+				|| map_floor[hero.getFlyFloor()].isLinked())
+				hero.setFlyFloor(1);
 			consts.lasttime=clock();
 		}
 		if(consts.hge->Input_GetKeyState(HGEK_DOWN) && clock()-consts.lasttime>100)
@@ -550,7 +550,7 @@ bool renderFunc()
 	case consts.MESSAGE_FLYING:
 		{
 			wchar_t ss[100];
-			wsprintf(ss,L"我要飞往 %d 楼\n[↑] [↓] 更改楼号\n[ENTER] 确认飞行\n[ESC] 取消",hero.getFlyFloor());
+			wsprintf(ss,L"只能飞往低层或有通路可达的高层。\n\n我要飞往 %d 楼\n[↑] [↓] 更改楼号\n[ENTER] 确认飞行\n[ESC] 取消",hero.getFlyFloor());
 			showMessage(ss);
 			break;
 		}

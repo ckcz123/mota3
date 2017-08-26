@@ -71,7 +71,7 @@ public:
 	bool moving,opening,flooring,music;
 	int map_floornum,map_height,map_width,volume,bgmvolume,ScreenLeft;
 
-	savedata sd[100];
+	savedata sd[1000];
 	int wanttosave;
 
 	// еецШпео╒

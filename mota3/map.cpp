@@ -309,6 +309,55 @@ bool c_map_floor::hasMonster(int id) {
 				return true;
 	return false;
 }
+bool c_map_floor::isLinked()
+{
+	if (dx<0 || ux<0) return false;
+	// (dy, dx) -> (uy, ux)
+	bool visited[30][30];
+	for (int i=0;i<30;i++) for (int j=0;j<30;j++) visited[i][j]=false;
+
+	int dir[4][2]={{-1,0},{0,-1},{1,0},{0,1}};
+
+	queue<int> q;
+	q.push(consts.map_width*dy+dx);
+	visited[dy][dx]=true;
+	
+	while (!q.empty()) {
+		int f=q.front();
+		q.pop();
+		
+		int cy=f/consts.map_width, cx=f%consts.map_width;
+		// bfs
+		c_map_point* point=getinfo(cy, cx);
+		for (int i=0;i<4;i++) {
+			if (point->getSpecial()==203 && i!=0) continue;
+			if (point->getSpecial()==204 && i!=1) continue;
+			if (point->getSpecial()==205 && i!=3) continue;
+			if (point->getSpecial()==206 && i!=2) continue;
+
+			int ny=cy+dir[i][0], nx=cx+dir[i][1];
+			if (ny<0 || ny>=consts.map_height || nx<0 || nx>=consts.map_width) continue;
+			if (ny==uy && nx==ux) return true;
+			c_map_point* np=getinfo(ny, nx);
+			bool cango=false;
+			if (np->isGround()) cango=true;
+			// »¨
+			else if (np->getSpecial()==209) cango=true;
+			// ¼ýÍ·
+			else if (np->getSpecial()==203 && i!=2) cango=true;
+			else if (np->getSpecial()==204 && i!=3) cango=true;
+			else if (np->getSpecial()==205 && i!=1) cango=true;
+			else if (np->getSpecial()==206 && i!=0) cango=true;
+
+			if (cango && !visited[ny][nx]) {
+				visited[ny][nx]=true;
+				q.push(ny*consts.map_width+nx);
+			}
+		}
+	}
+
+	return false;
+}
 void c_map_floor::save(FILE* f)
 {
 	fprintf_s(f,"%d %d %d %d\n",dx,dy,ux,uy);

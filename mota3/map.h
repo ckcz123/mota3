@@ -31,7 +31,7 @@ public:
 	c_map_door* getDoor() {return &door;}
 	c_map_npc* getNpc() {return &npc;}
 	c_monster* getMonster() {return &monster;}
-	bool nearStair() {return door.getType()==7 || door.getType()==8;}
+	bool nearStair(int t) {return door.getType()==t;}
 	bool hasMonster(int id=0) {return id==0?monster.getId()!=0:monster.getId()==id;}
 	bool isGround();
 	hgeSprite* getTypeSprite();
@@ -63,6 +63,7 @@ public:
 	void save(FILE*);//´æµµ
 	void load(FILE*);//¶Áµµ
 	bool hasMonster(int id=0);
+	bool isLinked(); //¸ÃÂ¥´ÓÏÂÂ¥Â¥Ìİµ½ÉÏÂ¥Â¥ÌİÊÇ·ñ¿É´ï
 	c_map_point* getinfo(int x, int y) {return &info[x][y];}
 private:
 	int id;//Â¥²ã±àºÅ

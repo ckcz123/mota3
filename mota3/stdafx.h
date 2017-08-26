@@ -17,6 +17,7 @@
 #include <io.h>
 #include <thread>
 #include <sstream>
+#include <queue>
 #include "constants.h"
 #include "http.h"
 
