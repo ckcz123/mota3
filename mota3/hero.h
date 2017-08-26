@@ -37,6 +37,9 @@ public:
 	int getHP() {return hp;}
 	int getAtk() {return atk;}
 	int getDef() {return def;}
+	int getMoney() {return money;}
+	int yellow() {return yellowkey;}
+	int blue() {return bluekey;}
 	int getNowFloor() {return now_floor;}
 	void setMaxFloor() {if (max_floor<now_floor && now_floor<30) max_floor=now_floor;}
 	void setFlyFloor(int delta=0);

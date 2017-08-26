@@ -9,6 +9,13 @@ struct savedata
 	void init(int _hp, int _atk, int _def, int _nowf, int _hard) {hp=_hp;atk=_atk;def=_def;now_floor=_nowf;hard=_hard;}
 };
 
+struct record
+{
+	int hp, atk, def, money, yellow, blue;
+	wchar_t t1[20], t2[20];
+	void init() {hp=atk=def=money=yellow=blue=0; wcscpy_s(t1, L""); wcscpy_s(t2, L"");}
+};
+
 class constants
 {
 public:
@@ -23,6 +30,7 @@ public:
 	static const int MESSAGE_START = 10;
 	static const int MESSAGE_CHOOSE_HARD = 11;
 	static const int MESSAGE_TEXT = 12;
+	static const int MESSAGE_RANK = 13;
 
 	constants();
 	void init();
@@ -39,11 +47,16 @@ public:
 	void load(FILE*);
 	void finishHint();
 	void printInfo();
+	void upload();
+	void doUpload();
+	void getRank();
+	void doGetRank();
 
 	int msg;
 	vector<wstring> hint;
 	int nowcnt;
 	long lasttime;
+	long starttime;
 
 	float playtime;
 	int step;
@@ -60,6 +73,11 @@ public:
 
 	savedata sd[100];
 	int wanttosave;
+
+	// 排名信息
+	wchar_t rank[20];
+	int currentmax;
+	record rd[20];
 
 	// 正在打开的门
 	c_map_door *map_openingdoor;

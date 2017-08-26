@@ -6,6 +6,8 @@ extern c_map_floor map_floor[50];
 // 勇士信息
 extern c_hero hero;
 
+extern Http http;
+
 constants::constants()
 {
 	hge=NULL;
@@ -25,6 +27,7 @@ void constants::init()
 	time_move=time_open=time_animation=time_floor=0;
 	msg=MESSAGE_START;
 	wand=-1;
+	starttime=0;
 	for (int i=0;i<100;i++) sd[i].hp=0;
 }
 void constants::loadResources()
@@ -321,15 +324,82 @@ void constants::printInfo()
 
 }
 
+void constants::upload()
+{
+	thread t1(&constants::doUpload, this);
+	t1.detach();
+}
+
+void constants::doUpload()
+{
+	char url[200];
+	// 开始时间、难度、当前层数、生命、攻击、防御、金钱、黄钥匙、蓝钥匙、魔杖次数、游戏时间、步数
+	sprintf_s(url, "/service/mota/mota3.php?action=upload&starttime=%ld&hard=%d&floor=%d&hp=%d&atk=%d&def=%d&money=%d&yellow=%d&blue=%d&wand=%d&playtime=%.0f&step=%d",
+		starttime, hard, hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, playtime, step);
+
+	char* output=http.get(http.server, http.port, url, NULL);
+
+	currentmax=0;
+	if (output!=NULL && hero.getNowFloor()==map_floornum-1) {
+		string text(output);
+		stringstream stream;
+		stream << text;
+
+		string s1;
+		stream >> s1 >> currentmax;
+		if (currentmax<=0) currentmax=-1;
+		else {
+			size_t outsize;
+			mbstowcs_s(&outsize, rank, 20, s1.c_str(), 20);
+		}
+		delete output;
+	}
+	else
+		currentmax=-1;
+}
+
+void constants::getRank()
+{
+	msg=MESSAGE_RANK;
+	currentmax=0;
+	for (int i=0; i<10; i++)
+		rd[i].init();
+	thread t2(&constants::doGetRank, this);
+	t2.detach();
+}
+
+void constants::doGetRank()
+{
+	char* output=http.get(http.server, http.port, "/service/mota/mota3.php?action=top", NULL);
+	if (output!=NULL) {
+		string text(output);
+		stringstream stream;
+		stream << text;
+		stream >> currentmax;
+		for (int i=0; i<currentmax; i++) {
+			stream >> rd[i].hp >> rd[i].atk >> rd[i].def >> rd[i].money >> rd[i].yellow >> rd[i].blue;
+			string s1, s2;
+			stream >> s1 >> s2;
+			size_t outsize;
+			mbstowcs_s(&outsize, rd[i].t1, 20, s1.c_str(), 20);
+			mbstowcs_s(&outsize, rd[i].t2, 20, s2.c_str(), 20);
+		}
+		delete output;
+		if (currentmax==0) currentmax=1;
+	}
+	else
+		currentmax=-1;
+}
+
 void constants::save(FILE* f) 
 {
-	fprintf_s(f, "%d %d %d %d %d %d %.2f\n", map_floornum, canfly?1:0, book?1:0, wand, step, hard, playtime);
+	fprintf_s(f, "%d %d %d %d %d %d %.2f %ld\n", map_floornum, canfly?1:0, book?1:0, wand, step, hard, playtime, starttime);
 }
 
 void constants::load(FILE* f)
 {
 	int _fly, _book;
-	fscanf_s(f, "%d %d %d %d %d %d %f", &map_floornum, &_fly, &_book, &wand, &step, &hard, &playtime);
+	fscanf_s(f, "%d %d %d %d %d %d %f %ld", &map_floornum, &_fly, &_book, &wand, &step, &hard, &playtime, &starttime);
 	canfly=_fly==1;
 	book=_book==1;
 	moving=opening=flooring=false;

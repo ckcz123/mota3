@@ -9,6 +9,9 @@ c_hero hero;
 // 常量信息
 constants consts;
 
+// HTTP
+Http http;
+
 
 // encode & decode file
 bool fileConvert(char* from, char* to, bool encode=true) {
@@ -132,6 +135,17 @@ void showMessage(const wchar_t *_s) // 显示提示
 	delete f;
 	delete s_temp;
 }
+void showMax(const wchar_t *s)
+{
+	hgeSprite *s_temp;
+	s_temp=new hgeSprite(consts.ht_skin, 0, 0, 128, 128);
+	s_temp->SetColor(0xBBFFFFFF);
+	s_temp->RenderStretch(16+consts.ScreenLeft, consts.map_height*32-400, consts.map_width*32+consts.ScreenLeft-16, consts.map_height*32-8);
+	GfxFont *f=new GfxFont(L"楷体", 22);
+	f->Print(16+consts.ScreenLeft+8, consts.map_height*32-400+8, L"%s", s);
+	delete f;
+	delete s_temp;
+}
 void init()
 {
 	// 初始化
@@ -171,6 +185,7 @@ bool frameFunc()
 		loadsave();
 		consts.msg=consts.MESSAGE_LOAD;
 	}
+	if (consts.isFree() && consts.hge->Input_GetKeyState(HGEK_P)) consts.getRank();
 	if(consts.hge->Input_GetKeyState(HGEK_G) && consts.isFree()) {
 		if (consts.canfly) { 
 			if (!hero.nearStair()) consts.setMsg(L"只能在楼梯边才能使用跳楼机！");
@@ -213,18 +228,20 @@ bool frameFunc()
 			hero.getBlueKey();
 			consts.msg=consts.MESSAGE_TEXT;
 			consts.nowcnt=0;
+			consts.starttime=time(NULL);
 		}
 		else if (consts.hge->Input_GetKeyState(HGEK_2) && clock()-consts.lasttime>200) {
 			consts.hard=2;
 			hero.getYellowKey();
 			consts.msg=consts.MESSAGE_TEXT;
 			consts.nowcnt=0;
+			consts.starttime=time(NULL);
 		}
 		else if (consts.hge->Input_GetKeyState(HGEK_3) && clock()-consts.lasttime>200) {
 			consts.hard=3;
 			consts.msg=consts.MESSAGE_TEXT;
-			consts.msg=consts.MESSAGE_NONE;
 			consts.nowcnt=0;
+			consts.starttime=time(NULL);
 		}
 	}
 	if (consts.msg==consts.MESSAGE_TEXT) {
@@ -292,8 +309,8 @@ bool frameFunc()
 		}
 	}
 
-	// 胜利or失败
-	if (consts.msg==consts.MESSAGE_WIN && consts.hge->Input_GetKeyState(HGEK_ENTER)) consts.msg=consts.MESSAGE_START;
+	// 胜利
+	if (consts.msg==consts.MESSAGE_WIN && consts.hge->Input_GetKeyState(HGEK_ENTER)) init();
 	// 重新开始
 	if (consts.msg==consts.MESSAGE_RESTART) {
 		if (consts.hge->Input_GetKeyState(HGEK_ENTER))
@@ -363,35 +380,9 @@ bool frameFunc()
 		else {
 			hero.npc();
 		}
-		/*
-		if (npcid>=40 && npcid<=44)
-			hero.npc();
-
-		if (npcid>=45 && npcid<=50)
-		{
-			if(consts.hge->Input_GetKeyState(HGEK_1) && clock()-consts.lasttime>200) {
-				hero.npc(1);consts.lasttime=clock();
-			}
-			else if(consts.hge->Input_GetKeyState(HGEK_2) && clock()-consts.lasttime>200) {
-				hero.npc(2);consts.lasttime=clock();
-			}
-			else if(consts.hge->Input_GetKeyState(HGEK_3) && clock()-consts.lasttime>200) {
-				hero.npc(3);consts.lasttime=clock();
-			}
-		}
-
-		if (npcid==51 || npcid==52 || npcid>=55)
-			hero.npc();
-
-		if(npcid==53 || npcid==54)
-		{
-			if(consts.hge->Input_GetKeyState(HGEK_1)) hero.npc(1);
-			else hero.npc();
-		}
-		*/
 	}
 
-	if ((consts.msg==consts.MESSAGE_FLYING || consts.msg==consts.MESSAGE_NPC) && consts.hge->Input_GetKeyState(HGEK_ENTER))
+	if ((consts.msg==consts.MESSAGE_FLYING || consts.msg==consts.MESSAGE_NPC || consts.msg==consts.MESSAGE_RANK) && consts.hge->Input_GetKeyState(HGEK_ENTER))
 		consts.msg=consts.MESSAGE_NONE;
 
 	consts.goOn(&hero, &map_floor[hero.getNowFloor()], dt);
@@ -501,8 +492,30 @@ bool renderFunc()
 		showMessage(L"你想返回主界面吗？\n\n[ENTER] 确认\n[ESC] 取消");
 		break;
 	case consts.MESSAGE_WIN:
-		showMessage(L"YY和XX同学顺利地从塔中\n逃生，从此过上了快乐幸福的\n生活。\n\nHAPPY END.");
-		break;
+		{
+			wchar_t ss[200];
+			wsprintf(ss, L"恭喜通关！您的分数是 %d。\n", hero.getHP());
+
+			if (consts.hard!=3) {
+				wcscat_s(ss, L"简单或普通难度将不记录您的成绩。\n");
+			}
+			// uploading...
+			else if (consts.currentmax==0) {
+				wcscat_s(ss, L"正在上传成绩... 请稍后\n");
+			}
+			// error
+			else if (consts.currentmax<0) {
+				wcscat_s(ss, L"成绩上传失败，请检查网络设置。\n");
+			}
+			else {
+				wchar_t tmp[200];
+				wsprintf(tmp, L"当前排名%s，当前MAX %d。\n", consts.rank, consts.currentmax);
+				wcscat_s(ss, tmp);
+			}
+			wcscat_s(ss, L"（P键可查看当前MAX记录信息。）\n欢迎截图到发布帖下进行炫耀！\n\n[ENTER] 重新开始");
+			showMessage(ss);
+			break;
+		}
 	case consts.MESSAGE_HINT:
 		showMessage(consts.hint.at(consts.nowcnt).c_str());
 		break;
@@ -538,6 +551,42 @@ bool renderFunc()
 			wchar_t ss[100];
 			wsprintf(ss,L"我要飞往 %d 楼\n[↑] [↓] 更改楼号\n[ENTER] 确认飞行\n[ESC] 取消",hero.getFlyFloor());
 			showMessage(ss);
+			break;
+		}
+	case consts.MESSAGE_RANK:
+		{
+			wchar_t ss[1200];
+			if (consts.currentmax<0) {
+				wsprintf(ss, L"拉取MAX记录失败，请检查网络连接，\n或在贴吧下进行反馈。\n\n[ENTER] 确定");
+				showMessage(ss);
+			}
+			else if (consts.currentmax==0) {
+				wsprintf(ss, L"正在拉取MAX记录，请稍后...\n这可能需要几秒钟。\n\n[ENTER] 取消");
+				showMessage(ss);
+			}
+			else {
+				wcscpy_s(ss, L"");
+
+				for (int i=0; i<10; i++) {
+					wchar_t tmp[100];
+					wsprintf(tmp, L"TOP%2d: %-8d", i+1, consts.rd[i].hp);
+					wcscat_s(ss, tmp);
+					if (consts.rd[i].hp>0) {
+						wsprintf(tmp, L"  (%s %s)", consts.rd[i].t1, consts.rd[i].t2);
+						wcscat_s(ss, tmp);
+					}
+					if (i<=2) {
+						wsprintf(tmp, L"\n[%d, %d, %d, %d, %d, %d]",
+							consts.rd[i].hp, consts.rd[i].atk, consts.rd[i].def, consts.rd[i].money, consts.rd[i].yellow, consts.rd[i].blue);
+						wcscat_s(ss, tmp);
+					}
+					wcscat_s(ss, L"\n");
+				}
+
+				wcscat_s(ss, L"\n[ENTER] 确定");
+				showMax(ss);
+			}
+
 			break;
 		}
 	default:

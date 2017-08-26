@@ -292,6 +292,7 @@ void c_hero::beat(c_monster* monster)
 	if (now_floor==5 && id==15 && !map_floor[now_floor].hasMonster(15)) {
 		// 5楼开门
 		map_floor[now_floor].getinfo(3,6)->openSpecial();
+		consts.upload();
 	}
 	if (now_floor==6 && x>=4 && x<=6 && y>=6 && y<=8) {
 		// 6楼中间开门
@@ -318,6 +319,7 @@ void c_hero::beat(c_monster* monster)
 	if (now_floor==10 && !map_floor[now_floor].hasMonster()) {
 		// 10楼机关门
 		map_floor[now_floor].getinfo(3,6)->openSpecial();
+		consts.upload();
 	}
 
 
