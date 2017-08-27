@@ -77,7 +77,7 @@ public:
 	// 排名信息
 	wchar_t rank[20];
 	int currentmax;
-	record rd[20];
+	record rd[4][20];
 
 	// 正在打开的门
 	c_map_door *map_openingdoor;

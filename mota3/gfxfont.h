@@ -47,7 +47,7 @@ public:
 			0,
 			0,
 			0,
-			(bBold)?FW_BOLD:FW_NORMAL,
+			(bBold)?FW_BLACK:FW_NORMAL,
 			bItalic,
 			FALSE,
 			FALSE,

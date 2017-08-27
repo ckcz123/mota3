@@ -397,7 +397,25 @@ bool frameFunc()
 		}
 	}
 
-	if ((consts.msg==consts.MESSAGE_FLYING || consts.msg==consts.MESSAGE_NPC || consts.msg==consts.MESSAGE_RANK) && consts.hge->Input_GetKeyState(HGEK_ENTER))
+	if (consts.msg==consts.MESSAGE_RANK) {
+		if(consts.hge->Input_GetKeyState(HGEK_DOWN) && consts.currentmax>0 && clock()-consts.lasttime>100)
+		{
+			consts.nowcnt++; if (consts.nowcnt>4) consts.nowcnt=4;
+			consts.lasttime=clock();
+		}
+		if(consts.hge->Input_GetKeyState(HGEK_UP) && consts.currentmax>0 && clock()-consts.lasttime>100)
+		{
+			consts.nowcnt--; if (consts.nowcnt==0) consts.nowcnt=1;
+			consts.lasttime=clock();
+		}
+		if(consts.hge->Input_GetKeyState(HGEK_ENTER))
+		{
+			consts.msg=consts.MESSAGE_NONE;
+			consts.nowcnt=0;
+		}
+	}
+
+	if ((consts.msg==consts.MESSAGE_FLYING || consts.msg==consts.MESSAGE_NPC) && consts.hge->Input_GetKeyState(HGEK_ENTER))
 		consts.msg=consts.MESSAGE_NONE;
 
 	consts.goOn(&hero, &map_floor[hero.getNowFloor()], dt);
@@ -517,11 +535,8 @@ bool renderFunc()
 			wchar_t ss[200];
 			wsprintf(ss, L"恭喜通关！您的分数是 %d。\n", hero.getHP());
 
-			if (consts.hard!=3) {
-				wcscat_s(ss, L"简单或普通难度将不记录您的成绩。\n");
-			}
 			// uploading...
-			else if (consts.currentmax==0) {
+			if (consts.currentmax==0) {
 				wcscat_s(ss, L"正在上传成绩... 请稍后\n");
 			}
 			// error
@@ -530,10 +545,10 @@ bool renderFunc()
 			}
 			else {
 				wchar_t tmp[200];
-				wsprintf(tmp, L"当前排名%s，当前MAX %d。\n", consts.rank, consts.currentmax);
+				wsprintf(tmp, L"当前难度下排名%s，当前MAX %d。\n", consts.rank, consts.currentmax);
 				wcscat_s(ss, tmp);
 			}
-			wcscat_s(ss, L"（P键可查看当前MAX记录信息。）\n欢迎截图到发布帖下进行炫耀！\n\n[ENTER] 重新开始");
+			wcscat_s(ss, L"（P键可查看各难度MAX记录信息。）\n欢迎截图到发布帖下进行炫耀！\n\n[ENTER] 重新开始");
 			showMessage(ss);
 			break;
 		}
@@ -586,25 +601,26 @@ bool renderFunc()
 				showMessage(ss);
 			}
 			else {
-				wcscpy_s(ss, L"");
+				wsprintf(ss, L"%s难度下MAX数据：\n", consts.getHardText(consts.nowcnt));
 
 				for (int i=0; i<10; i++) {
+					record* r=&consts.rd[consts.nowcnt-1][i];
 					wchar_t tmp[100];
-					wsprintf(tmp, L"TOP%2d: %-8d", i+1, consts.rd[i].hp);
+					wsprintf(tmp, L"TOP%2d: %-8d", i+1, r->hp);
 					wcscat_s(ss, tmp);
-					if (consts.rd[i].hp>0) {
-						wsprintf(tmp, L"  (%s %s)", consts.rd[i].t1, consts.rd[i].t2);
+					if (consts.rd[consts.nowcnt-1][i].hp>0) {
+						wsprintf(tmp, L"  (%s %s)", r->t1, r->t2);
 						wcscat_s(ss, tmp);
 					}
 					if (i<=2) {
 						wsprintf(tmp, L"\n[%d, %d, %d, %d, %d, %d]",
-							consts.rd[i].hp, consts.rd[i].atk, consts.rd[i].def, consts.rd[i].money, consts.rd[i].yellow, consts.rd[i].blue);
+							r->hp, r->atk, r->def, r->money, r->yellow, r->blue);
 						wcscat_s(ss, tmp);
 					}
 					wcscat_s(ss, L"\n");
 				}
 
-				wcscat_s(ss, L"\n[ENTER] 确定");
+				wcscat_s(ss, L"[↑][↓] 其他难度   [ENTER] 确定");
 				showMax(ss);
 			}
 

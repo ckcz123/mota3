@@ -48,7 +48,7 @@ void constants::loadResources()
 	s_ground=new hgeSprite(ht_map,0,0,32,32);
 	s_wall=new hgeSprite(ht_map,32,0,32,32);
 	s_wall_hidden=new hgeSprite(ht_map,32,0,32,32);
-	s_wall_hidden->SetColor(0xD0FFFFFF);
+	s_wall_hidden->SetColor(0xCCFFFFFF);
 	s_wall2=new hgeSprite(ht_map,64,0,32,32);
 	s_water=new hgeSprite(ht_map,32,32,32,32);
 	s_sky=new hgeSprite(ht_map,0,32,32,32);
@@ -327,8 +327,10 @@ void constants::getRank()
 {
 	msg=MESSAGE_RANK;
 	currentmax=0;
-	for (int i=0; i<10; i++)
-		rd[i].init();
+	for (int x=0;x<4;x++)
+		for (int i=0; i<10; i++)
+			rd[x][i].init();
+	nowcnt=1;
 	thread t2(&constants::doGetRank, this);
 	t2.detach();
 }
@@ -340,14 +342,17 @@ void constants::doGetRank()
 		string text(output);
 		stringstream stream;
 		stream << text;
-		stream >> currentmax;
-		for (int i=0; i<currentmax; i++) {
-			stream >> rd[i].hp >> rd[i].atk >> rd[i].def >> rd[i].money >> rd[i].yellow >> rd[i].blue;
-			string s1, s2;
-			stream >> s1 >> s2;
-			size_t outsize;
-			mbstowcs_s(&outsize, rd[i].t1, 20, s1.c_str(), 20);
-			mbstowcs_s(&outsize, rd[i].t2, 20, s2.c_str(), 20);
+
+		for (int x=0;x<4;x++) {
+			stream >> currentmax;
+			for (int i=0; i<currentmax; i++) {
+				stream >> rd[x][i].hp >> rd[x][i].atk >> rd[x][i].def >> rd[x][i].money >> rd[x][i].yellow >> rd[x][i].blue;
+				string s1, s2;
+				stream >> s1 >> s2;
+				size_t outsize;
+				mbstowcs_s(&outsize, rd[x][i].t1, 20, s1.c_str(), 20);
+				mbstowcs_s(&outsize, rd[x][i].t2, 20, s2.c_str(), 20);
+			}
 		}
 		delete output;
 		if (currentmax==0) currentmax=1;
