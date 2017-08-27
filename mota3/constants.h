@@ -40,7 +40,7 @@ public:
 	void setMsg(const wchar_t*);
 	bool isFree() {return !moving && !opening && !flooring && msg==MESSAGE_NONE && clock()-lasttime>150;}
 	wchar_t* getHardText(int h) {
-		return h==1?L"简单":h==2?L"普通":h==3?L"困难":L"";
+		return h==1?L"简单":h==2?L"普通":h==3?L"困难":h==4?L"噩梦":L"";
 	}
 	void goOn(c_hero*, c_map_floor*, float);
 	void save(FILE*);
@@ -61,7 +61,7 @@ public:
 	float playtime;
 	int step;
 
-	// 难度，1简单2普通3困难
+	// 难度，1简单2普通3困难4噩梦
 	int hard;
 
 	bool canfly,book;

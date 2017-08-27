@@ -48,7 +48,7 @@ void constants::loadResources()
 	s_ground=new hgeSprite(ht_map,0,0,32,32);
 	s_wall=new hgeSprite(ht_map,32,0,32,32);
 	s_wall_hidden=new hgeSprite(ht_map,32,0,32,32);
-	s_wall_hidden->SetColor(0xCCFFFFFF);
+	s_wall_hidden->SetColor(0xD0FFFFFF);
 	s_wall2=new hgeSprite(ht_map,64,0,32,32);
 	s_water=new hgeSprite(ht_map,32,32,32,32);
 	s_sky=new hgeSprite(ht_map,0,32,32,32);
@@ -280,6 +280,10 @@ void constants::printInfo()
 	else if (hard==3) {
 		f->SetColor(0xFFFF0000);
 		f->Print(64, 356, L"困难难度");
+	}
+	else if (hard==4) {
+		f->SetColor(0xFFFF0000);
+		f->Print(64, 356, L"噩梦难度");
 	}
 	delete f;
 

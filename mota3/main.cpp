@@ -242,6 +242,20 @@ bool frameFunc()
 			consts.nowcnt=0;
 			consts.starttime=time(NULL);
 		}
+		else if (consts.hge->Input_GetKeyState(HGEK_4) && clock()-consts.lasttime>200) {
+			consts.hard=4;
+			consts.msg=consts.MESSAGE_TEXT;
+			consts.nowcnt=0;
+			consts.starttime=time(NULL);
+
+			// 噩梦难度：所有纯血门均不可开启
+			map_floor[4].getinfo(1,4)->init(0,0,0,4);
+			map_floor[5].getinfo(12,1)->init(0,0,0,4);
+			map_floor[6].getinfo(4,1)->init(0,0,0,4);
+			map_floor[8].getinfo(11,8)->init(0,0,0,4);
+			map_floor[10].getinfo(12,9)->init(0,0,0,4);
+
+		}
 	}
 	if (consts.msg==consts.MESSAGE_TEXT) {
 		if(consts.hge->Input_GetKeyState(HGEK_ENTER) && clock()-consts.lasttime>200) {
@@ -416,9 +430,11 @@ bool renderFunc()
 		float len=f->GetTextSize(L"[2] 普通（送一黄，减伤5%%）").cx;
 		float left=16*consts.map_width+consts.ScreenLeft-len/2;
 		float height=consts.map_height*32*0.6;
+		f->Print(left, height-32, L"请选择难度：");
 		f->Print(left, height, L"[1] 简单（送二黄一蓝，减伤20%%）");
 		f->Print(left, height+28, L"[2] 普通（送一黄，减伤8%%）");
-		f->Print(left, height+56, L"[3] 困难");
+		f->Print(left, height+56, L"[3] 困难（正常模式）");
+		f->Print(left, height+84, L"[4] 噩梦（所有纯血门均不可开启）");
 		delete f;
 		consts.hge->Gfx_EndScene();
 		return false;
@@ -454,6 +470,10 @@ bool renderFunc()
 		else if (consts.hard==3) {
 			f->SetColor(0xFFFF0000);
 			f->Print(64, 356, L"困难难度");
+		}
+		else if (consts.hard==4) {
+			f->SetColor(0xFFFF0000);
+			f->Print(64, 356, L"噩梦难度");
 		}
 		delete f;
 		consts.hge->Gfx_EndScene();
