@@ -354,6 +354,10 @@ void c_hero::beat(c_monster* monster)
 		map_floor[now_floor].getinfo(3,6)->openSpecial();
 		consts.upload();
 	}
+	if (now_floor==12 && id==23 && !map_floor[now_floor].hasMonster(23)) {
+		// 12楼机关门
+		map_floor[now_floor].getinfo(2, 10)->openSpecial();
+	}
 
 
 	consts.lasttime=clock();
@@ -448,6 +452,9 @@ void c_hero::npc(int select)
 			consts.setMsg(msg);
 			break;
 		}
+	case 49:
+		consts.setMsg(L"徘徊之影\t你可能要把本层所有高级卫兵杀死才\n能打开商店门前的机关门。");
+		break;
 	default:
 		consts.setMsg(L"勇士\t这是啥？");
 		break;

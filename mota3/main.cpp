@@ -257,6 +257,7 @@ bool frameFunc()
 			map_floor[6].getinfo(4,1)->init(0,0,0,4);
 			map_floor[8].getinfo(11,8)->init(0,0,0,4);
 			map_floor[10].getinfo(12,9)->init(0,0,0,4);
+			map_floor[12].getinfo(8,1)->init(0,0,0,4);
 
 		}
 	}

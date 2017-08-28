@@ -273,7 +273,8 @@ bool c_map_floor::canMove(int x,int y,int f)
 		int spe=info[y][x].getSpecial();
 		if (spe!=210 && spe!=211) return true;
 		int sx=x+hero.dir[0][f],sy=y+hero.dir[1][f];
-		if (info[sy][sx].isGround() || info[sy][sx].getSpecial()==209) return true;
+		if (sx>=0 && sx<consts.map_width && sy>=0 && sy<consts.map_height &&
+			(info[sy][sx].isGround() || info[sy][sx].getSpecial()==209)) return true;
 		return false;
 	}
 	return false;
