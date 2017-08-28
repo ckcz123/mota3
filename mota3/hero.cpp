@@ -29,11 +29,11 @@ void c_hero::init()
 		for (int j=0; j<4; j++)
 			sprites[i][j]=new hgeSprite(consts.ht_hero, 32*i, 33*j, 32, 33);
 }
-float c_hero::nextX()
+int c_hero::nextX()
 {
 	return x+dir[0][face];
 }
-float c_hero::nextY()
+int c_hero::nextY()
 {
 	return y+dir[1][face];
 }
@@ -133,6 +133,15 @@ bool c_hero::moveComplete()
 			if (special==201) {
 				map_floor[now_floor].setSpecial(x,y,202);
 			}
+			if (special==210 || special==211) {
+				map_floor[now_floor].setSpecial(x,y,special==210?0:209);
+				if (map_floor[now_floor].getSpecial(x+dir[0][face],y+dir[1][face])==0) {
+					map_floor[now_floor].setSpecial(x+dir[0][face],y+dir[1][face],210);
+				}
+				else if (map_floor[now_floor].getSpecial(x+dir[0][face],y+dir[1][face])==209) {
+					map_floor[now_floor].setSpecial(x+dir[0][face],y+dir[1][face],211);
+				}
+			}
 		}
 		consts.step++;
 	}
@@ -187,6 +196,29 @@ void c_hero::downstair()
 }
 void c_hero::specialMove()
 {
+}
+void c_hero::turn()
+{
+	if (face==0) face=2;
+	else if (face==2) face=3;
+	else if (face==3) face=1;
+	else face=0;
+}
+void c_hero::useWand()
+{
+	if (consts.wand<=0) return;
+	int nx=nextX(), ny=nextY();
+	if (nx>=0 && nx<consts.map_width && ny>=0 && ny<consts.map_height) {
+		c_map_point* point=map_floor[now_floor].getinfo(ny,nx);
+		if (point->isGround()) {
+			point->setSpecial(210);
+			consts.wand--;
+		}
+		else if (point->getSpecial()==209) {
+			point->setSpecial(211);
+			consts.wand--;
+		}
+	}
 }
 void c_hero::fly()
 {
@@ -395,11 +427,11 @@ void c_hero::npc(int select)
 				break;
 			}
 			else {
-				if (money<100) {
+				if (money<80) {
 					consts.setMsg(L"½ð±Ò²»×ã¡£");
 					break;
 				}
-				money-=100;
+				money-=80;
 				consts.wand++;
 				break;
 			}

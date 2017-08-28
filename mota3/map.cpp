@@ -80,6 +80,10 @@ void c_map_point::show(GfxFont* f,int i,int j)
 		case 210:
 			consts.s_box->Render(j*32+consts.ScreenLeft,i*32);
 			break;
+		case 211:
+			consts.s_flower->Render(j*32+consts.ScreenLeft,i*32);
+			consts.s_boxed->Render(j*32+consts.ScreenLeft,i*32);
+			break;
 		default:
 			break;
 		}
@@ -269,8 +273,7 @@ bool c_map_floor::canMove(int x,int y,int f)
 		int spe=info[y][x].getSpecial();
 		if (spe!=210 && spe!=211) return true;
 		int sx=x+hero.dir[0][f],sy=y+hero.dir[1][f];
-		if (!info[sy][sx].isGround()) return false;
-		if (info[sy][sx].getSpecial()==0 || info[sy][sx].getSpecial()==209) return true;
+		if (info[sy][sx].isGround() || info[sy][sx].getSpecial()==209) return true;
 		return false;
 	}
 	return false;

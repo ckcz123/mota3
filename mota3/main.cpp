@@ -171,6 +171,10 @@ bool frameFunc()
 	if(consts.isFree() && consts.hge->Input_GetKeyState(HGEK_LEFT) && hero.canMove(1))consts.moving=true;
 	if(consts.isFree() && consts.hge->Input_GetKeyState(HGEK_RIGHT) && hero.canMove(2))consts.moving=true;
 	if(consts.isFree() && consts.hge->Input_GetKeyState(HGEK_UP) && hero.canMove(3))consts.moving=true;
+	if(consts.isFree() && consts.hge->Input_GetKeyState(HGEK_Z) && clock()-consts.lasttime>200) {
+		hero.turn();
+		consts.lasttime=clock();
+	}
 	if(consts.hge->Input_GetKeyState(HGEK_Q) && consts.isFree()) consts.msg=consts.MESSAGE_RESTART;
 	if(consts.hge->Input_GetKeyState(HGEK_S) && consts.isFree()) {
 		loadsave();
@@ -199,11 +203,7 @@ bool frameFunc()
 
 	// Ê¹ÓÃÄ§ÕÈ
 	if (consts.isFree() && consts.hge->Input_GetKeyState(HGEK_X) && consts.wand>0) {
-		c_map_point* point=map_floor[hero.getNowFloor()].getinfo(hero.getY(), hero.getX());
-		if (point->isGround()) {
-			point->setSpecial(209);
-			consts.wand--;
-		}
+		hero.useWand();
 	}
 
 	if (consts.msg==consts.MESSAGE_START) {

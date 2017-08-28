@@ -8,8 +8,8 @@ public:
 
 	c_hero();//构造函数
 	void init();
-	float nextX();//下一步的横坐标
-	float nextY();//下一步的纵坐标
+	int nextX();//下一步的横坐标
+	int nextY();//下一步的纵坐标
 	bool canMove(int);//是否可以朝某个方向移动
 	bool moveComplete();//移动是否完成
 	bool openRedDoor();//打开红色的门
@@ -18,6 +18,7 @@ public:
 	void upstair();//上楼
 	void downstair();//下楼
 	void specialMove();// 传送
+	void turn(); // 转向
 	void fly(); //楼层飞跃
 	void show();
 	void printInfo();//输出勇士信息
@@ -31,6 +32,7 @@ public:
 	bool nearDownStair() {return nearStair(8);}
 	bool nearUpStair() {return nearStair(7);}
 	bool canReborn();
+	void useWand();
 	void getYellowKey() {yellowkey++;}
 	void getBlueKey() {bluekey++;}
 	void getRedKey() {redkey++;}
