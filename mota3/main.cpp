@@ -94,7 +94,10 @@ void load(int id)
 	fopen_s(&loadfile,s,"r");
 	consts.load(loadfile);
 	hero.load(loadfile);
-	for(int i=0;i<consts.map_floornum;i++)map_floor[i].load(loadfile);
+	for(int i=0;i<consts.nowcnt;i++)map_floor[i].load(loadfile);
+	if (consts.map_floornum<consts.nowcnt)
+		consts.map_floornum=consts.nowcnt;
+	consts.nowcnt=0;
 	fclose(loadfile);
 	consts.setMsg(L"¶Áµµ³É¹¦£¡");
 }

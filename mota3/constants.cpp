@@ -370,7 +370,7 @@ void constants::save(FILE* f)
 void constants::load(FILE* f)
 {
 	int _fly, _book;
-	fscanf_s(f, "%d %d %d %d %d %d %f %ld", &map_floornum, &_fly, &_book, &wand, &step, &hard, &playtime, &starttime);
+	fscanf_s(f, "%d %d %d %d %d %d %f %ld", &nowcnt, &_fly, &_book, &wand, &step, &hard, &playtime, &starttime);
 	canfly=_fly==1;
 	book=_book==1;
 	moving=opening=flooring=false;

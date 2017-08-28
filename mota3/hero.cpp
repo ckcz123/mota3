@@ -439,6 +439,15 @@ void c_hero::npc(int select)
 	case 47:
 		consts.setMsg(L"徘徊之影\t注意你的钥匙数量，多探路。");
 		break;
+	case 48:
+		{
+			const wchar_t* msg[50]={
+				L"徘徊之影\t你既然通过了前两区来到了这里，想\n必已经对本塔的引怪和刷钱这两个技\n巧都比较熟悉了吧。\n\n那么，欢迎来到三区。",
+				L"勇士\t（这货... 这语气... 真不是魔王派\n来的卧底吗？）"
+			};
+			consts.setMsg(msg);
+			break;
+		}
 	default:
 		consts.setMsg(L"勇士\t这是啥？");
 		break;
