@@ -29,7 +29,6 @@ void constants::init()
 	time_move=time_open=time_animation=time_floor=0;
 	msg=MESSAGE_START;
 	wand=-1;
-	book=true;
 	starttime=0;
 	for (int i=0;i<1000;i++) sd[i].hp=0;
 }
