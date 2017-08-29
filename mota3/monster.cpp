@@ -37,8 +37,8 @@ void c_monster::init(int t)
 	case 20:wcscpy_s(name,L"影子战士");position=19;hp=333;atk=140;def=60;money=20;break;
 	case 21:wcscpy_s(name,L"初级卫兵");position=20;hp=300;atk=84;def=30;money=11;break;
 	case 22:wcscpy_s(name,L"中级卫兵");position=21;hp=600;atk=136;def=65;money=18;break;
-	case 23:wcscpy_s(name,L"高级卫兵");position=22;hp=1;atk=271;def=0;money=60;special=1;break;
-	case 24:wcscpy_s(name,L"双手剑士");position=23;hp=1200;atk=620;def=520;money=65;break;
+	case 23:wcscpy_s(name,L"高级卫兵");position=22;hp=500;atk=297;def=119;money=23;break;
+	case 24:wcscpy_s(name,L"双手剑士");position=23;hp=456;atk=584;def=0;money=22;break;
 	case 25:wcscpy_s(name,L"冥战士");position=24;hp=2000;atk=680;def=590;money=70;break;
 	case 26:wcscpy_s(name,L"初级骑士");position=25;hp=850;atk=350;def=200;money=45;break;
 	case 27:wcscpy_s(name,L"高级骑士");position=26;hp=900;atk=750;def=650;money=77;break;
@@ -80,7 +80,8 @@ void c_monster::show(GfxFont* f,int i,int j)
 				f->SetColor(0xFF96CDCD);
 			else if (damage<=hp*3/4)
 				f->SetColor(0xFFEE7942);
-			else f->SetColor(0xFFEE3B3B);
+			else
+				f->SetColor(0xFFEE3B3B);
 			if (damage>=c_hero::MAX_DAMAGE)
 				f->Print(j*32+consts.ScreenLeft, i*32+20, L"???");
 			else if (damage<100000)

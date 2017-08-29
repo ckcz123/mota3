@@ -38,7 +38,7 @@ public:
 	void destroy();
 	void setMsg(const wchar_t*[50]);
 	void setMsg(const wchar_t*);
-	bool isFree() {return !moving && !opening && !flooring && msg==MESSAGE_NONE && clock()-lasttime>150;}
+	bool isFree() {return !moving && !opening && !flooring && !ended && msg==MESSAGE_NONE && clock()-lasttime>150;}
 	wchar_t* getHardText(int h) {
 		return h==1?L"简单":h==2?L"普通":h==3?L"困难":h==4?L"噩梦":L"";
 	}
@@ -51,6 +51,8 @@ public:
 	void doUpload();
 	void getRank();
 	void doGetRank();
+	void normalEnd();
+	void goodEnd();
 
 	int msg;
 	vector<wstring> hint;
@@ -58,7 +60,7 @@ public:
 	long lasttime;
 	long starttime;
 
-	float playtime;
+	float playtime, lefttime;
 	int step;
 
 	// 难度，1简单2普通3困难4噩梦
@@ -68,7 +70,7 @@ public:
 	// 魔杖
 	int wand;
 
-	bool moving,opening,flooring,music;
+	bool moving,opening,flooring,music,ended;
 	int map_floornum,map_height,map_width,volume,bgmvolume,ScreenLeft;
 
 	savedata sd[1000];

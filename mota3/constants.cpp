@@ -20,7 +20,8 @@ constants::constants()
 
 void constants::init()
 {
-	canfly=book=moving=opening=flooring=false;
+	canfly=book=moving=opening=flooring=ended=false;
+	lefttime=100.0;
 	playtime=0.0;
 	step=0;
 	hard=0;
@@ -188,6 +189,65 @@ void constants::goOn(c_hero* hero, c_map_floor* currFloor, float dt)
 		time_animation-=0.1;
 		currFloor->animation();
 	}
+
+	if (!ended && lefttime<80 && lefttime>=0)
+		lefttime-=dt;
+	if (lefttime<=0) {
+		lefttime=0;
+		normalEnd();
+	}
+}
+void constants::normalEnd()
+{
+	ended=true;
+	const wchar_t* msg[50]={
+		L"塔倒了，勇士最终还是没有逃出来。",
+		L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们一鼓作气，将怪物\n打退，并想办法封锁了异次元之门。\n青叶帝国又恢复了以往的平静。",
+		L"国王为勇士搭建了一个纪念碑，以纪\n念勇士的卓越贡献。可预见的是，勇\n士的名字将被历史的长河所记忆，被\n后人所不断传颂。",
+		L"然而，人死了，什么都看不到了。",
+		L"“我成功了吗？帝国获胜了吗？好想\n好想看到啊...”",
+		L"NORMAL END."
+	};
+	setMsg(msg);
+}
+void constants::goodEnd()
+{
+	ended=true;
+	bool trueend=true;
+	for (int i=0;i<map_floornum;i++)
+		if (map_floor[i].hasMonster()) {
+			trueend=false;
+			break;
+		}
+
+	if (trueend) {
+		const wchar_t* msg[50]={
+			L"勇士携带着水晶碎片逃出了这座塔，\n回到了帝国。",
+			L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们压力大减，防线一\n鼓作气向前推进，终于看到了胜利的\n曙光。",
+			L"作为帝国现在最厉害的武士之一，勇\n士一马当先冲到了异次元大门前。突\n然！怪物们开始不顾一切地进行反\n扑，勇士独木难支，很快便身受重伤\n。",
+			L"被援军救下来后，紧急送去治疗，然\n而伤势过重无力回天。被欢呼声所惊\n醒，回光返照的勇士，看着窗外已被\n封闭的异次元之门，流下了热泪。",
+			L"正在意识弥留之际，突然怀中一阵温\n暖袭来，水晶碎片发出了耀眼的光芒\n。睁眼一看，自己伤口全部消失了，\n精神也恢复到了巅峰时刻！"
+			L"勇士也拥有了重生的能力！",
+			L"战争结束后，国王给勇士分封了一大\n块领地，并建了一座纪念碑以纪念勇\n士在这场战斗中的的卓越贡献。",
+			L"......百年后......",
+			L"拥有一大块领地，膝下儿女成群，享\n受了一生的荣华富贵，现已白发苍苍\n躺在床上垂垂老矣的勇士，将自己贴\n身水晶摘下，安详地闭上了眼睛。",
+			L"“我这一生，已经再无遗憾了。”",
+			L"TRUE END."
+		};
+		setMsg(msg);
+	}
+	else {
+		const wchar_t* msg[50]={
+			L"勇士逃出了这座塔，回到了帝国。",
+			L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们压力大减，防线一\n鼓作气向前推进，终于看到了胜利的\n曙光。",
+			L"作为帝国现在最厉害的武士之一，勇\n士一马当先冲到了异次元大门前。\n突然！怪物们开始不顾一切地进行反\n扑，勇士独木难支，很快便身受重伤\n。",
+			L"被援军救下来后，紧急送去治疗，然\n而伤势过重无力回天。被欢呼声所惊\n醒，回光返照的勇士，看着窗外已被\n封闭的异次元之门，流下了热泪。",
+			L"战争结束后，国王为勇士搭建了一个纪念碑，以纪\n念勇士的卓越贡献。可预见的是，勇\n士的名字将被历史的长河所记忆，被\n后人所不断传颂。",
+			L"“帝国终于是赢了，终于赢了... 只\n是，还是有那么一点遗憾的啊...”",
+			L"GOOD END."
+		};
+		setMsg(msg);
+	}
 }
 void constants::finishHint()
 {
@@ -239,14 +299,20 @@ void constants::finishHint()
 		default:
 			break;
 		}
+		map_npc=NULL;
 		
+	}
+	else if (ended) {
+		upload();
+		msg=MESSAGE_WIN;
 	}
 	else
 		msg=MESSAGE_NONE;
-	map_npc=NULL;
 }
 void constants::printInfo()
 {
+	if (lefttime<80)
+		hgef->printf(ScreenLeft+16,16,HGETEXT_LEFT,"%.2f",lefttime);
 	s_step->Render(ScreenLeft+map_width*32+24, 340);
 	hgef->printf(ScreenLeft+map_width*32+68, 340, HGETEXT_LEFT, "%d", step);
 	int ptm=playtime;
@@ -301,7 +367,7 @@ void constants::doUpload()
 	char url[200];
 	// 开始时间、难度、当前层数、生命、攻击、防御、金钱、黄钥匙、蓝钥匙、魔杖次数、游戏时间、步数
 	sprintf_s(url, "/service/mota/mota3.php?action=upload&starttime=%ld&hard=%d&floor=%d&hp=%d&atk=%d&def=%d&money=%d&yellow=%d&blue=%d&wand=%d&playtime=%.0f&step=%d",
-		starttime, hard, hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, playtime, step);
+		starttime, hard, ended?map_floornum-1:hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, playtime, step);
 
 	char* output=http.get(http.server, http.port, url, NULL);
 

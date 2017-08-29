@@ -190,7 +190,8 @@ bool frameFunc()
 	if (consts.isFree() && consts.hge->Input_GetKeyState(HGEK_P)) consts.getRank();
 	if(consts.hge->Input_GetKeyState(HGEK_G) && consts.isFree()) {
 		if (consts.canfly) { 
-			if (!hero.nearStair()) consts.setMsg(L"只有在楼梯旁才能使用传送器！");
+			if (consts.lasttime<80.) consts.setMsg(L"传送器好像失效了！");
+			else if (!hero.nearStair()) consts.setMsg(L"只有在楼梯旁才能使用传送器！");
 			else {
 				hero.setFlyFloor();
 				consts.msg=consts.MESSAGE_FLYING;
@@ -650,8 +651,13 @@ bool renderFunc()
 				showMessage(L"徘徊之影\t100金币一次，可增加魔杖使用次数。\n\n[ENTER] 我要\n[ESC] 离开");
 			}
 		}
-
-
+		// 12楼商店
+		if (id==50) {
+			int need=50+4*times;
+			wchar_t s[200];
+			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 生命+800\n[2] 攻击+4\n[3] 防御+6\n[ESC] 离开", need);
+			showMessage(s);
+		}
 	}
 	consts.hge->Gfx_EndScene();
 	return false;

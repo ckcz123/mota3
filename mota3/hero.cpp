@@ -144,6 +144,8 @@ bool c_hero::moveComplete()
 			}
 		}
 		consts.step++;
+		if (!consts.ended && now_floor==0 && x==6 && y==12 && consts.lefttime<80)
+			consts.goodEnd();
 	}
 	move++;
 	move%=4;
@@ -455,6 +457,17 @@ void c_hero::npc(int select)
 	case 49:
 		consts.setMsg(L"徘徊之影\t你可能要把本层所有高级卫兵杀死才\n能打开商店门前的机关门。");
 		break;
+	case 50:
+		{
+			int need=50+4*npctime;
+			if (money<need) break;
+			money-=need;
+			if (select==1) hp+=800;
+			if (select==2) atk+=4;
+			if (select==3) def+=6;
+			map_npc->visitNpc();
+			break;
+		}
 	default:
 		consts.setMsg(L"勇士\t这是啥？");
 		break;

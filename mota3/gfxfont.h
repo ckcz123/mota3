@@ -148,6 +148,10 @@ public:
 	{
 		return m_pSprite->GetColor(i);
 	}
+	virtual void SetBlendMode(int mode)
+	{
+		m_pSprite->SetBlendMode(mode);
+	}
 
 	// 获取文本宽高
 	virtual SIZE    GetTextSize(const wchar_t* text)
