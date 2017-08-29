@@ -70,7 +70,7 @@ public:
 	// Ä§ÕÈ
 	int wand;
 
-	bool moving,opening,flooring,music,ended;
+	bool moving,opening,flooring,music,ended,showdamage;
 	int map_floornum,map_height,map_width,volume,bgmvolume,ScreenLeft;
 
 	savedata sd[1000];
@@ -98,7 +98,7 @@ public:
 	HCHANNEL hc_Music;
 
 	//¸÷ÖÖÍ¼¿é
-	hgeSprite *s_ground,*s_wall,*s_wall2,*s_wall_hidden,*s_water,*s_sky,*s_lightning,*s_barrier;
+	hgeSprite *s_ground,*s_wall,*s_wall2,*s_wall_hidden,*s_water,*s_sky,*s_lightning,*s_barrier,*s_bg,*s_bg_font;
 	hgeSprite *s_redjewel,*s_bluejewel,*s_redkey,*s_bluekey,*s_yellowkey,*s_allkey;
 	hgeSprite *s_redpotion,*s_bluepotion,*s_coin,*s_fly,*s_fly2,*s_cross,*s_floor,*s_stick,*s_drink,*s_wand;
 	hgeSprite *s_sword1,*s_shield1,*s_sword2,*s_shield2,*s_sword3,*s_shield3;
@@ -108,6 +108,8 @@ public:
 
 	hgeSprite *s_portal, *s_sigh, *s_sighed, *s_up, *s_left, *s_right, *s_down, *s_flower, *s_box, *s_boxed;
 	hgeSprite *s_atk, *s_def, *s_life;
+
+
 
 	// ÎÄ×Ö
 	hgeFont *hgef;

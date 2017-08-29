@@ -15,6 +15,7 @@ constants::constants()
 	bgmvolume=100;
 	ScreenLeft=240;
 	music=true;
+	showdamage=true;
 	map_width=13;map_height=13;
 }
 
@@ -28,6 +29,7 @@ void constants::init()
 	time_move=time_open=time_animation=time_floor=0;
 	msg=MESSAGE_START;
 	wand=-1;
+	book=true;
 	starttime=0;
 	for (int i=0;i<1000;i++) sd[i].hp=0;
 }
@@ -55,6 +57,10 @@ void constants::loadResources()
 	s_sky=new hgeSprite(ht_map,0,32,32,32);
 	s_lightning=new hgeSprite(ht_npc,0,128,32,32);
 	s_barrier=new hgeSprite(ht_special,128,960,32,32);
+	s_bg=new hgeSprite(ht_skin,0,0,128,128);
+	s_bg->SetColor(0xCCFFFFFF);
+	s_bg_font=new hgeSprite(ht_skin,0,0,128,128);
+	s_bg_font->SetColor(0x72FFFFFF);
 	//ht_door
 	s_yellowdoor=new hgeSprite(ht_map,0,64,32,32);
 	s_bluedoor=new hgeSprite(ht_map,32,64,32,32);
@@ -275,7 +281,7 @@ void constants::finishHint()
 					L"勇士\t好的好的，我记下了。还有吗？",
 					L"徘徊之影\t嗯... 因为我比较弱，没闯几层就挂\n了，因此并不知道其他什么内容。\n不过，在这座塔里，像我这样的徘徊\n者应该还有很多，如果你碰见了他们\n，也许可以问问更多信息呢。",
 					L"勇士\t好的好的，谢谢您！我会加油的！我\n会毁了这座塔，将你们都解脱出来，\n捍卫我大青叶帝国的荣耀！",
-					L"系统提示\t本塔快捷键如下：\nS/L: 存/读档\nZ: 转向\nP: 查看当前MAX\nM: 音乐开关\nQ: 返回主界面\n其他各项道具使用的快捷键在拿到时\n会给予提示。",
+					L"系统提示\t本塔快捷键如下：\nS/L: 存/读档\nZ: 转向\n-: 开启/关闭显伤\nP: 查看当前MAX\nM: 开启/关闭音乐\nQ: 返回主界面\n其他各项道具使用的快捷键在拿到时\n会给予提示。",
 					L"系统提示\t本塔由Sky_天空的梦使用C++编写而成\n，代码开源在：\nhttps://github.com/ckcz123/mota3/\n\n如有问题，请于发布帖下进行回复和\n反馈，谢谢支持！",
 					L"徘徊之影\t加油吧小伙子，我看好你！"
 				};

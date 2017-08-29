@@ -67,27 +67,38 @@ void c_monster::show(GfxFont* f,int i,int j)
 	if(id!=0)
 	{
 		monster[state]->Render(j*32+consts.ScreenLeft,i*32);
-		if (consts.book && f!=NULL) {
+		if (consts.book && consts.showdamage && f!=NULL) {
 			int damage=hero.getDamage(this);
 			int hp=hero.getHP();
-			if (damage>=hp)
+			if (damage>=hp) {
 				f->SetColor(0xFFFF0000);
-			else if (damage<=hp/10)
+			}
+			else if (damage<=hp/10) {
 				f->SetColor(0xFF00FF00);
-			else if (damage<=hp/5)
+			}
+			else if (damage<=hp/5) {
 				f->SetColor(0xFF66CD00);
-			else if (damage<=hp/2)
+			}
+			else if (damage<=hp/2) {
 				f->SetColor(0xFF96CDCD);
-			else if (damage<=hp*3/4)
+			}
+			else if (damage<=hp*3/4) {
 				f->SetColor(0xFFEE7942);
-			else
+			}
+			else {
 				f->SetColor(0xFFEE3B3B);
+			}
+			wchar_t ss[100];
 			if (damage>=c_hero::MAX_DAMAGE)
-				f->Print(j*32+consts.ScreenLeft, i*32+20, L"???");
+				wcscpy_s(ss, L"???");
 			else if (damage<100000)
-				f->Print(j*32+consts.ScreenLeft, i*32+20, L"%d", damage);
+				wsprintf(ss, L"%d", damage);
 			else
-				f->Print(j*32+consts.ScreenLeft, i*32+20, L"%.1fW", damage/10000.0);
+				wsprintf(ss, L"%.1fW", damage/10000.0);
+			SIZE size=f->GetTextSize(ss);
+			int left=j*32+consts.ScreenLeft, top=i*32+20;
+			consts.s_bg_font->RenderStretch(left-1, top-1, left+size.cx+1, top+size.cy+1);
+			f->Render(left, top, ss);
 		}
 	}
 }

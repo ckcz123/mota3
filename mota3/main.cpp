@@ -116,10 +116,7 @@ void showMessage(const wchar_t *_s) // 显示提示
 
 	int left=16+consts.ScreenLeft, right=consts.map_width*32+consts.ScreenLeft-16,
 		top=consts.map_height*32-12-28*l, bottom=consts.map_height*32-8;
-	hgeSprite *s_temp;
-	s_temp=new hgeSprite(consts.ht_skin, 0, 0, 128, 128);
-	s_temp->SetColor(0xCCFFFFFF);
-	s_temp->RenderStretch(left, top, right, bottom);
+	consts.s_bg->RenderStretch(left, top, right, bottom);
 	GfxFont *f=new GfxFont(L"楷体", 22);
 
 	// get name
@@ -127,7 +124,7 @@ void showMessage(const wchar_t *_s) // 显示提示
 	while (*pos!=L'\t' && *pos!=L'\0') *pos++;
 	if (*pos==L'\t') {
 		*pos=L'\0';
-		s_temp->RenderStretch(left, top-40, left+25+f->GetTextSize(s).cx, top-2);
+		consts.s_bg->RenderStretch(left, top-40, left+25+f->GetTextSize(s).cx, top-2);
 		f->Print(left+12, top-33, L"%s", s);
 		pos++;
 	}
@@ -136,18 +133,13 @@ void showMessage(const wchar_t *_s) // 显示提示
 	f->Print(left+12, top+12, L"%s", pos);
 
 	delete f;
-	delete s_temp;
 }
 void showMax(const wchar_t *s)
 {
-	hgeSprite *s_temp;
-	s_temp=new hgeSprite(consts.ht_skin, 0, 0, 128, 128);
-	s_temp->SetColor(0xBBFFFFFF);
-	s_temp->RenderStretch(16+consts.ScreenLeft, consts.map_height*32-400, consts.map_width*32+consts.ScreenLeft-16, consts.map_height*32-8);
+	consts.s_bg->RenderStretch(16+consts.ScreenLeft, consts.map_height*32-400, consts.map_width*32+consts.ScreenLeft-16, consts.map_height*32-8);
 	GfxFont *f=new GfxFont(L"楷体", 22);
 	f->Print(16+consts.ScreenLeft+8, consts.map_height*32-400+8, L"%s", s);
 	delete f;
-	delete s_temp;
 }
 void init()
 {
@@ -203,6 +195,10 @@ bool frameFunc()
 		consts.setMsg(consts.music?L"音乐已开启":L"音乐已关闭");
 		if (consts.music) consts.hge->Channel_SetVolume(consts.hc_Music, consts.bgmvolume);
 		else consts.hge->Channel_SetVolume(consts.hc_Music, 0);
+	}
+	if(consts.hge->Input_GetKeyState(HGEK_MINUS) && consts.isFree()) {
+		consts.showdamage=!consts.showdamage;
+		consts.setMsg(consts.showdamage?L"显伤已开启":L"显伤已关闭");
 	}
 
 	// 使用魔杖
