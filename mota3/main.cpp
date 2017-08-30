@@ -182,7 +182,7 @@ bool frameFunc()
 	if (consts.isFree() && consts.hge->Input_GetKeyState(HGEK_P)) consts.getRank();
 	if(consts.hge->Input_GetKeyState(HGEK_G) && consts.isFree()) {
 		if (consts.canfly) { 
-			if (consts.lasttime<80.) consts.setMsg(L"传送器好像失效了！");
+			if (consts.lefttime<80.) consts.setMsg(L"传送器好像失效了！");
 			else if (!hero.nearStair()) consts.setMsg(L"只有在楼梯旁才能使用传送器！");
 			else {
 				hero.setFlyFloor();
@@ -324,7 +324,11 @@ bool frameFunc()
 	}
 
 	// 胜利
-	if (consts.msg==consts.MESSAGE_WIN && consts.hge->Input_GetKeyState(HGEK_ENTER)) init();
+	if (consts.msg==consts.MESSAGE_WIN && clock()-consts.lasttime>300) {
+		if (consts.hge->Input_GetKeyState(HGEK_P))
+			consts.getRank();
+		else if (consts.hge->Input_GetKeyState(HGEK_ENTER)) init();
+	}
 	// 重新开始
 	if (consts.msg==consts.MESSAGE_RESTART) {
 		if (consts.hge->Input_GetKeyState(HGEK_ENTER))
@@ -363,9 +367,18 @@ bool frameFunc()
 	{
 		c_map_npc* map_npc=map_floor[hero.getNowFloor()].getinfo(hero.nextY(),hero.nextX())->getNpc();
 		int npcid=map_npc->getId(), npctimes=map_npc->getVisit();
+
+		// 逃跑过程中
+		if (consts.lefttime<80) {
+			// 商店
+			if (npcid==45||npcid==50) {
+				consts.setMsg(L"贪婪之神\t塔都要倒了你还想来买东西不成？");
+			}
+			else consts.setMsg(L"徘徊之影\t孩子恭喜你成功了！塔快倒了，快跑\n吧，我们已是亡魂，不用管我们了。");
+		}
 		
 		// 商店
-		if (npcid==45) {
+		else if (npcid==45) {
 			if(consts.hge->Input_GetKeyState(HGEK_1) && clock()-consts.lasttime>200) {
 				hero.npc(1);
 			}
@@ -411,7 +424,10 @@ bool frameFunc()
 		}
 		if(consts.hge->Input_GetKeyState(HGEK_ENTER))
 		{
-			consts.msg=consts.MESSAGE_NONE;
+			if (consts.ended)
+				init();
+			else 
+				consts.msg=consts.MESSAGE_NONE;
 			consts.nowcnt=0;
 		}
 	}

@@ -91,14 +91,14 @@ public:
 	HGE *hge;
 
 	//各种纹理
-	HTEXTURE ht_map,ht_icon,ht_hero,ht_monster,ht_skin,ht_npc,ht_special;
+	HTEXTURE ht_map,ht_icon,ht_hero,ht_monster,ht_skin,ht_npc,ht_special,ht_special2;
 
 	//各种音效
 	HEFFECT he_GetItem,he_OpenDoor,he_Attack, he_Music;
 	HCHANNEL hc_Music;
 
 	//各种图块
-	hgeSprite *s_ground,*s_wall,*s_wall2,*s_wall_hidden,*s_water,*s_sky,*s_lightning,*s_barrier,*s_bg,*s_bg_font;
+	hgeSprite *s_ground,*s_wall,*s_wall2,*s_wall3,*s_wall_hidden,*s_water,*s_sky,*s_lightning,*s_barrier,*s_bg,*s_bg_font;
 	hgeSprite *s_redjewel,*s_bluejewel,*s_redkey,*s_bluekey,*s_yellowkey,*s_allkey;
 	hgeSprite *s_redpotion,*s_bluepotion,*s_coin,*s_fly,*s_fly2,*s_cross,*s_floor,*s_stick,*s_drink,*s_wand;
 	hgeSprite *s_sword1,*s_shield1,*s_sword2,*s_shield2,*s_sword3,*s_shield3;

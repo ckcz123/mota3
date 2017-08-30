@@ -96,6 +96,7 @@ hgeSprite* c_map_point::getTypeSprite() {
 	if (type==3) return consts.s_water;
 	if (type==4) return consts.s_sky;
 	if (type==5) return consts.s_barrier;
+	if (type==6) return consts.s_wall3;
 	return consts.s_ground;
 }
 hgeSprite* c_map_point::getItemSprite() {

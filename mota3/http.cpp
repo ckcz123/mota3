@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 Http::Http() {
-	strcpy_s(server, "47.93.40.127");
+	strcpy_s(server, "ckcz123.com");
 	port=80;
 }
 

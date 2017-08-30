@@ -287,7 +287,7 @@ void c_hero::beat(c_monster* monster)
 	money+=monster->getMoney();
 
 	// 重生
-	if (d!=0)
+	if (d!=0 && consts.lefttime>=80)
 	{
 		int nx=x-dir[0][face], ny=y-dir[1][face];
 		if (nx>=0 && nx<consts.map_width && ny>=0 && ny<consts.map_height) {
@@ -466,6 +466,37 @@ void c_hero::npc(int select)
 			if (select==2) atk+=4;
 			if (select==3) def+=6;
 			map_npc->visitNpc();
+			break;
+		}
+	case 70:
+		{
+			bool trueend=true;
+			for (int i=0;i<consts.map_floornum;i++)
+				if (map_floor[i].hasMonster()) {
+					trueend=false;
+					break;
+				}
+
+			if (trueend) {
+				const wchar_t* msg[50]={
+					L"勇士\t波动好像就是从这里散发开来的，看\n来就是这个水晶球了。",
+					L"勇士\t（敲敲打打）\n好像从没见过这种材质呢，这就是异\n次元的物品吗？试试能不能带回去研\n究研究。",
+					L"勇士\t（上前轻轻一摘）",
+				};
+				consts.map_npc=map_npc;
+				consts.setMsg(msg);
+			}
+			else {
+				const wchar_t* msg[50]={
+					L"勇士\t波动好像就是从这里散发开来的，看\n来就是这个水晶球了。",
+					L"勇士\t（敲敲打打）\n好像从没见过这种材质呢，这就是异\n次元的物品吗？试试能不能带回去研\n究研究。",
+					L"勇士\t（勇士使出了洪荒之力）\n啊呀呀呀呀呀呀......",
+					L"勇士\t不行，看来这个水晶球被封死在柱子\n上面了。没办法了，看来只能毁了它\n了。",
+					L"勇士\t（拿起剑，狠狠劈下）\n为了我大青叶帝国的荣耀，什么牛鬼\n马蛇都统统去死吧！",
+				};
+				consts.map_npc=map_npc;
+				consts.setMsg(msg);
+			}
 			break;
 		}
 	default:

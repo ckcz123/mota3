@@ -41,6 +41,7 @@ void constants::loadResources()
 	ht_skin=hge->Texture_Load("Res/skin.png");
 	ht_npc=hge->Texture_Load("Res/npc.png");
 	ht_special=hge->Texture_Load("Res/special.png");
+	ht_special2=hge->Texture_Load("Res/special2.png");
 	he_GetItem=hge->Effect_Load("Res/item.ogg");
 	he_OpenDoor=hge->Effect_Load("Res/door.ogg");
 	he_Attack=hge->Effect_Load("Res/attack.ogg");
@@ -52,6 +53,7 @@ void constants::loadResources()
 	s_wall_hidden=new hgeSprite(ht_map,32,0,32,32);
 	s_wall_hidden->SetColor(0xCCFFFFFF);
 	s_wall2=new hgeSprite(ht_map,64,0,32,32);
+	s_wall3=new hgeSprite(ht_map,96,0,32,32);
 	s_water=new hgeSprite(ht_map,32,32,32,32);
 	s_sky=new hgeSprite(ht_map,0,32,32,32);
 	s_lightning=new hgeSprite(ht_npc,0,128,32,32);
@@ -125,6 +127,8 @@ void constants::destroy()
 	hge->Texture_Free(ht_skin);
 	hge->Texture_Free(ht_monster);
 	hge->Texture_Free(ht_npc);
+	hge->Texture_Free(ht_special);
+	hge->Texture_Free(ht_special2);
 	hge->Effect_Free(he_GetItem);
 	hge->Effect_Free(he_Music);
 	hge->Effect_Free(he_OpenDoor);
@@ -195,9 +199,9 @@ void constants::goOn(c_hero* hero, c_map_floor* currFloor, float dt)
 		currFloor->animation();
 	}
 
-	if (!ended && lefttime<80 && lefttime>=0)
+	if (!ended && lefttime<80 && lefttime>0)
 		lefttime-=dt;
-	if (lefttime<=0) {
+	if (lefttime<0) {
 		lefttime=0;
 		normalEnd();
 	}
@@ -229,13 +233,15 @@ void constants::goodEnd()
 		const wchar_t* msg[50]={
 			L"勇士携带着水晶碎片逃出了这座塔，\n回到了帝国。",
 			L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们压力大减，防线一\n鼓作气向前推进，终于看到了胜利的\n曙光。",
-			L"作为帝国现在最厉害的武士之一，勇\n士一马当先冲到了异次元大门前。突\n然！怪物们开始不顾一切地进行反\n扑，勇士独木难支，很快便身受重伤\n。",
-			L"被援军救下来后，紧急送去治疗，然\n而伤势过重无力回天。被欢呼声所惊\n醒，回光返照的勇士，看着窗外已被\n封闭的异次元之门，流下了热泪。",
-			L"正在意识弥留之际，突然怀中一阵温\n暖袭来，水晶碎片发出了耀眼的光芒\n。睁眼一看，自己伤口全部消失了，\n精神也恢复到了巅峰时刻！"
-			L"勇士也拥有了重生的能力！",
+			L"作为帝国最厉害的武士之一，勇士一\n马当先冲到了异次元大门前。",
+			L"突然！怪物们开始不顾一切地进行反\n扑，勇士独木难支，很快身受重伤。",
+			L"被援军救下来后，勇士被紧急送去治\n疗，然而由于伤势过重无力回天。",
+			L"被欢呼声所惊醒，回光返照的勇士，\n看着窗外那已被封闭的异次元之门，\n流下了热泪。",
+			L"正当意识弥留之际，突然怀中一阵温\n暖袭来，水晶碎片发出了耀眼的光芒\n。睁眼一看，自己伤口全部消失了，\n精神也恢复到了巅峰时刻！"
+			L"勇士竟然也拥有了重生的能力！",
 			L"战争结束后，国王给勇士分封了一大\n块领地，并建了一座纪念碑以纪念勇\n士在这场战斗中的的卓越贡献。",
 			L"......百年后......",
-			L"拥有一大块领地，膝下儿女成群，享\n受了一生的荣华富贵，现已白发苍苍\n躺在床上垂垂老矣的勇士，将自己贴\n身水晶摘下，安详地闭上了眼睛。",
+			L"拥有一大块领地，膝下儿女成群，享\n受了一生的荣华富贵，现已白发苍苍\n垂垂老矣的勇士，将自己贴身水晶摘\n下，安详地闭上了眼睛。",
 			L"“我这一生，已经再无遗憾了。”",
 			L"TRUE END."
 		};
@@ -243,11 +249,13 @@ void constants::goodEnd()
 	}
 	else {
 		const wchar_t* msg[50]={
-			L"勇士逃出了这座塔，回到了帝国。",
+			L"勇士携带着水晶碎片逃出了这座塔，\n回到了帝国。",
 			L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们压力大减，防线一\n鼓作气向前推进，终于看到了胜利的\n曙光。",
-			L"作为帝国现在最厉害的武士之一，勇\n士一马当先冲到了异次元大门前。\n突然！怪物们开始不顾一切地进行反\n扑，勇士独木难支，很快便身受重伤\n。",
-			L"被援军救下来后，紧急送去治疗，然\n而伤势过重无力回天。被欢呼声所惊\n醒，回光返照的勇士，看着窗外已被\n封闭的异次元之门，流下了热泪。",
-			L"战争结束后，国王为勇士搭建了一个纪念碑，以纪\n念勇士的卓越贡献。可预见的是，勇\n士的名字将被历史的长河所记忆，被\n后人所不断传颂。",
+			L"作为帝国最厉害的武士之一，勇士一\n马当先冲到了异次元大门前。",
+			L"突然！怪物们开始不顾一切地进行反\n扑，勇士独木难支，很快身受重伤。",
+			L"被援军救下来后，勇士被紧急送去治\n疗，然而由于伤势过重无力回天。",
+			L"被欢呼声所惊醒，回光返照的勇士，\n看着窗外那已被封闭的异次元之门，\n流下了热泪。",
+			L"战争结束后，国王为勇士搭建了一个\n纪念碑，以纪念勇士的卓越贡献。可\n预见的是，勇士的名字将被历史的长\n河所记忆，被后人所不断传颂。",
 			L"“帝国终于是赢了，终于赢了... 只\n是，还是有那么一点遗憾的啊...”",
 			L"GOOD END."
 		};
@@ -300,7 +308,54 @@ void constants::finishHint()
 				setMsg(msg);
 				break;
 			}
+		case 70:
+			{
+				map_npc->init(0);
+				map_floor[hero.getNowFloor()].getinfo(0,6)->getNpc()->init(0);
 
+				bool trueend=true;
+				for (int i=0;i<map_floornum;i++)
+					if (map_floor[i].hasMonster()) {
+						trueend=false;
+						break;
+					}
+
+				if (trueend) {
+					const wchar_t* msg[50]={
+						L"（获得水晶碎片）",
+						L"勇士\t这么轻易就摘下来了？不会有什么坑\n吧...",
+						L"（突然，地面传来一阵震动）",
+						L"勇士\t怎么了，好像这座塔在震？",
+						L"（震动感更强烈了）",
+						L"勇士\t卧槽，真的在震，这座塔是要垮啊！\n快跑啊！",
+						L"勇士\t快跑啊，好不容易闯到了最后，我可\n不想死在这里！"
+					};
+					setMsg(msg);
+				}
+				else {
+					const wchar_t* msg[50]={
+						L"（水晶在重击下碎成一地）",
+						L"勇士\t嗯，这样应该就可以了吧。不知道怪\n物的重生能力是否还在。",
+						L"（突然，地面传来一阵震动）",
+						L"勇士\t怎么了，好像这座塔在震？",
+						L"（震动感更强烈了）",
+						L"勇士\t卧槽，真的在震，这座塔是要垮啊！\n快跑啊！",
+						L"勇士\t快跑啊，好不容易闯到了最后，我可\n不想死在这里！"
+					};
+					setMsg(msg);
+				}
+				map_npc=new c_map_npc();
+				map_npc->init(71);
+				return;
+			}
+		case 71:
+			{
+				delete map_npc;
+				map_npc=NULL;
+				lefttime=10.0;
+				this->msg=MESSAGE_NONE;
+				break;
+			}
 		default:
 			break;
 		}
@@ -308,8 +363,9 @@ void constants::finishHint()
 		
 	}
 	else if (ended) {
-		upload();
+		//upload();
 		msg=MESSAGE_WIN;
+		lasttime=clock();
 	}
 	else
 		msg=MESSAGE_NONE;
@@ -363,6 +419,7 @@ void constants::printInfo()
 
 void constants::upload()
 {
+	currentmax=0;
 	thread t1(&constants::doUpload, this);
 	t1.detach();
 }
@@ -376,7 +433,6 @@ void constants::doUpload()
 
 	char* output=http.get(http.server, http.port, url, NULL);
 
-	currentmax=0;
 	if (output!=NULL && hero.getNowFloor()==map_floornum-1) {
 		string text(output);
 		stringstream stream;
