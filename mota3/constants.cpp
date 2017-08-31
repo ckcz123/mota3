@@ -29,7 +29,7 @@ void constants::init()
 	time_move=time_open=time_animation=time_floor=0;
 	msg=MESSAGE_START;
 	wand=-1;
-	fly=2;
+	fly=-1;
 	starttime=0;
 	for (int i=0;i<1000;i++) sd[i].hp=0;
 }
@@ -435,8 +435,8 @@ void constants::doUpload()
 {
 	char url[200];
 	// 开始时间、难度、当前层数、生命、攻击、防御、金钱、黄钥匙、蓝钥匙、魔杖次数、游戏时间、步数
-	sprintf_s(url, "/service/mota/mota3.php?action=upload&starttime=%ld&hard=%d&floor=%d&hp=%d&atk=%d&def=%d&money=%d&yellow=%d&blue=%d&wand=%d&playtime=%.0f&step=%d",
-		starttime, hard, ended?map_floornum-1:hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, playtime, step);
+	sprintf_s(url, "/service/mota/mota3.php?action=upload&starttime=%ld&hard=%d&floor=%d&hp=%d&atk=%d&def=%d&money=%d&yellow=%d&blue=%d&wand=%d&fly=%d&playtime=%.2f&step=%d&lefttime=%.2f",
+		starttime, hard, ended?map_floornum-1:hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, fly, playtime, step, lefttime);
 
 	char* output=http.get(http.server, http.port, url, NULL);
 
