@@ -24,6 +24,7 @@ void constants::init()
 	canfly=book=moving=opening=flooring=ended=false;
 	lefttime=100.0;
 	playtime=0.0;
+	totaltime=0.0;
 	step=0;
 	hard=0;
 	time_move=time_open=time_animation=time_floor=0;
@@ -163,6 +164,7 @@ void constants::setMsg(const wchar_t* s)
 void constants::goOn(c_hero* hero, c_map_floor* currFloor, float dt)
 {
 	playtime+=dt;
+	totaltime+=dt;
 	if(moving) // 移动
 	{
 		time_move+=dt;
@@ -435,8 +437,8 @@ void constants::doUpload()
 {
 	char url[200];
 	// 开始时间、难度、当前层数、生命、攻击、防御、金钱、黄钥匙、蓝钥匙、魔杖次数、游戏时间、步数
-	sprintf_s(url, "/service/mota/mota3.php?action=upload&starttime=%ld&hard=%d&floor=%d&hp=%d&atk=%d&def=%d&money=%d&yellow=%d&blue=%d&wand=%d&fly=%d&playtime=%.2f&step=%d&lefttime=%.2f",
-		starttime, hard, ended?map_floornum-1:hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, fly, playtime, step, lefttime);
+	sprintf_s(url, "/service/mota/mota3.php?action=upload&starttime=%ld&hard=%d&floor=%d&hp=%d&atk=%d&def=%d&money=%d&yellow=%d&blue=%d&wand=%d&fly=%d&playtime=%.3f&step=%d&totaltime=%.3f",
+		starttime, hard, ended?map_floornum-1:hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, fly, playtime, step, totaltime);
 
 	char* output=http.get(http.server, http.port, url, NULL);
 
@@ -498,13 +500,16 @@ void constants::doGetRank()
 
 void constants::save(FILE* f) 
 {
-	fprintf_s(f, "%d %d %d %d %d %d %.2f %ld\n", map_floornum, canfly?1:0, book?1:0, wand, step, hard, playtime, starttime);
+	fprintf_s(f, "%d %d %d %d %d %d %d %.2f %.2f %.2f %ld\n", map_floornum, canfly?1:0, book?1:0, wand, fly, step, hard, playtime, lefttime, totaltime, starttime);
 }
 
 void constants::load(FILE* f)
 {
 	int _fly, _book;
-	fscanf_s(f, "%d %d %d %d %d %d %f %ld", &nowcnt, &_fly, &_book, &wand, &step, &hard, &playtime, &starttime);
+	float total;
+	fscanf_s(f, "%d %d %d %d %d %d %d %f %f %f %ld", &nowcnt, &_fly, &_book, &wand, &fly, &step, &hard, &playtime, &lefttime, &total, &starttime);
+	if (totaltime<total)
+		totaltime=total;
 	canfly=_fly==1;
 	book=_book==1;
 	moving=opening=flooring=false;

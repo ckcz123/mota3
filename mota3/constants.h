@@ -60,7 +60,7 @@ public:
 	long lasttime;
 	long starttime;
 
-	float playtime, lefttime;
+	float playtime, lefttime, totaltime;
 	int step;
 
 	// 难度，1简单2普通3困难4噩梦
