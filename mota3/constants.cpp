@@ -396,10 +396,10 @@ void constants::printInfo()
 		f->Print(142, 308, L"%d", wand);
 		delete f;
 	}
-	if (fly>0) {
-		s_fly2->Render(159, 288);
+	if (fly>=0) {
+		s_fly2->Render(165, 288);
 		GfxFont* f=new GfxFont(L"¿¬Ìå", 14, true);
-		f->Print(183, 308, L"%d", fly);
+		f->Print(189, 308, L"%d", fly);
 		delete f;
 	}
 

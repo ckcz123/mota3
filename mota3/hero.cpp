@@ -232,7 +232,7 @@ void c_hero::fly()
 bool c_hero::canCenterFly()
 {
 	int nx=consts.map_width-1-x, ny=consts.map_height-1-y;
-	if (!map_floor[now_floor].getinfo(y,x)->isGround())
+	if (!map_floor[now_floor].getinfo(ny,nx)->isGround())
 		return false;
 	return true;
 }
@@ -491,6 +491,7 @@ void c_hero::npc(int select)
 				break;
 			}
 			money-=need;
+			if (consts.fly<0) consts.fly=0;
 			consts.fly++;
 			map_npc->visitNpc();
 			break;
