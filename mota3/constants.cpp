@@ -353,8 +353,8 @@ void constants::finishHint()
 			{
 				delete map_npc;
 				map_npc=NULL;
-				lefttime=10.0;
-				this->msg=MESSAGE_NONE;
+				lefttime=55;
+				msg=MESSAGE_NONE;
 				break;
 			}
 		default:
