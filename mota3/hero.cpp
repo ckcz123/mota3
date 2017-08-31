@@ -472,10 +472,8 @@ void c_hero::npc(int select)
 	case 50:
 		{
 			int need=50+4*npctime;
-			if (money<need) {
-				consts.setMsg(L"½ð±Ò²»×ã¡£");
+			if (money<need)
 				break;
-			}
 			money-=need;
 			if (select==1) hp+=800;
 			if (select==2) atk+=4;
