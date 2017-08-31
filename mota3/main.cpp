@@ -179,6 +179,16 @@ bool frameFunc()
 		loadsave();
 		consts.msg=consts.MESSAGE_LOAD;
 	}
+	if(consts.isFree() && consts.hge->Input_GetKeyState(HGEK_F) && consts.fly>0 && clock()-consts.lasttime>600) {
+		if (!hero.canCenterFly()) {
+			consts.setMsg(L"无法使用中心对称飞行器：目标落点\n不为空地。");
+		}
+		else {
+			hero.centerFly();
+			consts.fly--;
+			consts.lasttime=clock();
+		}
+	}
 	if (consts.isFree() && consts.hge->Input_GetKeyState(HGEK_P)) consts.getRank();
 	if(consts.hge->Input_GetKeyState(HGEK_G) && consts.isFree()) {
 		if (consts.canfly) { 
@@ -378,7 +388,7 @@ bool frameFunc()
 		}
 		
 		// 商店
-		else if (npcid==45) {
+		else if (npcid==45 || npcid==50) {
 			if(consts.hge->Input_GetKeyState(HGEK_1) && clock()-consts.lasttime>200) {
 				hero.npc(1);
 			}
@@ -391,8 +401,8 @@ bool frameFunc()
 			else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
 				consts.msg=consts.MESSAGE_NONE;
 			}
-			
 		}
+		// 魔杖商人
 		else if (npcid==46) {
 			if (npctimes==0) {
 				hero.npc();
@@ -404,6 +414,15 @@ bool frameFunc()
 				else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
 					consts.msg=consts.MESSAGE_NONE;
 				}
+			}
+		}
+		// 对称飞商人
+		else if (npcid==51) {
+			if (consts.hge->Input_GetKeyState(HGEK_ENTER)) {
+				hero.npc();
+			}
+			else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
+				consts.msg=consts.MESSAGE_NONE;
 			}
 		}
 		else {
@@ -668,6 +687,13 @@ bool renderFunc()
 			int need=50+4*times;
 			wchar_t s[200];
 			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 生命+800\n[2] 攻击+4\n[3] 防御+6\n[ESC] 离开", need);
+			showMessage(s);
+		}
+		// 14楼奸商
+		if (id==51) {
+			int need=150*(times+1);
+			wchar_t s[200];
+			wsprintf(s, L"徘徊之影\t%d金币一个中心对称飞行器，要吗？\n（[F] 键可以使用）\n\n[ENTER] 我要\n[ESC] 离开", need);
 			showMessage(s);
 		}
 	}

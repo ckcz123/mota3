@@ -229,6 +229,18 @@ void c_hero::fly()
 	now_floor=fly_floor;
 	consts.flooring=true;
 }
+bool c_hero::canCenterFly()
+{
+	int nx=consts.map_width-1-x, ny=consts.map_height-1-y;
+	if (!map_floor[now_floor].getinfo(y,x)->isGround())
+		return false;
+	return true;
+}
+void c_hero::centerFly()
+{
+	int nx=consts.map_width-1-x, ny=consts.map_height-1-y;
+	x=nx; y=ny;
+}
 void c_hero::printInfo()
 {
 	int py=16;
@@ -460,11 +472,26 @@ void c_hero::npc(int select)
 	case 50:
 		{
 			int need=50+4*npctime;
-			if (money<need) break;
+			if (money<need) {
+				consts.setMsg(L"金币不足。");
+				break;
+			}
 			money-=need;
 			if (select==1) hp+=800;
 			if (select==2) atk+=4;
 			if (select==3) def+=6;
+			map_npc->visitNpc();
+			break;
+		}
+	case 51:
+		{
+			int need=150*(npctime+1);
+			if (money<need) {
+				consts.setMsg(L"金币不足。");
+				break;
+			}
+			money-=need;
+			consts.fly++;
 			map_npc->visitNpc();
 			break;
 		}

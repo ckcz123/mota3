@@ -67,8 +67,8 @@ public:
 	int hard;
 
 	bool canfly,book;
-	// Ä§ÕÈ
-	int wand;
+	// Ä§ÕÈ£¬¶Ô³Æ·ÉÐÐÆ÷
+	int wand, fly;
 
 	bool moving,opening,flooring,music,ended,showdamage;
 	int map_floornum,map_height,map_width,volume,bgmvolume,ScreenLeft;

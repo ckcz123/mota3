@@ -33,6 +33,8 @@ public:
 	bool nearUpStair() {return nearStair(7);}
 	bool canReborn();
 	void useWand();
+	bool canCenterFly();
+	void centerFly();
 	void getYellowKey() {yellowkey++;}
 	void getBlueKey() {bluekey++;}
 	void getRedKey() {redkey++;}

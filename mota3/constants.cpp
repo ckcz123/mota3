@@ -29,6 +29,7 @@ void constants::init()
 	time_move=time_open=time_animation=time_floor=0;
 	msg=MESSAGE_START;
 	wand=-1;
+	fly=2;
 	starttime=0;
 	for (int i=0;i<1000;i++) sd[i].hp=0;
 }
@@ -393,6 +394,12 @@ void constants::printInfo()
 		s_wand->Render(118, 288);
 		GfxFont* f=new GfxFont(L"¿¬Ìå", 14, true);
 		f->Print(142, 308, L"%d", wand);
+		delete f;
+	}
+	if (fly>0) {
+		s_fly2->Render(159, 288);
+		GfxFont* f=new GfxFont(L"¿¬Ìå", 14, true);
+		f->Print(183, 308, L"%d", fly);
 		delete f;
 	}
 
