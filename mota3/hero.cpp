@@ -372,6 +372,10 @@ void c_hero::beat(c_monster* monster)
 		// 12楼机关门
 		map_floor[now_floor].getinfo(2, 10)->openSpecial();
 	}
+	if (now_floor==15 && id==26 && !map_floor[now_floor].hasMonster(26)) {
+		map_floor[now_floor].getinfo(3, 6)->openSpecial();
+		consts.upload();
+	}
 
 
 	consts.lasttime=clock();
@@ -430,7 +434,7 @@ void c_hero::npc(int select)
 			int need=25+2*npctime;
 			if (money<need) break;
 			money-=need;
-			if (select==1) hp+=400;
+			if (select==1) hp+=500;
 			if (select==2) atk+=2;
 			if (select==3) def+=3;
 			map_npc->visitNpc();
@@ -445,12 +449,14 @@ void c_hero::npc(int select)
 				break;
 			}
 			else {
-				if (money<80) {
+				int need=25*(1+npctime);
+				if (money<need) {
 					consts.setMsg(L"金币不足。");
 					break;
 				}
-				money-=80;
+				money-=need;
 				consts.wand++;
+				map_npc->visitNpc();
 				break;
 			}
 		}
@@ -458,14 +464,8 @@ void c_hero::npc(int select)
 		consts.setMsg(L"徘徊之影\t注意你的钥匙数量，多探路。");
 		break;
 	case 48:
-		{
-			const wchar_t* msg[50]={
-				L"徘徊之影\t你既然通过了前两区来到了这里，想\n必已经对本塔的引怪和刷钱这两个技\n巧都比较熟悉了吧。\n\n那么，欢迎来到三区。",
-				L"勇士\t（这货... 这语气... 真不是魔王派\n来的卧底吗？）"
-			};
-			consts.setMsg(msg);
-			break;
-		}
+		consts.setMsg(L"作者提示\t作者噩梦难度到这里的数据如下：\n生命2103，攻击179，防御159，金币\n97，黄钥匙5，蓝钥匙1，魔杖4次。\n\n以上数据仅供参考。");
+		break;
 	case 49:
 		consts.setMsg(L"徘徊之影\t你可能要把本层所有高级卫兵杀死才\n能打开商店门前的机关门。");
 		break;
@@ -475,7 +475,7 @@ void c_hero::npc(int select)
 			if (money<need)
 				break;
 			money-=need;
-			if (select==1) hp+=800;
+			if (select==1) hp+=1000;
 			if (select==2) atk+=4;
 			if (select==3) def+=6;
 			map_npc->visitNpc();
@@ -483,7 +483,7 @@ void c_hero::npc(int select)
 		}
 	case 51:
 		{
-			int need=150*(npctime+1);
+			int need=50*(npctime+1);
 			if (money<need) {
 				consts.setMsg(L"金币不足。");
 				break;

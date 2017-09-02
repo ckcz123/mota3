@@ -212,6 +212,7 @@ void constants::goOn(c_hero* hero, c_map_floor* currFloor, float dt)
 void constants::normalEnd()
 {
 	ended=true;
+	currentmax=1;
 	const wchar_t* msg[50]={
 		L"塔倒了，勇士最终还是没有逃出来。",
 		L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们一鼓作气，将怪物\n打退，并想办法封锁了异次元之门。\n青叶帝国又恢复了以往的平静。",
@@ -233,6 +234,7 @@ void constants::goodEnd()
 		}
 
 	if (trueend) {
+		currentmax=3;
 		const wchar_t* msg[50]={
 			L"勇士携带着水晶碎片逃出了这座塔，\n回到了帝国。",
 			L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们压力大减，防线一\n鼓作气向前推进，终于看到了胜利的\n曙光。",
@@ -251,6 +253,7 @@ void constants::goodEnd()
 		setMsg(msg);
 	}
 	else {
+		currentmax=2;
 		const wchar_t* msg[50]={
 			L"勇士携带着水晶碎片逃出了这座塔，\n回到了帝国。",
 			L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们压力大减，防线一\n鼓作气向前推进，终于看到了胜利的\n曙光。",
@@ -305,7 +308,7 @@ void constants::finishHint()
 					hge->Effect_PlayEx(he_GetItem, volume);
 				const wchar_t* msg[50]={
 					L"获得神秘魔杖！\n如果你正前方是空地，则可以在你正\n前方放置一个箱子。\n\n[X]键使用。",
-					L"徘徊之影\t目前你只能使用5次，不过你可以来\n找我增加它的使用次数，每次增加需\n80金币。",
+					L"徘徊之影\t目前你只能使用5次，不过你可以来\n找我增加它的使用次数。",
 					L"勇士\t好的，谢谢您！"
 				};
 				setMsg(msg);
@@ -366,7 +369,7 @@ void constants::finishHint()
 		
 	}
 	else if (ended) {
-		//upload();
+		upload();
 		msg=MESSAGE_WIN;
 		lasttime=clock();
 	}
