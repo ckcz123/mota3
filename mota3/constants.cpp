@@ -21,7 +21,7 @@ constants::constants()
 
 void constants::init()
 {
-	canfly=book=moving=opening=flooring=ended=false;
+	canfly=book=moving=opening=flooring=false;
 	lefttime=100.0;
 	playtime=0.0;
 	totaltime=0.0;
@@ -32,6 +32,7 @@ void constants::init()
 	wand=-1;
 	fly=-1;
 	starttime=0;
+	ending=0;
 	for (int i=0;i<1000;i++) sd[i].hp=0;
 }
 void constants::loadResources()
@@ -202,7 +203,7 @@ void constants::goOn(c_hero* hero, c_map_floor* currFloor, float dt)
 		currFloor->animation();
 	}
 
-	if (!ended && lefttime<80 && lefttime>0)
+	if (!ending && lefttime<80 && lefttime>0)
 		lefttime-=dt;
 	if (lefttime<0) {
 		lefttime=0;
@@ -211,8 +212,7 @@ void constants::goOn(c_hero* hero, c_map_floor* currFloor, float dt)
 }
 void constants::normalEnd()
 {
-	ended=true;
-	currentmax=1;
+	ending=1;
 	const wchar_t* msg[50]={
 		L"塔倒了，勇士最终还是没有逃出来。",
 		L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们一鼓作气，将怪物\n打退，并想办法封锁了异次元之门。\n青叶帝国又恢复了以往的平静。",
@@ -225,16 +225,14 @@ void constants::normalEnd()
 }
 void constants::goodEnd()
 {
-	ended=true;
-	bool trueend=true;
+	ending=3;
 	for (int i=0;i<map_floornum;i++)
 		if (map_floor[i].hasMonster()) {
-			trueend=false;
+			ending=2;
 			break;
 		}
 
-	if (trueend) {
-		currentmax=3;
+	if (ending==3) {
 		const wchar_t* msg[50]={
 			L"勇士携带着水晶碎片逃出了这座塔，\n回到了帝国。",
 			L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们压力大减，防线一\n鼓作气向前推进，终于看到了胜利的\n曙光。",
@@ -253,7 +251,6 @@ void constants::goodEnd()
 		setMsg(msg);
 	}
 	else {
-		currentmax=2;
 		const wchar_t* msg[50]={
 			L"勇士携带着水晶碎片逃出了这座塔，\n回到了帝国。",
 			L"战场上，怪物们的不死之身能力消失\n了，帝国的武士们压力大减，防线一\n鼓作气向前推进，终于看到了胜利的\n曙光。",
@@ -368,7 +365,7 @@ void constants::finishHint()
 		map_npc=NULL;
 		
 	}
-	else if (ended) {
+	else if (ending) {
 		upload();
 		msg=MESSAGE_WIN;
 		lasttime=clock();
@@ -439,13 +436,15 @@ void constants::upload()
 void constants::doUpload()
 {
 	char url[200];
-	// 开始时间、难度、当前层数、生命、攻击、防御、金钱、黄钥匙、蓝钥匙、魔杖次数、游戏时间、步数
-	sprintf_s(url, "/service/mota/mota3.php?action=upload&starttime=%ld&hard=%d&floor=%d&hp=%d&atk=%d&def=%d&money=%d&yellow=%d&blue=%d&wand=%d&fly=%d&playtime=%.3f&step=%d&totaltime=%.3f",
-		starttime, hard, ended?map_floornum-1:hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, fly, playtime, step, totaltime);
+	// 开始时间、难度、当前层数、生命、攻击、防御、金钱、黄钥匙、蓝钥匙、魔杖次数、对称飞次数、游戏时间、总时间、步数、结局
+	// 结局1/2传1，结局3传2
+	sprintf_s(url, "/service/mota/mota3.php?action=upload&starttime=%ld&hard=%d&floor=%d&hp=%d&atk=%d&def=%d&money=%d&yellow=%d&blue=%d&wand=%d&fly=%d&playtime=%.3f&totaltime=%.3f&step=%d&ending=%d",
+		starttime, hard, ending?map_floornum-1:hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, fly, playtime, totaltime, step,
+		(ending+1)/2);
 
 	char* output=http.get(http.server, http.port, url, NULL);
 
-	if (output!=NULL && hero.getNowFloor()==map_floornum-1) {
+	if (output!=NULL) {
 		string text(output);
 		stringstream stream;
 		stream << text;
@@ -467,10 +466,10 @@ void constants::getRank()
 {
 	msg=MESSAGE_RANK;
 	currentmax=0;
-	for (int x=0;x<4;x++)
-		for (int i=0; i<10; i++)
+	for (int x=0;x<8;x++)
+		for (int i=0; i<5; i++)
 			rd[x][i].init();
-	nowcnt=1;
+	nowcnt=0;
 	thread t2(&constants::doGetRank, this);
 	t2.detach();
 }
@@ -479,11 +478,16 @@ void constants::doGetRank()
 {
 	char* output=http.get(http.server, http.port, "/service/mota/mota3.php?action=top", NULL);
 	if (output!=NULL) {
+
 		string text(output);
 		stringstream stream;
 		stream << text;
 
-		for (int x=0;x<4;x++) {
+		// 首先存放22个数据
+		for (int i=0;i<22;i++)
+			stream >> tmp[i];
+
+		for (int x=0;x<8;x++) {
 			stream >> currentmax;
 			for (int i=0; i<currentmax; i++) {
 				stream >> rd[x][i].hp >> rd[x][i].atk >> rd[x][i].def >> rd[x][i].money >> rd[x][i].yellow >> rd[x][i].blue;

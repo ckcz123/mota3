@@ -38,7 +38,7 @@ public:
 	void destroy();
 	void setMsg(const wchar_t*[50]);
 	void setMsg(const wchar_t*);
-	bool isFree() {return !moving && !opening && !flooring && !ended && msg==MESSAGE_NONE && clock()-lasttime>150;}
+	bool isFree() {return !moving && !opening && !flooring && !ending && msg==MESSAGE_NONE && clock()-lasttime>150;}
 	wchar_t* getHardText(int h) {
 		return h==1?L"简单":h==2?L"普通":h==3?L"困难":h==4?L"噩梦":L"";
 	}
@@ -70,16 +70,20 @@ public:
 	// 魔杖，对称飞行器
 	int wand, fly;
 
-	bool moving,opening,flooring,music,ended,showdamage;
+	bool moving,opening,flooring,music,showdamage;
 	int map_floornum,map_height,map_width,volume,bgmvolume,ScreenLeft;
 
 	savedata sd[1000];
 	int wanttosave;
 
+	// 结局：1 NE 2GE 3TE
+	int ending;
+
 	// 排名信息
 	wchar_t rank[20];
 	int currentmax;
-	record rd[4][20];
+	record rd[8][5];
+	int tmp[50];
 
 	// 正在打开的门
 	c_map_door *map_openingdoor;

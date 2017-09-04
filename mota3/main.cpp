@@ -439,12 +439,12 @@ bool frameFunc()
 		}
 		if(consts.hge->Input_GetKeyState(HGEK_UP) && consts.currentmax>0 && clock()-consts.lasttime>100)
 		{
-			consts.nowcnt--; if (consts.nowcnt==0) consts.nowcnt=1;
+			consts.nowcnt--; if (consts.nowcnt<0) consts.nowcnt=0;
 			consts.lasttime=clock();
 		}
 		if(consts.hge->Input_GetKeyState(HGEK_ENTER))
 		{
-			if (consts.ended)
+			if (consts.ending)
 				init();
 			else 
 				consts.msg=consts.MESSAGE_NONE;
@@ -571,7 +571,7 @@ bool renderFunc()
 		{
 			wchar_t ss[200];
 			wsprintf(ss, L"恭喜通关%s！您的分数是 %d。\n", 
-				consts.currentmax==1?L"NE":consts.currentmax==1?L"GE":consts.currentmax==2?L"TE":L"", hero.getHP());
+				consts.ending==1?L"NE":consts.ending==1?L"GE":consts.ending==2?L"TE":L"", hero.getHP());
 
 			// uploading...
 			if (consts.currentmax==0) {
@@ -639,27 +639,42 @@ bool renderFunc()
 				showMessage(ss);
 			}
 			else {
-				wsprintf(ss, L"%s难度下MAX数据：\n", consts.getHardText(consts.nowcnt));
 
-				for (int i=0; i<10; i++) {
-					record* r=&consts.rd[consts.nowcnt-1][i];
+				if (consts.nowcnt==0) {
+					wsprintf(ss, L"当前已有%d人次尝试，%d人次通关。\n\n", consts.tmp[0], consts.tmp[1]);
 					wchar_t tmp[100];
-					wsprintf(tmp, L"TOP%2d: %-8d", i+1, r->hp);
-					wcscat_s(ss, tmp);
-					if (consts.rd[consts.nowcnt-1][i].hp>0) {
-						wsprintf(tmp, L"  (%s %s)", r->t1, r->t2);
+					for (int i=1;i<=4;i++) {
+						wsprintf(tmp, L"%s难度：%d人次尝试。\n", consts.getHardText(i), consts.tmp[5*i-3]);
+						wcscat_s(ss, tmp);
+						wsprintf(tmp, L"NE/GE:(%d, %d)  TE:(%d, %d)\n", consts.tmp[5*i-2], consts.tmp[5*i-1], consts.tmp[5*i], consts.tmp[5*i+1]);
 						wcscat_s(ss, tmp);
 					}
-					if (i<=2) {
-						wsprintf(tmp, L"\n[%d, %d, %d, %d, %d, %d]",
-							r->hp, r->atk, r->def, r->money, r->yellow, r->blue);
-						wcscat_s(ss, tmp);
-					}
-					wcscat_s(ss, L"\n");
+					wcscat_s(ss, L"注：\n(x, y)代表通关人次x，当前MAX为y；\n“人次”按游戏开始时间进行计算。\n");
+					wcscat_s(ss, L"\n[↑][↓] 详细数据   [ENTER] 确定");
+					showMax(ss);
 				}
 
-				wcscat_s(ss, L"[↑][↓] 其他难度   [ENTER] 确定");
-				showMax(ss);
+				else {
+					wsprintf(ss, L"%s难度下MAX数据：\n", consts.getHardText(consts.nowcnt));
+
+					wcscat_s(ss, L"NE/GE：\n");
+					for (int i=0; i<5; i++) {
+						record* r=&consts.rd[2*consts.nowcnt-2][i];
+						wchar_t tmp[100];
+						wsprintf(tmp, L"TOP%d: [%d, %d, %d, %d, %d, %d]\n", i+1, r->hp, r->atk, r->def, r->money, r->yellow, r->blue);
+						wcscat_s(ss, tmp);
+					}
+					wcscat_s(ss, L"TE：\n");
+					for (int i=0; i<5; i++) {
+						record* r=&consts.rd[2*consts.nowcnt-1][i];
+						wchar_t tmp[100];
+						wsprintf(tmp, L"TOP%d: [%d, %d, %d, %d, %d, %d]\n", i+1, r->hp, r->atk, r->def, r->money, r->yellow, r->blue);
+						wcscat_s(ss, tmp);
+					}
+
+					wcscat_s(ss, L"\n[↑][↓] 其他难度   [ENTER] 确定");
+					showMax(ss);
+				}
 			}
 
 			break;
