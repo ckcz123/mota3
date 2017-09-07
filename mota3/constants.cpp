@@ -447,14 +447,20 @@ void constants::doUpload()
 	char* ss=toString();
 	strcpy_s(s, ss);
 	delete ss;
-	ss=hero.toString();
-	strcat_s(s, ss);
-	delete ss;
-	for (int i=0;i<map_floornum;i++) {
+	for (int i=0;i<map_floornum/2;i++) {
 		ss=map_floor[i].toString();
 		strcat_s(s, ss);
 		delete ss;
 	}
+	ss=hero.toString();
+	strcat_s(s, ss);
+	delete ss;
+	for (int i=map_floornum/2;i<map_floornum;i++) {
+		ss=map_floor[i].toString();
+		strcat_s(s, ss);
+		delete ss;
+	}
+
 	char sd[100000]="data=";
 	char* encoded=http.base64_urlencode(s);
 	strcat_s(sd, encoded);
@@ -532,7 +538,7 @@ void constants::save(FILE* f)
 char* constants::toString()
 {
 	char* ss=new char[2000];
-	sprintf_s(ss, 2000, "%d %d %d %d %d %d %d %.2f %.2f %.2f %ld\ ", map_floornum, canfly?1:0, book?1:0, wand, fly, step, hard, playtime, lefttime, totaltime, starttime);
+	sprintf_s(ss, 2000, "%d %d %d %d %d %d %d %.2f %.2f %.2f %ld ", map_floornum, canfly?1:0, book?1:0, wand, fly, step, hard, playtime, lefttime, totaltime, starttime);
 	return ss;
 }
 
