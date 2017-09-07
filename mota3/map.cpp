@@ -251,7 +251,7 @@ void c_map_point::load(FILE* f)
 void c_map_floor::init(int d,int ch[30][30])
 {
 	id=d;
-	ux=-100;uy=-100;dx=-100;dy=-100;
+	ux=-1;uy=-1;dx=-1;dy=-1;
 	for(int i=0;i<consts.map_height;i++)
 	{
 		for(int j=0;j<consts.map_width;j++)
