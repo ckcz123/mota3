@@ -28,14 +28,36 @@ bool c_map_door::open()
 	}
 	return false;
 }
-void c_map_point::init(int _type,int _item,int s_monster,int s_door,int s_npc,int s_spe)
+void c_map_point::init(int _type, int _times)
 {
-	type=_type;
-	item=_item;
-	monster.init(s_monster);
-	door.init(s_door);
-	npc.init(s_npc);
-	special=s_spe;
+	type=0;
+	item=0;
+	monster.init(0); monster.setTimes(0);
+	npc.init(0); npc.setVisit(0);
+	door.init(0);
+	special=0;
+
+	if (_type<=9) type=_type;
+	else if (_type<=40) item=_type;
+	else if (_type<=80) {
+		npc.init(_type);
+		npc.setVisit(_times);
+	}
+	else if (_type<=100) door.init(_type-80);
+	else if (_type<=200) {
+		monster.init(_type-100);
+		monster.setTimes(_times);
+	}
+	else special=_type;
+}
+int c_map_point::getPoint()
+{
+	if (special!=0) return special;
+	if (monster.getId()!=0) return 100+monster.getId();
+	if (door.getType()!=0) return 80+door.getType();
+	if (npc.getId()!=0) return npc.getId();
+	if (item!=0) return item;
+	return type;
 }
 void c_map_point::show(GfxFont* f,int i,int j)
 {
@@ -204,20 +226,27 @@ int c_map_point::getItemID()
 {
 	return item;
 }
-void c_map_point::save(FILE* f)
+void c_map_point::toString(char* s)
 {
-	fprintf_s(f,"%d %d %d %d %d %d %d %d\n",type,item,door.getType(),monster.getId(),
-		monster.getTimes(),npc.getId(),npc.getVisit(),special);
+	char ss[200];
+	
+	int point=getPoint();
+	if (point>40 && point<=80) {
+		sprintf_s(ss, " %d %d", point, npc.getVisit());
+	}
+	else if (point>100 && point<=200) {
+		sprintf_s(ss, " %d %d", point, monster.getTimes());
+	}
+	else sprintf_s(ss, " %d", point);
+	strcat_s(s, 20000, ss);
 }
 void c_map_point::load(FILE* f)
 {
-	int d,m,t1,n,t2;
-	fscanf_s(f,"%d %d %d %d %d %d %d %d\n",&type,&item,&d,&m,&t1,&n,&t2,&special);
-	door.init(d);
-	monster.init(m);
-	monster.setTimes(t1);
-	npc.init(n);
-	npc.setVisit(t2);
+	int point=0, t=0;
+	fscanf_s(f, "%d", &point);
+	if ((point>40 && point<=80) || (point>100 && point<=200))
+		fscanf_s(f, "%d", &t);
+	init(point, t);
 }
 void c_map_floor::init(int d,int ch[30][30])
 {
@@ -227,12 +256,7 @@ void c_map_floor::init(int d,int ch[30][30])
 	{
 		for(int j=0;j<consts.map_width;j++)
 		{
-			if (ch[i][j]<=9)info[i][j].init(ch[i][j],0,0,0);
-			else if (ch[i][j]<=40)info[i][j].init(0,ch[i][j],0,0);
-			else if (ch[i][j]<=80)info[i][j].init(0,0,0,0,ch[i][j]);
-			else if (ch[i][j]<=100)info[i][j].init(0,0,0,ch[i][j]-80);
-			else if (ch[i][j]<=200)info[i][j].init(0,0,ch[i][j]-100,0);
-			else info[i][j].init(0,0,0,0,0,ch[i][j]);
+			info[i][j].init(ch[i][j]);
 			if(ch[i][j]==87)
 			{
 				ux=j;
@@ -365,14 +389,23 @@ bool c_map_floor::isLinked()
 }
 void c_map_floor::save(FILE* f)
 {
-	fprintf_s(f,"%d %d %d %d\n",dx,dy,ux,uy);
+	char *ss=toString();
+	fprintf_s(f, "%s", ss);
+	delete ss;
+}
+char* c_map_floor::toString()
+{
+	char* ss=new char[20000];
+	sprintf_s(ss, 20000, "%d %d %d %d", dx,dy,ux,uy);
 	for(int i=0;i<consts.map_height;i++)
 	{
 		for(int j=0;j<consts.map_width;j++)
 		{
-			info[i][j].save(f);
+			info[i][j].toString(ss);
 		}
 	}
+	strcat_s(ss, 20000, " ");
+	return ss;
 }
 void c_map_floor::load(FILE* f)
 {

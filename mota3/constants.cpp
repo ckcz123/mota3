@@ -442,7 +442,25 @@ void constants::doUpload()
 		starttime, hard, ending?map_floornum-1:hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, fly, playtime, totaltime, step,
 		(ending+1)/2);
 
-	char* output=http.get(http.server, http.port, url, NULL);
+	char s[50000];
+
+	char* ss=toString();
+	strcpy_s(s, ss);
+	delete ss;
+	ss=hero.toString();
+	strcat_s(s, ss);
+	delete ss;
+	for (int i=0;i<map_floornum;i++) {
+		ss=map_floor[i].toString();
+		strcat_s(s, ss);
+		delete ss;
+	}
+	char sd[100000]="data=";
+	char* encoded=http.base64_urlencode(s);
+	strcat_s(sd, encoded);
+	delete encoded;
+
+	char* output=http.get(http.server, http.port, url, sd);
 
 	if (output!=NULL) {
 		string text(output);
@@ -507,7 +525,15 @@ void constants::doGetRank()
 
 void constants::save(FILE* f) 
 {
-	fprintf_s(f, "%d %d %d %d %d %d %d %.2f %.2f %.2f %ld\n", map_floornum, canfly?1:0, book?1:0, wand, fly, step, hard, playtime, lefttime, totaltime, starttime);
+	char *ss=toString();
+	fprintf_s(f, "%s", ss);
+	delete ss;
+}
+char* constants::toString()
+{
+	char* ss=new char[2000];
+	sprintf_s(ss, 2000, "%d %d %d %d %d %d %d %.2f %.2f %.2f %ld\ ", map_floornum, canfly?1:0, book?1:0, wand, fly, step, hard, playtime, lefttime, totaltime, starttime);
+	return ss;
 }
 
 void constants::load(FILE* f)

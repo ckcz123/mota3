@@ -305,8 +305,7 @@ void c_hero::beat(c_monster* monster)
 		if (nx>=0 && nx<consts.map_width && ny>=0 && ny<consts.map_height) {
 			c_map_point* point=map_floor[now_floor].getinfo(ny,nx);
 			if (point->isGround()) {
-				point->init(0,0,monster->getId(),0);
-				point->getMonster()->setTimes(monster->getTimes()+1);
+				point->init(100+monster->getId(), monster->getTimes()+1);
 			}
 		}
 	}
@@ -376,7 +375,6 @@ void c_hero::beat(c_monster* monster)
 		map_floor[now_floor].getinfo(3, 6)->openSpecial();
 		consts.upload();
 	}
-
 
 	consts.lasttime=clock();
 }
@@ -533,13 +531,23 @@ void c_hero::npc(int select)
 }
 void c_hero::save(FILE* f)
 {
-	fprintf_s(f,"%d %d %d %d %d %d %d %d %d %d %d %d %d\n",
-		hp,atk,def,money,redkey,bluekey,yellowkey,x,y,face,now_floor,max_floor,fly_floor);
+	char* ss=toString();
+	fprintf_s(f,"%s",ss);
+	delete ss;
+}
+char* c_hero::toString()
+{
+	char* ss=new char[2000];
+	sprintf_s(ss, 2000, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d ",
+		hp/77,hp%77,atk/46,atk%46,def/51,def%51,money/22,money%22,yellowkey,bluekey,redkey,x,y,face,now_floor,max_floor,fly_floor);
+	return ss;
 }
 void c_hero::load(FILE* f)
 {
-	fscanf_s(f,"%d %d %d %d %d %d %d %d %d %d %d %d %d",
-		&hp,&atk,&def,&money,&redkey,&bluekey,&yellowkey,&x,&y,&face,&now_floor,&max_floor,&fly_floor);
+	int h1,h2,a1,a2,d1,d2,m1,m2;
+	fscanf_s(f,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
+		&h1,&h2,&a1,&a2,&d1,&d2,&m1,&m2,&yellowkey,&bluekey,&redkey,&x,&y,&face,&now_floor,&max_floor,&fly_floor);
+	hp=77*h1+h2; atk=46*a1+a2; def=51*d1+d2; money=22*m1+m2;
 }
 
 void c_hero::setFlyFloor(int delta)

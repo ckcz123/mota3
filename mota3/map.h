@@ -18,7 +18,8 @@ private:
 class c_map_point
 {
 public:
-	void init(int,int,int,int,int s_npc=0,int s_spe=0);//初始化
+	void init(int,int times=0);
+	int getPoint();
 	void show(GfxFont*,int,int);//渲染
 	void animation() {monster.changeState();npc.changeState();}//npc状态改变
 	void printMonsterInfo() {monster.printInfo();} //输出怪物信息
@@ -36,7 +37,7 @@ public:
 	bool isGround();
 	hgeSprite* getTypeSprite();
 	hgeSprite* getItemSprite();
-	void save(FILE*);//存档
+	void toString(char*s);
 	void load(FILE*);//读档
 private:
 	int type;//地面类型（地 OR 墙）
@@ -61,6 +62,7 @@ public:
 	void getDownPosition(int&,int&);//找到地图的下楼楼梯
 	void getUpPosition(int&,int&);//找到地图的上楼楼梯
 	void save(FILE*);//存档
+	char* toString();
 	void load(FILE*);//读档
 	bool hasMonster(int id=0);
 	bool isLinked(); //该楼从下楼楼梯到上楼楼梯是否可达

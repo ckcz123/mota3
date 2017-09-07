@@ -6,6 +6,7 @@ class Http {
 public:
 	Http();
 	char* get(char* host, int port, char* path, char* parameters=NULL);
+	char* base64_urlencode(char* content);
 	char server[200];
 	int port;
 private:

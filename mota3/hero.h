@@ -27,6 +27,7 @@ public:
 	void beat(c_monster*);
 	void npc(int select=0);//Ñ¡Ôñselect
 	void save(FILE*);//´æµµ
+	char* toString();
 	void load(FILE*);//¶Áµµ
 	bool nearStair(int t=0);
 	bool nearDownStair() {return nearStair(8);}

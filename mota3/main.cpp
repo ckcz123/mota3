@@ -58,6 +58,7 @@ void loadsave()
 	FILE *savefile;
 	constants tmpcon;
 	c_hero tmphero;
+	c_map_floor tmpfloor;
 	for (int i=0;i<1000;i++) {
 		char s[100]="";
 		sprintf_s(s,"Save/save%d.dat",i);
@@ -66,6 +67,7 @@ void loadsave()
 			consts.sd[i].hp=-1;
 		else {
 			tmpcon.load(savefile);
+			for (int i=0;i<tmpcon.nowcnt/2;i++) tmpfloor.load(savefile);
 			tmphero.load(savefile);
 			consts.sd[i].init(tmphero.getHP(), tmphero.getAtk(), tmphero.getDef(), tmphero.getNowFloor(), tmpcon.hard);
 			fclose(savefile);
@@ -81,8 +83,9 @@ void save(int id)
 	sprintf_s(s,"Save/save%d.dat",id);
 	fopen_s(&savefile,s,"w");
 	consts.save(savefile);
+	for(int i=0;i<consts.map_floornum/2;i++)map_floor[i].save(savefile);
 	hero.save(savefile);
-	for(int i=0;i<consts.map_floornum;i++)map_floor[i].save(savefile);
+	for (int i=consts.map_floornum/2;i<consts.map_floornum;i++)map_floor[i].save(savefile);
 	fclose(savefile);
 	consts.setMsg(L"存档成功！");
 }
@@ -93,8 +96,9 @@ void load(int id)
 	sprintf_s(s,"Save/save%d.dat",id);
 	fopen_s(&loadfile,s,"r");
 	consts.load(loadfile);
+	for(int i=0;i<consts.nowcnt/2;i++)map_floor[i].load(loadfile);
 	hero.load(loadfile);
-	for(int i=0;i<consts.nowcnt;i++)map_floor[i].load(loadfile);
+	for(int i=consts.nowcnt/2;i<consts.nowcnt;i++)map_floor[i].load(loadfile);
 	if (consts.map_floornum<consts.nowcnt)
 		consts.map_floornum=consts.nowcnt;
 	consts.nowcnt=0;
@@ -259,13 +263,13 @@ bool frameFunc()
 			consts.starttime=time(NULL);
 
 			// 噩梦难度：所有纯血门均不可开启
-			map_floor[4].getinfo(1,4)->init(0,0,0,4);
-			map_floor[5].getinfo(12,1)->init(0,0,0,4);
-			map_floor[6].getinfo(4,1)->init(0,0,0,4);
-			map_floor[8].getinfo(11,8)->init(0,0,0,4);
-			map_floor[10].getinfo(12,9)->init(0,0,0,4);
-			map_floor[12].getinfo(8,1)->init(0,0,0,4);
-			map_floor[14].getinfo(11,6)->init(0,0,0,4);
+			map_floor[4].getinfo(1,4)->init(84);
+			map_floor[5].getinfo(12,1)->init(84);
+			map_floor[6].getinfo(4,1)->init(84);
+			map_floor[8].getinfo(11,8)->init(84);
+			map_floor[10].getinfo(12,9)->init(84);
+			map_floor[12].getinfo(8,1)->init(84);
+			map_floor[14].getinfo(11,6)->init(84);
 
 		}
 	}
