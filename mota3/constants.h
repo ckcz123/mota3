@@ -12,8 +12,7 @@ struct savedata
 struct record
 {
 	int hp, atk, def, money, yellow, blue;
-	wchar_t t1[20], t2[20];
-	void init() {hp=atk=def=money=yellow=blue=0; wcscpy_s(t1, L""); wcscpy_s(t2, L"");}
+	void init() {hp=atk=def=money=yellow=blue=0;}
 };
 
 class constants

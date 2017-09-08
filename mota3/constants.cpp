@@ -54,7 +54,7 @@ void constants::loadResources()
 	s_ground=new hgeSprite(ht_map,0,0,32,32);
 	s_wall=new hgeSprite(ht_map,32,0,32,32);
 	s_wall_hidden=new hgeSprite(ht_map,32,0,32,32);
-	s_wall_hidden->SetColor(0xCCFFFFFF);
+	s_wall_hidden->SetColor(0xBBFFFFFF);
 	s_wall2=new hgeSprite(ht_map,64,0,32,32);
 	s_wall3=new hgeSprite(ht_map,96,0,32,32);
 	s_water=new hgeSprite(ht_map,32,32,32,32);
@@ -62,7 +62,7 @@ void constants::loadResources()
 	s_lightning=new hgeSprite(ht_npc,0,128,32,32);
 	s_barrier=new hgeSprite(ht_special,128,960,32,32);
 	s_bg=new hgeSprite(ht_skin,0,0,128,128);
-	s_bg->SetColor(0xCCFFFFFF);
+	s_bg->SetColor(0xD0FFFFFF);
 	s_bg_font=new hgeSprite(ht_skin,0,0,128,128);
 	s_bg_font->SetColor(0x72FFFFFF);
 	//ht_door
@@ -515,11 +515,6 @@ void constants::doGetRank()
 			stream >> currentmax;
 			for (int i=0; i<currentmax; i++) {
 				stream >> rd[x][i].hp >> rd[x][i].atk >> rd[x][i].def >> rd[x][i].money >> rd[x][i].yellow >> rd[x][i].blue;
-				string s1, s2;
-				stream >> s1 >> s2;
-				size_t outsize;
-				mbstowcs_s(&outsize, rd[x][i].t1, 20, s1.c_str(), 20);
-				mbstowcs_s(&outsize, rd[x][i].t2, 20, s2.c_str(), 20);
 			}
 		}
 		delete output;

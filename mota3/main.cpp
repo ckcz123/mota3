@@ -653,7 +653,7 @@ bool renderFunc()
 						wsprintf(tmp, L"NE/GE:(%d, %d)  TE:(%d, %d)\n", consts.tmp[5*i-2], consts.tmp[5*i-1], consts.tmp[5*i], consts.tmp[5*i+1]);
 						wcscat_s(ss, tmp);
 					}
-					wcscat_s(ss, L"注：\n(x, y)代表通关人次x，当前MAX为y；\n“人次”按游戏开始时间进行计算。\n");
+					wcscat_s(ss, L"备注：\n(x, y)代表通关人次x，当前MAX为y；\n“人次”按游戏开始时间进行计算。\n");
 					wcscat_s(ss, L"\n[↑][↓] 详细数据   [ENTER] 确定");
 					showMax(ss);
 				}
