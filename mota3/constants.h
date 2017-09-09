@@ -46,7 +46,9 @@ public:
 	void finishHint();
 	void printInfo();
 	void upload();
+	void uploadAll();
 	void doUpload();
+	void doUploadAll();
 	void getRank();
 	void doGetRank();
 	void normalEnd();

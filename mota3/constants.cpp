@@ -432,6 +432,11 @@ void constants::upload()
 	thread t1(&constants::doUpload, this);
 	t1.detach();
 }
+void constants::uploadAll()
+{
+	thread t1(&constants::doUploadAll, this);
+	t1.detach();
+}
 
 void constants::doUpload()
 {
@@ -484,6 +489,46 @@ void constants::doUpload()
 	}
 	else
 		currentmax=-1;
+}
+
+void constants::doUploadAll()
+{
+	char url[200];
+	// 开始时间、难度、当前层数、生命、攻击、防御、金钱、黄钥匙、蓝钥匙、魔杖次数、对称飞次数、游戏时间、总时间、步数、结局
+	// 结局1/2传1，结局3传2
+	sprintf_s(url, "/service/mota/mota3.php?action=uploadall&starttime=%ld&hard=%d&floor=%d&hp=%d&atk=%d&def=%d&money=%d&yellow=%d&blue=%d&wand=%d&fly=%d&playtime=%.3f&totaltime=%.3f&step=%d&ending=%d",
+		starttime, hard, hero.getNowFloor(), hero.getHP(), hero.getAtk(), hero.getDef(), hero.getMoney(), hero.yellow(), hero.blue(), wand, fly, playtime, totaltime, step,
+		(ending+1)/2);
+
+	char s[50000];
+
+	char* ss=toString();
+	strcpy_s(s, ss);
+	delete ss;
+	for (int i=0;i<map_floornum/2;i++) {
+		ss=map_floor[i].toString();
+		strcat_s(s, ss);
+		delete ss;
+	}
+	ss=hero.toString();
+	strcat_s(s, ss);
+	delete ss;
+	for (int i=map_floornum/2;i<map_floornum;i++) {
+		ss=map_floor[i].toString();
+		strcat_s(s, ss);
+		delete ss;
+	}
+
+	char sd[100000]="data=";
+	char* encoded=http.base64_urlencode(s);
+	strcat_s(sd, encoded);
+	delete encoded;
+
+	char* output=http.get(http.server, http.port, url, sd);
+
+	if (output!=NULL)
+		delete output;
+
 }
 
 void constants::getRank()

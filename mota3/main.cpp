@@ -87,6 +87,7 @@ void save(int id)
 	hero.save(savefile);
 	for (int i=consts.map_floornum/2;i<consts.map_floornum;i++)map_floor[i].save(savefile);
 	fclose(savefile);
+	consts.uploadAll();
 	consts.setMsg(L"存档成功！");
 }
 void load(int id)
@@ -103,6 +104,7 @@ void load(int id)
 		consts.map_floornum=consts.nowcnt;
 	consts.nowcnt=0;
 	fclose(loadfile);
+	consts.uploadAll();
 	consts.setMsg(L"读档成功！");
 }
 void showMessage(const wchar_t *_s) // 显示提示
