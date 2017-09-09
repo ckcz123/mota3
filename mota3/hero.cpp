@@ -432,9 +432,8 @@ void c_hero::npc(int select)
 			int need=25+2*npctime;
 			if (money<need) break;
 			money-=need;
-			if (select==1) hp+=500;
-			if (select==2) atk+=2;
-			if (select==3) def+=3;
+			if (select==1) atk+=2;
+			if (select==2) def+=3;
 			map_npc->visitNpc();
 			break;
 		}
@@ -461,9 +460,6 @@ void c_hero::npc(int select)
 	case 47:
 		consts.setMsg(L"徘徊之影\t注意你的钥匙数量，多探路。");
 		break;
-	case 48:
-		consts.setMsg(L"作者提示\t作者噩梦难度到这里的数据如下：\n生命2103，攻击179，防御159，金币\n97，黄钥匙5，蓝钥匙1，魔杖4次。\n\n以上数据仅供参考。");
-		break;
 	case 49:
 		consts.setMsg(L"徘徊之影\t你可能要把本层所有高级卫兵杀死才\n能打开商店门前的机关门。");
 		break;
@@ -473,9 +469,8 @@ void c_hero::npc(int select)
 			if (money<need)
 				break;
 			money-=need;
-			if (select==1) hp+=1000;
-			if (select==2) atk+=4;
-			if (select==3) def+=6;
+			if (select==1) atk+=4;
+			if (select==2) def+=6;
 			map_npc->visitNpc();
 			break;
 		}
@@ -490,6 +485,28 @@ void c_hero::npc(int select)
 			if (consts.fly<0) consts.fly=0;
 			consts.fly++;
 			map_npc->visitNpc();
+			break;
+		}
+	case 52:
+		{
+			if (money<80) {
+				consts.setMsg(L"金币不足。");
+				break;
+			}
+			money-=80;
+			hp+=500;
+			map_npc->init(0);
+			break;
+		}
+	case 53:
+		{
+			if (money<180) {
+				consts.setMsg(L"金币不足。");
+				break;
+			}
+			money-=180;
+			hp+=2000;
+			map_npc->init(0);
 			break;
 		}
 	case 70:

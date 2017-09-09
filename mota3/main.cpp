@@ -268,7 +268,6 @@ bool frameFunc()
 			map_floor[4].getinfo(1,4)->init(84);
 			map_floor[5].getinfo(12,1)->init(84);
 			map_floor[6].getinfo(4,1)->init(84);
-			map_floor[8].getinfo(11,8)->init(84);
 			map_floor[10].getinfo(12,9)->init(84);
 			map_floor[12].getinfo(8,1)->init(84);
 			map_floor[14].getinfo(11,6)->init(84);
@@ -402,9 +401,6 @@ bool frameFunc()
 			else if(consts.hge->Input_GetKeyState(HGEK_2) && clock()-consts.lasttime>200) {
 				hero.npc(2);
 			}
-			else if(consts.hge->Input_GetKeyState(HGEK_3) && clock()-consts.lasttime>200) {
-				hero.npc(3);
-			}
 			else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
 				consts.msg=consts.MESSAGE_NONE;
 			}
@@ -425,6 +421,15 @@ bool frameFunc()
 		}
 		// 对称飞商人
 		else if (npcid==51) {
+			if (consts.hge->Input_GetKeyState(HGEK_ENTER)) {
+				hero.npc();
+			}
+			else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
+				consts.msg=consts.MESSAGE_NONE;
+			}
+		}
+		// 血商人
+		else if (npcid==52 || npcid==53) {
 			if (consts.hge->Input_GetKeyState(HGEK_ENTER)) {
 				hero.npc();
 			}
@@ -696,7 +701,7 @@ bool renderFunc()
 		if (id==45) {
 			int need=25+2*times;
 			wchar_t s[200];
-			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 生命+500\n[2] 攻击+2\n[3] 防御+3\n[ESC] 离开", need);
+			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 攻击+2\n[2] 防御+3\n[ESC] 离开", need);
 			showMessage(s);
 		}
 		// 7楼奸商
@@ -712,7 +717,7 @@ bool renderFunc()
 		if (id==50) {
 			int need=50+4*times;
 			wchar_t s[200];
-			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 生命+1000\n[2] 攻击+4\n[3] 防御+6\n[ESC] 离开", need);
+			wsprintf(s, L"贪婪之神\t勇敢的武士啊，给我%d金币就可以：\n\n[1] 攻击+4\n[2] 防御+6\n[ESC] 离开", need);
 			showMessage(s);
 		}
 		// 14楼奸商
@@ -721,6 +726,14 @@ bool renderFunc()
 			wchar_t s[200];
 			wsprintf(s, L"徘徊之影\t%d金币一个中心对称飞行器，要吗？\n（[C] 键可以使用）\n\n[ENTER] 我要\n[ESC] 离开", need);
 			showMessage(s);
+		}
+		// 8楼血商人
+		if (id==52) {
+			showMessage(L"徘徊之影\t80金币换取500生命值，要吗？\n\n[ENTER] 我要\n[ESC] 离开");
+		}
+		// 13楼血商人
+		if (id==53) {
+			showMessage(L"徘徊之影\t180金币换取2000生命值，要吗？\n\n[ENTER] 我要\n[ESC] 离开");
 		}
 	}
 	consts.hge->Gfx_EndScene();
