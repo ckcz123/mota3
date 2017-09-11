@@ -29,7 +29,7 @@ void c_monster::init(int t)
 	case 12:wcscpy_s(name,L"高级巫师");position=11;hp=1234;atk=400;def=260;money=47;break;
 	case 13:wcscpy_s(name,L"骷髅人");position=12;hp=110;atk=40;def=5;money=5;break;
 	case 14:wcscpy_s(name,L"骷髅士兵");position=13;hp=200;atk=60;def=20;money=9;break;
-	case 15:wcscpy_s(name,L"骷髅队长");position=14;hp=400;atk=100;def=30;money=13;special=1;break;
+	case 15:wcscpy_s(name,L"骷髅队长");position=14;hp=540;atk=104;def=30;money=13;special=1;break;
 	case 16:wcscpy_s(name,L"冥队长");position=15;hp=538;atk=376;def=98;money=32;break;
 	case 17:wcscpy_s(name,L"兽面人");position=16;hp=250;atk=100;def=35;money=14;break;
 	case 18:wcscpy_s(name,L"兽面武士");position=17;hp=600;atk=175;def=66;money=19;break;
