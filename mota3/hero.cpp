@@ -460,6 +460,9 @@ void c_hero::npc(int select)
 	case 47:
 		consts.setMsg(L"徘徊之影\t注意你的钥匙数量，多探路。");
 		break;
+	case 48:
+		consts.setMsg(L"15F测试版结束！");
+		break;
 	case 49:
 		consts.setMsg(L"徘徊之影\t你可能要把本层所有高级卫兵杀死才\n能打开商店门前的机关门。");
 		break;
