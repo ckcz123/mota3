@@ -62,7 +62,7 @@ void loadsave()
 	constants tmpcon;
 	c_hero tmphero;
 	c_map_floor tmpfloor;
-	for (int i=consts.wanttosave-10;i<=consts.wanttosave+10;i++) {
+	for (int i=consts.wanttosave-8;i<=consts.wanttosave+8;i++) {
 		if (i<0) continue;
 		char s[100]="";
 		sprintf_s(s,"Save/save%d.dat",i);
@@ -93,6 +93,7 @@ void save(int id)
 	for (int i=consts.map_floornum/2;i<consts.map_floornum;i++)map_floor[i].save(savefile);
 	fclose(savefile);
 	consts.uploadAll();
+	consts.lastload=-1000;
 	consts.setMsg(L"存档成功！");
 }
 void load(int id)
@@ -111,6 +112,7 @@ void load(int id)
 	consts.nowcnt=0;
 	fclose(loadfile);
 	consts.uploadAll();
+	consts.lastload=-1000;
 	consts.setMsg(L"读档成功！");
 }
 void showMessage(const wchar_t *_s) // 显示提示
