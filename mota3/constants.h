@@ -70,7 +70,7 @@ public:
 	// Ä§ÕÈ£¬¶Ô³Æ·ÉÐÐÆ÷
 	int wand, fly;
 
-	bool moving,opening,flooring,music,showdamage;
+	bool moving,opening,flooring,music,showdamage,shouldUpload;
 	int map_floornum,map_height,map_width,volume,bgmvolume,ScreenLeft;
 
 	savedata sd[1000];

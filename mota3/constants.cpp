@@ -17,6 +17,7 @@ constants::constants()
 	music=true;
 	showdamage=true;
 	map_width=13;map_height=13;
+	shouldUpload=true;
 }
 
 void constants::init()
@@ -428,12 +429,14 @@ void constants::printInfo()
 
 void constants::upload()
 {
+	if (!shouldUpload && ending==0) return;
 	currentmax=0;
 	thread t1(&constants::doUpload, this);
 	t1.detach();
 }
 void constants::uploadAll()
 {
+	if (!shouldUpload) return;
 	thread t1(&constants::doUploadAll, this);
 	t1.detach();
 }

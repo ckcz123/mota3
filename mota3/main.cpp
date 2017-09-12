@@ -217,6 +217,11 @@ bool frameFunc()
 		consts.setMsg(consts.showdamage?L"显伤已开启":L"显伤已关闭");
 	}
 
+	if(consts.hge->Input_GetKeyState(HGEK_EQUALS) && consts.isFree()) {
+		consts.shouldUpload=!consts.shouldUpload;
+		consts.setMsg(consts.shouldUpload?L"DEBUG模式关闭":L"DEBUG模式开启");
+	}
+
 	// 使用魔杖
 	if (consts.isFree() && consts.hge->Input_GetKeyState(HGEK_X) && consts.wand>0) {
 		hero.useWand();
