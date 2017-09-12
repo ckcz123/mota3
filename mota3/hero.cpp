@@ -419,8 +419,14 @@ void c_hero::npc(int select)
 			break;
 		}
 	case 42:
-		consts.setMsg(L"徘徊之影\t这塔里有一些比较容易垮塌的墙壁，\n找到它们也许能让你的过关之路更为\n轻松。");
-		break;
+		{
+			const wchar_t* msg[50]={
+				L"徘徊之影\t这塔里有一些比较容易垮塌的墙壁，\n找到它们也许能让你的过关之路更为\n轻松。",
+				L"徘徊之影\t另外，上面的石头人有坚固属性且很\n难打，重生时也会堵住回来的路，如\n果能找到办法克制其重生就最好了。"
+			};
+			consts.setMsg(msg);
+			break;
+		}
 	case 43:
 		consts.setMsg(L"徘徊之影\t像这种机关门，往往都是需要将其守\n卫怪物全部打死后才会开启。");
 		break;

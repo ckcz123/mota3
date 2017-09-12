@@ -75,6 +75,7 @@ public:
 
 	savedata sd[1000];
 	int wanttosave;
+	int lastload;
 
 	// ½á¾Ö£º1 NE 2GE 3TE
 	int ending;

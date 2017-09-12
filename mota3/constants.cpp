@@ -18,6 +18,8 @@ constants::constants()
 	showdamage=true;
 	map_width=13;map_height=13;
 	shouldUpload=true;
+	wanttosave=0;
+	lastload=-1000;
 }
 
 void constants::init()

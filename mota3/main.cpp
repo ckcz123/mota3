@@ -55,11 +55,15 @@ bool fileConvert(char* from, char* to, bool encode=true) {
 
 void loadsave()
 {
+	if (consts.lastload>=consts.wanttosave-5 && consts.lastload<=consts.wanttosave+5)
+		return;
+
 	FILE *savefile;
 	constants tmpcon;
 	c_hero tmphero;
 	c_map_floor tmpfloor;
-	for (int i=0;i<1000;i++) {
+	for (int i=consts.wanttosave-10;i<=consts.wanttosave+10;i++) {
+		if (i<0) continue;
 		char s[100]="";
 		sprintf_s(s,"Save/save%d.dat",i);
 		int err=fopen_s(&savefile,s,"r");
@@ -74,6 +78,7 @@ void loadsave()
 		}
 	}
 	consts.lasttime=clock();
+	consts.lastload=consts.wanttosave;
 }
 
 void save(int id)
@@ -92,6 +97,7 @@ void save(int id)
 }
 void load(int id)
 {
+	consts.uploadAll();
 	FILE *loadfile;
 	char s[100]="";
 	sprintf_s(s,"Save/save%d.dat",id);
@@ -308,11 +314,13 @@ bool frameFunc()
 		if(consts.hge->Input_GetKeyState(HGEK_DOWN) && clock()-consts.lasttime>200) {
 			consts.wanttosave++;
 			if (consts.wanttosave>=1000) consts.wanttosave=999;
+			loadsave();
 			consts.lasttime=clock();
 		}
 		else if(consts.hge->Input_GetKeyState(HGEK_UP) && clock()-consts.lasttime>200) {
 			consts.wanttosave--;
 			if (consts.wanttosave<0) consts.wanttosave=0;
+			loadsave();
 			consts.lasttime=clock();
 		}
 		else if(consts.hge->Input_GetKeyState(HGEK_ESCAPE))
@@ -327,11 +335,13 @@ bool frameFunc()
 		if(consts.hge->Input_GetKeyState(HGEK_DOWN) && clock()-consts.lasttime>200) {
 			consts.wanttosave++;
 			if (consts.wanttosave>=1000) consts.wanttosave=999;
+			loadsave();
 			consts.lasttime=clock();
 		}
 		else if(consts.hge->Input_GetKeyState(HGEK_UP) && clock()-consts.lasttime>200) {
 			consts.wanttosave--;
 			if (consts.wanttosave<0) consts.wanttosave=0;
+			loadsave();
 			consts.lasttime=clock();
 		}
 		else if(consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
