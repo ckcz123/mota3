@@ -227,7 +227,7 @@ bool frameFunc()
 
 	if(consts.hge->Input_GetKeyState(HGEK_EQUALS) && consts.isFree()) {
 		consts.shouldUpload=!consts.shouldUpload;
-		consts.setMsg(consts.shouldUpload?L"DEBUG模式关闭":L"DEBUG模式开启");
+		consts.setMsg(consts.shouldUpload?L"DEBUG模式关闭。":L"DEBUG模式开启。\n此模式下将对游戏性能进行分析，可\n能会出现部分卡顿情况，非开发环境\n建议关闭。");
 	}
 
 	// 使用魔杖
