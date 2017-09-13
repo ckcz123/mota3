@@ -466,10 +466,10 @@ void c_hero::npc(int select)
 			}
 		}
 	case 47:
-		consts.setMsg(L"徘徊之影\t注意你的钥匙数量，多探路。");
+		consts.setMsg(L"徘徊之影\t爆防一时爽，三区火葬场。\n请适当调整好加攻和加防的比例，请\n勿过度爆攻或爆防。");
 		break;
 	case 48:
-		consts.setMsg(L"15F测试版结束！");
+		consts.setMsg(L"徘徊之影\t15F测试版结束！");
 		break;
 	case 49:
 		consts.setMsg(L"徘徊之影\t你可能要把本层所有高级卫兵杀死才\n能打开商店门前的机关门。");
