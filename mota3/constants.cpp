@@ -57,7 +57,7 @@ void constants::loadResources()
 	s_ground=new hgeSprite(ht_map,0,0,32,32);
 	s_wall=new hgeSprite(ht_map,32,0,32,32);
 	s_wall_hidden=new hgeSprite(ht_map,32,0,32,32);
-	s_wall_hidden->SetColor(0xBBFFFFFF);
+	s_wall_hidden->SetColor(0xB0FFFFFF);
 	s_wall2=new hgeSprite(ht_map,64,0,32,32);
 	s_wall3=new hgeSprite(ht_map,96,0,32,32);
 	s_water=new hgeSprite(ht_map,32,32,32,32);
