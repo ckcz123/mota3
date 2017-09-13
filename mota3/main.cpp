@@ -514,8 +514,8 @@ bool renderFunc()
 		float left=16*consts.map_width+consts.ScreenLeft-len/2;
 		float height=consts.map_height*32*0.6;
 		f->Print(left, height-32, L"请选择难度：");
-		f->Print(left, height, L"[1] 简单（送二黄一蓝，减伤20%%）");
-		f->Print(left, height+28, L"[2] 普通（送一黄，减伤8%%）");
+		f->Print(left, height, L"[1] 简单（送二黄一蓝，减伤15%%）");
+		f->Print(left, height+28, L"[2] 普通（送一黄，减伤5%%）");
 		f->Print(left, height+56, L"[3] 困难（正常模式）");
 		f->Print(left, height+84, L"[4] 噩梦（所有纯血门均不可开启）");
 		delete f;

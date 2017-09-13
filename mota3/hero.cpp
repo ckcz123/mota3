@@ -144,6 +144,8 @@ bool c_hero::moveComplete()
 			}
 		}
 		consts.step++;
+		if (consts.step%30==0)
+			consts.uploadAll();
 		if (!consts.ending && now_floor==0 && x==6 && y==12 && consts.lefttime<80)
 			consts.goodEnd();
 	}
@@ -284,8 +286,8 @@ int c_hero::getDamage(c_monster* monster) // ´ò°Ü¹ÖÎï£¬·µ»Øhp
 	int damage=monster->getSpecial()==1?mon_atk-hero_def:0;
 	int val=damage+(monster->getHp()-1)/(atk-mon_def)*(mon_atk-hero_def);
 
-	if (consts.hard==1) return val*.8;
-	if (consts.hard==2) return val*.92;
+	if (consts.hard==1) return val*.85;
+	if (consts.hard==2) return val*.95;
 	return val;
 
 }
