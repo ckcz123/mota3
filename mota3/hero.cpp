@@ -144,7 +144,7 @@ bool c_hero::moveComplete()
 			}
 		}
 		consts.step++;
-		if (consts.step%30==0)
+		if (consts.step%50==0)
 			consts.uploadAll();
 		if (!consts.ending && now_floor==0 && x==6 && y==12 && consts.lefttime<80)
 			consts.goodEnd();
