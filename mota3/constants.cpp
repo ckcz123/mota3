@@ -314,6 +314,10 @@ void constants::finishHint()
 				setMsg(msg);
 				break;
 			}
+		case 53:
+			map_npc->init(0);
+			msg=MESSAGE_NONE;
+			break;
 		case 70:
 			{
 				map_npc->init(0);

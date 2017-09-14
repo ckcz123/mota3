@@ -517,7 +517,9 @@ void c_hero::npc(int select)
 			}
 			money-=180;
 			hp+=2000;
-			map_npc->init(0);
+			// map_npc->init(0);
+			consts.map_npc=map_npc;
+			consts.setMsg(L"徘徊之影\t本区域怪物伤害都非常高，需要打破\n思维定势，多探路。");
 			break;
 		}
 	case 70:
