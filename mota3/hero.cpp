@@ -127,6 +127,14 @@ bool c_hero::moveComplete()
 			consts.canfly=true;
 			consts.setMsg(L"获得楼层飞行器。\n你可以飞往任意比当前层数低的楼层\n，或比当前层数高且存在通路可达的\n楼层。\n[G]键使用。");
 			break;
+		case 31:
+			atk+=40;
+			consts.setMsg(L"获得神圣剑，攻击+40。");
+			break;
+		case 32:
+			def+=40;
+			consts.setMsg(L"获得神圣盾，防御+40。");
+			break;
 		}
 		int special=map_floor[now_floor].getSpecial(x,y);
 		if (special!=0) {
@@ -376,6 +384,9 @@ void c_hero::beat(c_monster* monster)
 	if (now_floor==15 && id==26 && !map_floor[now_floor].hasMonster(26)) {
 		map_floor[now_floor].getinfo(3, 6)->openSpecial();
 		consts.upload();
+	}
+	if (now_floor==17 && id==30 && !map_floor[now_floor].hasMonster(30)) {
+		map_floor[now_floor].getinfo(3, 10)->openSpecial();
 	}
 
 	consts.lasttime=clock();

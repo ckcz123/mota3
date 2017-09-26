@@ -20,6 +20,7 @@ constants::constants()
 	shouldUpload=true;
 	wanttosave=0;
 	lastload=-1000;
+	shouldUpload=false;
 }
 
 void constants::init()
