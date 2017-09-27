@@ -315,6 +315,7 @@ void constants::finishHint()
 			{
 				msg=MESSAGE_NPC;
 				map_npc=NULL;
+				lasttime=clock();
 				break;
 			}
 		case 55: case 56: case 57:

@@ -460,7 +460,7 @@ bool frameFunc()
 				hero.npc();
 			}
 			else {
-				if (consts.hge->Input_GetKeyState(HGEK_ENTER)) {
+				if (consts.hge->Input_GetKeyState(HGEK_ENTER) && clock()-consts.lasttime>150) {
 					hero.npc();
 				}
 				else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
@@ -770,13 +770,13 @@ bool renderFunc()
 		if (id==54) {
 			if (times>0) {
 				if (times==1) {
-					showMessage(L"？？？\t要进入试炼1层吗？\n过关奖励：生命+1500。\n难度：★★★\n\n[ENTER] 确认进入\n[ESC] 离开");
+					showMessage(L"？？？\t要进入试炼1层吗？\n难度：★★★\n过关奖励：生命+1500。\n\n[ENTER] 确认进入\n[ESC] 离开");
 				}
 				else if (times==2) {
-					showMessage(L"？？？\t要进入试炼2层吗？\n过关奖励：攻防+10。\n难度：★★★★\n\n[ENTER] 确认进入\n[ESC] 离开");
+					showMessage(L"？？？\t要进入试炼2层吗？\n难度：★★★★\n过关奖励：攻防+10。\n\n[ENTER] 确认进入\n[ESC] 离开");
 				}
 				else if (times==3) {
-					showMessage(L"？？？\t要进入试炼3层吗？\n过关奖励：神秘手镯。\n难度：★★★★★\n\n[ENTER] 确认进入\n[ESC] 离开");
+					showMessage(L"？？？\t要进入试炼3层吗？\n难度：★★★★★\n过关奖励：神秘手镯。\n\n[ENTER] 确认进入\n[ESC] 离开");
 				}
 			}
 		}
