@@ -229,12 +229,8 @@ void constants::normalEnd()
 }
 void constants::goodEnd()
 {
-	ending=3;
-	for (int i=0;i<map_floornum;i++)
-		if (map_floor[i].hasMonster()) {
-			ending=2;
-			break;
-		}
+	bool trueend=map_floor[17].getinfo(1,10)->getNpc()->getVisit()==4;
+	ending=trueend?3:2;
 
 	if (ending==3) {
 		const wchar_t* msg[50]={
@@ -314,22 +310,26 @@ void constants::finishHint()
 				};
 				setMsg(msg);
 				break;
+			} 
+		case 54:
+			{
+				msg=MESSAGE_NPC;
+				map_npc=NULL;
+				break;
 			}
-		case 53:
-			map_npc->init(0);
-			msg=MESSAGE_NONE;
-			break;
+		case 55: case 56: case 57:
+			{
+				hero.specialMove();
+				msg=MESSAGE_NONE;
+				map_npc=NULL;
+				break;
+			}
 		case 70:
 			{
 				map_npc->init(0);
 				map_floor[hero.getNowFloor()].getinfo(0,6)->getNpc()->init(0);
 
-				bool trueend=true;
-				for (int i=0;i<map_floornum;i++)
-					if (map_floor[i].hasMonster()) {
-						trueend=false;
-						break;
-					}
+				bool trueend=map_floor[17].getinfo(1,10)->getNpc()->getVisit()==4;
 
 				if (trueend) {
 					const wchar_t* msg[50]={

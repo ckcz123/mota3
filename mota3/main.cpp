@@ -454,6 +454,20 @@ bool frameFunc()
 				consts.msg=consts.MESSAGE_NONE;
 			}
 		}
+		// 17楼仙子
+		else if (npcid==54) {
+			if (npctimes==0 || npctimes==4) {
+				hero.npc();
+			}
+			else {
+				if (consts.hge->Input_GetKeyState(HGEK_ENTER)) {
+					hero.npc();
+				}
+				else if (consts.hge->Input_GetKeyState(HGEK_ESCAPE)) {
+					consts.msg=consts.MESSAGE_NONE;
+				}
+			}
+		}
 		else {
 			hero.npc();
 		}
@@ -751,6 +765,20 @@ bool renderFunc()
 		// 13楼血商人
 		if (id==53) {
 			showMessage(L"徘徊之影\t180金币换取2000生命值，要吗？\n\n[ENTER] 我要\n[ESC] 离开");
+		}
+		// 17楼仙子
+		if (id==54) {
+			if (times>0) {
+				if (times==1) {
+					showMessage(L"？？？\t要进入试炼1层吗？\n过关奖励：生命+1500。\n难度：★★★\n\n[ENTER] 确认进入\n[ESC] 离开");
+				}
+				else if (times==2) {
+					showMessage(L"？？？\t要进入试炼2层吗？\n过关奖励：攻防+10。\n难度：★★★★\n\n[ENTER] 确认进入\n[ESC] 离开");
+				}
+				else if (times==3) {
+					showMessage(L"？？？\t要进入试炼3层吗？\n过关奖励：神秘手镯。\n难度：★★★★★\n\n[ENTER] 确认进入\n[ESC] 离开");
+				}
+			}
 		}
 	}
 	consts.hge->Gfx_EndScene();

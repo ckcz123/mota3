@@ -17,7 +17,7 @@ public:
 	bool openYellowDoor();//打开黄色的门
 	void upstair();//上楼
 	void downstair();//下楼
-	void specialMove();// 传送
+	void specialMove(int f=0);// 传送
 	void turn(); // 转向
 	void fly(); //楼层飞跃
 	void show();
@@ -48,6 +48,7 @@ public:
 	int yellow() {return yellowkey;}
 	int blue() {return bluekey;}
 	int getNowFloor() {return now_floor;}
+	int getDisplayFloor() {return now_floor>20?now_floor-20:now_floor;}
 	void setMaxFloor() {if (max_floor<now_floor && now_floor<30) max_floor=now_floor;}
 	void setFlyFloor(int delta=0);
 	int getFlyFloor() {return fly_floor;}

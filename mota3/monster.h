@@ -15,7 +15,7 @@ public:
 	int getId() {return id;}
 	int getHp() {return hp;}
 	bool beAttacked(int hero_atk) {hp-=special==2?1:hero_atk-def;return hp<=0;}
-	int getAtk() {return atk;}
+	int getAtk();
 	int getDef();
 	int getMoney() {
 		int m=money;

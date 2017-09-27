@@ -206,8 +206,20 @@ void c_hero::downstair()
 	consts.flooring=true;
 	consts.step++;
 }
-void c_hero::specialMove()
+void c_hero::specialMove(int f)
 {
+	if (f==0) {
+		now_floor=17;
+		x=10;
+		y=2;
+		face=3;
+	}
+	else {
+		now_floor=20+f;
+		x=0;
+		y=12;
+		face=3;
+	}
 }
 void c_hero::turn()
 {
@@ -320,6 +332,20 @@ void c_hero::beat(c_monster* monster)
 		}
 	}
 
+	// 分裂
+	if (monster->getSpecial()==4) {
+		int nx=nextX(), ny=nextY();
+		for (int i=0;i<4;i++) {
+			int nnx=nx+2*dir[0][i], nny=ny+2*dir[1][i];
+			if (nnx>=0 && nnx<consts.map_width && nny>=0 && nny<consts.map_height) {
+				c_map_point* point=map_floor[now_floor].getinfo(nny,nnx);
+				if (point->isGround()) {
+					point->init(100+monster->getId());
+				}
+			}
+		}
+	}
+	
 	monster->init(0);
 
 	// 打完，触发一些事件
@@ -447,7 +473,7 @@ void c_hero::npc(int select)
 		{
 			const wchar_t* msg[50]={
 				L"徘徊之影\t本塔共有两个商店，6楼和12楼。两\n个商店是类似于新新魔塔的那种关系。",
-				L"徘徊之影\t另外给个友情提示：\n爆防一时爽，三区火葬场！\n\n（大佬们请无视这句话...）"
+				L"徘徊之影\t另外给个友情提示：\n爆防一时爽，三区火葬场！\n请适当平衡加点，以免三区骂作者...\n\n（大佬们请无视这段话...）"
 			};
 			consts.setMsg(msg);
 			break;
@@ -483,14 +509,23 @@ void c_hero::npc(int select)
 			}
 		}
 	case 47:
-		consts.setMsg(L"徘徊之影\t爆防一时爽，三区火葬场。\n请适当调整好加攻和加防的比例，请\n勿过度爆攻或爆防。");
-		break;
-	case 48:
-		consts.setMsg(L"徘徊之影\t15F测试版结束！");
-		break;
+		{
+			const wchar_t* msg[50]={
+				L"作者提示\t恭喜通过了前两区，来到了这里！\n作者噩梦难度数据如下：\nHP2103,A179,D159,M97,Y5,B1\n\n以上数据仅供参考。",
+				L"作者提示\t另外，三四区怪物伤害较高，请多存\n档，多探路，最好先把所有NPC碰一遍\n，也许有的会给你意想不到的惊喜呢~"
+			};
+			consts.setMsg(msg);
+			break;
+		}
 	case 49:
-		consts.setMsg(L"徘徊之影\t你可能要把本层所有高级卫兵杀死才\n能打开商店门前的机关门。");
-		break;
+		{
+			const wchar_t* msg[50]={
+				L"徘徊之影\t你可能要把本层所有高级卫兵杀死才\n能打开商店门前的机关门。",
+				L"作者提示\t设计上，可以只用一次魔杖就能杀掉\n所有高级卫兵；当然你也可以选择多\n使用几次以节省黄钥匙。"
+			};
+			consts.setMsg(msg);
+			break;
+		}
 	case 50:
 		{
 			int need=50+4*npctime;
@@ -534,25 +569,71 @@ void c_hero::npc(int select)
 			}
 			money-=180;
 			hp+=2000;
-			// map_npc->init(0);
+			map_npc->init(0);
+			break;
+		}
+	case 54:
+		{
+			if (npctime==0) {
+				const wchar_t* msg[50]={
+					L"？？？\t少年，你想进行试炼吗？",
+					L"勇士\t试炼？什么是试炼......",
+					L"？？？\t我给你简单介绍一下规则。请听好：",
+					L"？？？\t1. 试炼之地位于异次元空间，共有3\n层。每过一层就可以回来获取我给你\n的奖励。",
+					L"？？？\t2. 试炼之地的怪物都比较特殊：\n\n(1) 所有怪物的伤害值都是恒定的。\n(2) 所有怪物都拥有分裂属性，打掉\n后会向四个方向进行分裂。\n(3) 怪物打掉后无法获取金币值。",
+					L"？？？\t3. 试炼之地仅拥有钥匙、血瓶和对称\n飞等宝物。宝物都是可以带出来的。",
+					L"？？？\t试炼之地比较考验路线，需一定的智\n商仔细琢磨才能找到最优解；当然选\n择直接使用对称飞过关也是可以的。",
+					L"？？？\t来试试吧！"
+				};
+				consts.setMsg(msg);
+				map_npc->visitNpc();
+				consts.map_npc=map_npc;
+			}
+			else if (npctime<=3) {
+				specialMove(npctime);
+				map_npc->visitNpc();
+				consts.msg=consts.MESSAGE_NONE;		
+			}
+			else {
+				consts.setMsg(L"？？？\t你已通关所有试炼层！");
+			}
+			break;
+		}
+	case 55:
+		{
+			hp+=1500;
+			if (consts.music)
+				consts.hge->Effect_PlayEx(consts.he_GetItem, consts.volume);
+			consts.setMsg(L"？？？\t恭喜通关试炼1层！\n生命+1500。");
 			consts.map_npc=map_npc;
-			consts.setMsg(L"徘徊之影\t本区域怪物伤害都非常高，需要打破\n思维定势，多探路。");
+			break;
+		}
+	case 56:
+		{
+			atk+=10; def+=10;
+			if (consts.music)
+				consts.hge->Effect_PlayEx(consts.he_GetItem, consts.volume);
+			consts.setMsg(L"？？？\t恭喜通关试炼2层！\n攻防+10。");
+			consts.map_npc=map_npc;
+			break;
+		}
+	case 57:
+		{
+			if (consts.music)
+				consts.hge->Effect_PlayEx(consts.he_GetItem, consts.volume);
+			consts.setMsg(L"？？？\t恭喜通关试炼3层！\n获得神秘手镯。");
+			consts.map_npc=map_npc;
 			break;
 		}
 	case 70:
 		{
-			bool trueend=true;
-			for (int i=0;i<consts.map_floornum;i++)
-				if (map_floor[i].hasMonster()) {
-					trueend=false;
-					break;
-				}
+			bool trueend=map_floor[17].getinfo(1,10)->getNpc()->getVisit()==4;
 
 			if (trueend) {
 				const wchar_t* msg[50]={
 					L"勇士\t波动好像就是从这里散发开来的，看\n来就是这个水晶球了。",
 					L"勇士\t（敲敲打打）\n好像从没见过这种材质呢，这就是异\n次元的物品吗？试试能不能带回去研\n究研究。",
-					L"勇士\t（上前轻轻一摘）",
+					L"勇士\t（上前轻轻一摘，手镯发出了光芒）",
 				};
 				consts.map_npc=map_npc;
 				consts.setMsg(msg);

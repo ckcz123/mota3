@@ -12,6 +12,7 @@ void c_monster::init(int t)
 	// 1 - 先攻
 	// 2 - 魔攻
 	// 3 - 坚固
+	// 4 - 特殊
 
 	switch(t)
 	{
@@ -59,8 +60,11 @@ void c_monster::init(int t)
 		for(int i=0;i<4;i++)
 			monster[i]=new hgeSprite(consts.ht_monster,32*i,32*position,32,32);
 }
+int c_monster::getAtk() {
+	return special==4?hero.getDef()+1:atk;
+}
 int c_monster::getDef() {
-	return special==3?hero.getAtk()-1:def;
+	return special==3||special==4?hero.getAtk()-1:def;
 }
 void c_monster::show(GfxFont* f,int i,int j)
 {
@@ -112,6 +116,7 @@ void c_monster::printInfo()
 		if (special==1) wcscpy_s(s0, L"（先攻）");
 		else if (special==2) wcscpy_s(s0, L"（魔攻）");
 		else if (special==3) wcscpy_s(s0, L"（坚固）");
+		else if (special==4) wcscpy_s(s0, L"（特殊）");
 		f->Print(consts.ScreenLeft+consts.map_width*32+16,py,L"%s%s",name,s0);
 		delete f;
 		py+=32;
