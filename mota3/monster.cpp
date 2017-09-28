@@ -44,12 +44,10 @@ void c_monster::init(int t)
 	case 26:wcscpy_s(name,L"骑士队长");position=25;hp=1356;atk=594;def=140;money=38;break;
 	case 27:wcscpy_s(name,L"金骑士");position=26;hp=847;atk=451;def=233;money=46;break;
 	case 28:wcscpy_s(name,L"灵武士");position=27;hp=988;atk=673;def=235;money=50;break;
-	case 29:wcscpy_s(name,L"红衣魔王");position=28;hp=15000;atk=1000;def=1000;money=100;break;
 	case 30:wcscpy_s(name,L"白衣武士");position=29;hp=735;atk=652;def=100;money=42;break;
-	case 31:wcscpy_s(name,L"灵法师");position=30;hp=1500;atk=830;def=730;money=80;break;
 	case 32:wcscpy_s(name,L"铁面人");position=34;hp=748;atk=401;def=354;money=45;break;
 	case 33:wcscpy_s(name,L"近卫骑士");position=39;hp=950;atk=500;def=350;money=48;break;
-	case 34:wcscpy_s(name,L"黑衣魔王");position=36;hp=2017;atk=891;def=243;money=60;break;
+	case 34:wcscpy_s(name,L"黑衣魔王");position=36;hp=2017;atk=903;def=243;money=0;break;
 	case 51:wcscpy_s(name,L"绿头怪");position=0;hp=21;atk=0;def=0;money=0;special=4;break;
 	case 52:wcscpy_s(name,L"红头怪");position=1;hp=201;atk=0;def=0;money=0;special=4;break;
 	case 53:wcscpy_s(name,L"青头怪");position=2;hp=401;atk=0;def=0;money=0;special=4;break;

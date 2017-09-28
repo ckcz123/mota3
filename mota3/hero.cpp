@@ -484,7 +484,7 @@ void c_hero::npc(int select)
 	case 42:
 		{
 			const wchar_t* msg[50]={
-				L"徘徊之影\t这塔里有一些比较容易垮塌的墙壁，\n找到它们也许能让你的过关之路更为\n轻松。\n\n（暗墙的存在是为了让本塔的地图更\n好看，其和普通墙壁对比度达到了50%\n，很容易找到的。）",
+				L"徘徊之影\t这塔里有一些比较容易垮塌的墙壁，\n找到它们也许能让你的过关之路更为\n轻松。\n（PS: 暗墙的存在是为了让本塔的地\n图更好看，它们都很容易找到的。）",
 				L"徘徊之影\t另外，如何正确处理上面的坚固怪是\n能否顺利通过一区的关键所在。"
 			};
 			consts.setMsg(msg);
@@ -496,8 +496,8 @@ void c_hero::npc(int select)
 	case 44:
 		{
 			const wchar_t* msg[50]={
-				L"徘徊之影\t本塔共有两个商店，6楼和12楼。两\n个商店是类似于新新魔塔的那种关系。",
-				L"徘徊之影\t另外给个友情提示：\n爆防一时爽，三区火葬场！\n请适当平衡加点，以免三区骂作者...\n\n（大佬们请无视这段话...）"
+				L"徘徊之影\t本塔共有两个商店，6楼和12楼。两\n个商店类似于新新魔塔的那种关系。",
+				L"徘徊之影\t另外给个友情提示：\n爆防一时爽，三区火葬场！\n请适当平衡加点，以免三区骂作者。\n（大佬们请无视这段话...）"
 			};
 			consts.setMsg(msg);
 			break;
@@ -535,8 +535,8 @@ void c_hero::npc(int select)
 	case 47:
 		{
 			const wchar_t* msg[50]={
-				L"作者提示\t恭喜通过了前两区，来到了这里！\n作者噩梦难度数据如下：\nHP2103,A179,D159,M97,Y5,B1\n\n以上数据仅供参考。",
-				L"作者提示\t另外，三四区怪物伤害较高，请多存\n档，多探路，最好先把所有NPC碰一遍\n，也许有的会给你意想不到的惊喜呢~"
+				L"作者提示\t作者测试时噩梦难度下的属性：\n生命2103，攻击179，防御159，金币\n97，黄钥匙5，蓝钥匙1，魔杖4次。\n（以上数据仅供参考。）",
+				L"作者提示\t另外，三四区怪物伤害较高，请多存\n档多探路，最好先把所有NPC碰一遍。"
 			};
 			consts.setMsg(msg);
 			break;
@@ -596,7 +596,9 @@ void c_hero::npc(int select)
 			}
 			money-=180;
 			hp+=2000;
-			map_npc->init(0);
+			// map_npc->init(0);
+			consts.map_npc=map_npc;
+			consts.setMsg(L"徘徊之影\t钥匙尽量不要浪费，到后面有好处的。");
 			break;
 		}
 	case 54:
@@ -655,13 +657,18 @@ void c_hero::npc(int select)
 		}
 	case 70:
 		{
-			bool trueend=map_floor[17].getinfo(1,10)->getNpc()->getVisit()==4;
+			bool trueend=true;
+			for (int i=0;i<=20;i++)
+				if (map_floor[i].hasMonster()) {
+					trueend=false;
+					break;
+				}
 
 			if (trueend) {
 				const wchar_t* msg[50]={
 					L"勇士\t波动好像就是从这里散发开来的，看\n来就是这个水晶球了。",
 					L"勇士\t（敲敲打打）\n好像从没见过这种材质呢，这就是异\n次元的物品吗？试试能不能带回去研\n究研究。",
-					L"勇士\t（上前轻轻一摘，手镯发出了光芒）",
+					L"勇士\t（上前轻轻一摘）",
 				};
 				consts.map_npc=map_npc;
 				consts.setMsg(msg);

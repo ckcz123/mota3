@@ -284,6 +284,8 @@ bool frameFunc()
 			map_floor[10].getinfo(12,9)->init(84);
 			map_floor[12].getinfo(8,1)->init(84);
 			map_floor[14].getinfo(11,6)->init(84);
+			map_floor[17].getinfo(10,7)->init(84);
+			map_floor[18].getinfo(9,10)->init(84);
 
 		}
 	}
@@ -613,7 +615,7 @@ bool renderFunc()
 		{
 			wchar_t ss[200];
 			wsprintf(ss, L"恭喜通关%s！您的分数是 %d。\n", 
-				consts.ending==1?L"NE":consts.ending==1?L"GE":consts.ending==2?L"TE":L"", hero.getHP());
+				consts.ending==1?L"NE":consts.ending==2?L"GE":consts.ending==3?L"TE":L"", hero.getHP());
 
 			// uploading...
 			if (consts.currentmax==0) {

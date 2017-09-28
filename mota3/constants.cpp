@@ -58,7 +58,7 @@ void constants::loadResources()
 	s_ground=new hgeSprite(ht_map,0,0,32,32);
 	s_wall=new hgeSprite(ht_map,32,0,32,32);
 	s_wall_hidden=new hgeSprite(ht_map,32,0,32,32);
-	s_wall_hidden->SetColor(0xB0FFFFFF);
+	s_wall_hidden->SetColor(0xA0FFFFFF);
 	s_wall2=new hgeSprite(ht_map,64,0,32,32);
 	s_wall3=new hgeSprite(ht_map,96,0,32,32);
 	s_water=new hgeSprite(ht_map,32,32,32,32);
@@ -229,7 +229,12 @@ void constants::normalEnd()
 }
 void constants::goodEnd()
 {
-	bool trueend=map_floor[17].getinfo(1,10)->getNpc()->getVisit()==4;
+	bool trueend=true;
+	for (int i=0;i<=20;i++)
+		if (map_floor[i].hasMonster()) {
+			trueend=false;
+			break;
+		}
 	ending=trueend?3:2;
 
 	if (ending==3) {
@@ -240,7 +245,7 @@ void constants::goodEnd()
 			L"突然！怪物们开始不顾一切地进行反\n扑，勇士独木难支，很快身受重伤。",
 			L"被援军救下来后，勇士被紧急送去治\n疗，然而由于伤势过重无力回天。",
 			L"被欢呼声所惊醒，回光返照的勇士，\n看着窗外那已被封闭的异次元之门，\n流下了热泪。",
-			L"正当意识弥留之际，突然怀中一阵温\n暖袭来，水晶碎片发出了耀眼的光芒\n。睁眼一看，自己伤口全部消失了，\n精神也恢复到了巅峰时刻！"
+			L"正当意识弥留之际，突然怀中一阵温\n暖袭来，水晶碎片发出了耀眼的光芒\n。睁眼一看，自己伤口全部消失了，\n精神也恢复到了巅峰时刻！",
 			L"勇士竟然也拥有了重生的能力！",
 			L"战争结束后，国王给勇士分封了一大\n块领地，并建了一座纪念碑以纪念勇\n士在这场战斗中的卓越贡献。",
 			L"......百年后......",
@@ -310,7 +315,13 @@ void constants::finishHint()
 				};
 				setMsg(msg);
 				break;
-			} 
+			}
+		case 53:
+			{
+				map_npc->init(0);
+				msg=MESSAGE_NONE;
+				break;
+			}
 		case 54:
 			{
 				msg=MESSAGE_NPC;
@@ -328,11 +339,19 @@ void constants::finishHint()
 		case 70:
 			{
 				map_npc->init(0);
-				map_floor[hero.getNowFloor()].getinfo(0,6)->getNpc()->init(0);
+				map_floor[hero.getNowFloor()].getinfo(1,6)->init(0);
 
-				bool trueend=map_floor[17].getinfo(1,10)->getNpc()->getVisit()==4;
+				// bool trueend=map_floor[17].getinfo(1,10)->getNpc()->getVisit()==4;
+				bool trueend=true;
+				for (int i=0;i<=20;i++)
+					if (map_floor[i].hasMonster()) {
+						trueend=false;
+						break;
+					}
 
 				if (trueend) {
+					if (music)
+						hge->Effect_PlayEx(he_GetItem, volume);
 					const wchar_t* msg[50]={
 						L"（获得水晶碎片）",
 						L"勇士\t这么轻易就摘下来了？不会有什么坑\n吧...",
@@ -340,7 +359,7 @@ void constants::finishHint()
 						L"勇士\t怎么了，好像这座塔在震？",
 						L"（震动感更强烈了）",
 						L"勇士\t卧槽，真的在震，这座塔是要垮啊！\n快跑啊！",
-						L"勇士\t快跑啊，好不容易闯到了最后，我可\n不想死在这里！"
+						L"请在规定时间内逃离这座塔。"
 					};
 					setMsg(msg);
 				}
@@ -352,7 +371,7 @@ void constants::finishHint()
 						L"勇士\t怎么了，好像这座塔在震？",
 						L"（震动感更强烈了）",
 						L"勇士\t卧槽，真的在震，这座塔是要垮啊！\n快跑啊！",
-						L"勇士\t快跑啊，好不容易闯到了最后，我可\n不想死在这里！"
+						L"请在规定时间内逃离这座塔。"
 					};
 					setMsg(msg);
 				}
@@ -364,7 +383,7 @@ void constants::finishHint()
 			{
 				delete map_npc;
 				map_npc=NULL;
-				lefttime=70;
+				lefttime=60.0-hard;
 				msg=MESSAGE_NONE;
 				break;
 			}
