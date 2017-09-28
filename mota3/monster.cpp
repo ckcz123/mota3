@@ -42,18 +42,18 @@ void c_monster::init(int t)
 	case 24:wcscpy_s(name,L"双手剑士");position=23;hp=454;atk=584;def=0;money=28;break;
 	case 25:wcscpy_s(name,L"冥战士");position=24;hp=649;atk=409;def=112;money=34;break;
 	case 26:wcscpy_s(name,L"骑士队长");position=25;hp=1356;atk=594;def=140;money=38;break;
-	case 27:wcscpy_s(name,L"金骑士");position=26;hp=813;atk=467;def=263;money=46;break;
-	case 28:wcscpy_s(name,L"灵武士");position=27;hp=3000;atk=980;def=900;money=88;break;
+	case 27:wcscpy_s(name,L"金骑士");position=26;hp=847;atk=451;def=233;money=46;break;
+	case 28:wcscpy_s(name,L"灵武士");position=27;hp=988;atk=673;def=235;money=50;break;
 	case 29:wcscpy_s(name,L"红衣魔王");position=28;hp=15000;atk=1000;def=1000;money=100;break;
 	case 30:wcscpy_s(name,L"白衣武士");position=29;hp=735;atk=652;def=100;money=42;break;
 	case 31:wcscpy_s(name,L"灵法师");position=30;hp=1500;atk=830;def=730;money=80;break;
-	case 36:wcscpy_s(name,L"冥队长");position=15;hp=3333;atk=1200;def=1133;money=112;break;
-	case 38:wcscpy_s(name,L"黑衣魔王");position=36;hp=50000;atk=3300;def=2600;money=0;break;
-	case 39:wcscpy_s(name,L"铁面人");position=34;hp=20;atk=400;def=0;money=29;special=3;break;
-	case 46:wcscpy_s(name,L"高级巫师");position=11;hp=5000;atk=2500;def=1500;money=0;break;
-	case 47:wcscpy_s(name,L"铁面人");position=34;hp=100;atk=2333;def=0;money=0;break;
-	case 48:wcscpy_s(name,L"灵武士");position=27;hp=1600;atk=1306;def=1200;money=117;break;
-	case 49:wcscpy_s(name,L"红衣魔王");position=28;hp=20000;atk=1777;def=1444;money=133;break;
+	case 32:wcscpy_s(name,L"铁面人");position=34;hp=748;atk=401;def=354;money=45;break;
+	case 33:wcscpy_s(name,L"近卫骑士");position=39;hp=950;atk=500;def=350;money=48;break;
+	case 34:wcscpy_s(name,L"黑衣魔王");position=36;hp=2017;atk=891;def=243;money=60;break;
+	case 51:wcscpy_s(name,L"绿头怪");position=0;hp=21;atk=0;def=0;money=0;special=4;break;
+	case 52:wcscpy_s(name,L"红头怪");position=1;hp=201;atk=0;def=0;money=0;special=4;break;
+	case 53:wcscpy_s(name,L"青头怪");position=2;hp=401;atk=0;def=0;money=0;special=4;break;
+	case 54:wcscpy_s(name,L"怪王");position=3;hp=751;atk=0;def=0;money=0;special=4;break;
 	default:position=-1;
 	}
 	if (position!=-1)

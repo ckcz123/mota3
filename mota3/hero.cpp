@@ -115,6 +115,11 @@ bool c_hero::moveComplete()
 			def+=10;
 			consts.setMsg(L"获得铁盾，防御力+10。");
 			break;
+		case 23:
+			if (consts.fly<0) consts.fly=0;
+			consts.fly++;
+			consts.setMsg(L"获得中心对称飞行器。");
+			break;
 		case 25:
 			atk+=20;
 			consts.setMsg(L"获得银剑，攻击力+20。");
@@ -152,8 +157,12 @@ bool c_hero::moveComplete()
 			}
 		}
 		consts.step++;
-		if (consts.step%50==0)
-			consts.uploadAll();
+		if (now_floor==20 && x==6 && y==8 && map_floor[now_floor].hasMonster() && map_floor[now_floor].getinfo(9,6)->isGround()) {
+			if (consts.music)
+				consts.hge->Effect_PlayEx(consts.he_OpenDoor,consts.volume);
+			consts.upload();
+			map_floor[now_floor].getinfo(9,6)->init(84);
+		}
 		if (!consts.ending && now_floor==0 && x==6 && y==12 && consts.lefttime<80)
 			consts.goodEnd();
 	}
@@ -216,8 +225,8 @@ void c_hero::specialMove(int f)
 	}
 	else {
 		now_floor=20+f;
-		x=0;
-		y=12;
+		x=1;
+		y=11;
 		face=3;
 	}
 }
@@ -267,7 +276,7 @@ void c_hero::printInfo()
 {
 	int py=16;
 	consts.s_storey->Render(16,py);
-	consts.hgef->printf(60,py,HGETEXT_LEFT,"%d",now_floor);
+	consts.hgef->printf(60,py,HGETEXT_LEFT,"%d",getDisplayFloor());
 	py+=32;
 	consts.s_heart->Render(16,py);
 	consts.hgef->printf(60,py,HGETEXT_LEFT,"%d",hp);
@@ -414,6 +423,21 @@ void c_hero::beat(c_monster* monster)
 	if (now_floor==17 && id==30 && !map_floor[now_floor].hasMonster(30)) {
 		map_floor[now_floor].getinfo(3, 10)->openSpecial();
 	}
+	if (now_floor==17 && id==27 && map_floor[now_floor].getinfo(10,9)->isGround() && map_floor[now_floor].getinfo(10,11)->isGround()) {
+		map_floor[now_floor].getinfo(9,10)->openSpecial();
+	}
+	if (now_floor==19 && id==33) {
+		if (map_floor[now_floor].getinfo(1,5)->isGround() && map_floor[now_floor].getinfo(3,5)->isGround()) {
+			map_floor[now_floor].getinfo(2,4)->openSpecial();
+		}
+		if (map_floor[now_floor].getinfo(1,7)->isGround() && map_floor[now_floor].getinfo(3,7)->isGround()) {
+			map_floor[now_floor].getinfo(2,8)->openSpecial();
+		}
+	}
+	if (now_floor==20 && !map_floor[now_floor].hasMonster()) {
+		map_floor[now_floor].getinfo(9,6)->init(0);
+		map_floor[now_floor].getinfo(3,6)->openSpecial();
+	}
 
 	consts.lasttime=clock();
 }
@@ -518,7 +542,7 @@ void c_hero::npc(int select)
 			break;
 		}
 	case 48:
-		consts.setMsg(L"徘徊之影\t据说右上角那个仙子可以引导你进入\n一个异次元空间，不过我也没有试过\n，不知道具体是怎么样的。");
+		consts.setMsg(L"徘徊之影\t据说右上角那个仙子可以引导你进入\n一个异次元空间。");
 		break;
 	case 49:
 		{
@@ -607,24 +631,25 @@ void c_hero::npc(int select)
 			hp+=1500;
 			if (consts.music)
 				consts.hge->Effect_PlayEx(consts.he_GetItem, consts.volume);
-			consts.setMsg(L"？？？\t恭喜通关试炼1层！\n生命+1500。");
+			consts.setMsg(L"？？？\t恭喜通关试炼1层！\n这是你的奖励：生命+1500。");
 			consts.map_npc=map_npc;
 			break;
 		}
 	case 56:
 		{
-			atk+=10; def+=10;
+			consts.wand++; consts.fly+=2;
 			if (consts.music)
 				consts.hge->Effect_PlayEx(consts.he_GetItem, consts.volume);
-			consts.setMsg(L"？？？\t恭喜通关试炼2层！\n攻防+10。");
+			consts.setMsg(L"？？？\t恭喜通关试炼2层！\n这是你的奖励：魔杖+1，对称飞+2。");
 			consts.map_npc=map_npc;
 			break;
 		}
 	case 57:
 		{
+			atk+=10; def+=10;
 			if (consts.music)
 				consts.hge->Effect_PlayEx(consts.he_GetItem, consts.volume);
-			consts.setMsg(L"？？？\t恭喜通关试炼3层！\n获得神秘手镯。");
+			consts.setMsg(L"？？？\t恭喜通关试炼3层！\n这是你的奖励：攻防+10。");
 			consts.map_npc=map_npc;
 			break;
 		}

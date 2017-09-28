@@ -48,7 +48,7 @@ public:
 	int yellow() {return yellowkey;}
 	int blue() {return bluekey;}
 	int getNowFloor() {return now_floor;}
-	int getDisplayFloor() {return now_floor>20?now_floor-20:now_floor;}
+	int getDisplayFloor(int f=-1) {return f<0?getDisplayFloor(now_floor):(f>20?f-20:f);}
 	void setMaxFloor() {if (max_floor<now_floor && now_floor<30) max_floor=now_floor;}
 	void setFlyFloor(int delta=0);
 	int getFlyFloor() {return fly_floor;}

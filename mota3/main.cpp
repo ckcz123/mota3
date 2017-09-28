@@ -584,7 +584,7 @@ bool renderFunc()
 			wsprintf(ss,L"读取存档 %d\n(无效的存档)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消", consts.wanttosave+1);
 		else
 			wsprintf(ss,L"读取存档 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消",
-			consts.wanttosave+1, consts.getHardText(sd->hard), sd->now_floor, sd->hp,
+			consts.wanttosave+1, consts.getHardText(sd->hard), hero.getDisplayFloor(sd->now_floor), sd->hp,
 			sd->atk, sd->def);
 		showMessage(ss);
 		
@@ -643,7 +643,7 @@ bool renderFunc()
 				wsprintf(ss,L"存档到文件 %d\n(空白)\n\n[↑] [↓] 更改存档位置\n[ENTER] 确认存档\n[ESC] 取消", consts.wanttosave+1);
 			else
 				wsprintf(ss,L"存档到文件 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改存档位置\n[ENTER] 确认存档\n[ESC] 取消",
-				consts.wanttosave+1, consts.getHardText(sd->hard), sd->now_floor, sd->hp,
+				consts.wanttosave+1, consts.getHardText(sd->hard), hero.getDisplayFloor(sd->now_floor), sd->hp,
 				sd->atk, sd->def);
 			showMessage(ss);
 			break;
@@ -657,7 +657,7 @@ bool renderFunc()
 				wsprintf(ss,L"读取存档 %d\n(无效的存档)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消", consts.wanttosave+1);
 			else
 				wsprintf(ss,L"读取存档 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消",
-						consts.wanttosave+1, consts.getHardText(sd->hard), sd->now_floor, sd->hp,
+						consts.wanttosave+1, consts.getHardText(sd->hard), hero.getDisplayFloor(sd->now_floor), sd->hp,
 						sd->atk, sd->def);
 			showMessage(ss);
 			break;
@@ -773,10 +773,10 @@ bool renderFunc()
 					showMessage(L"？？？\t要进入试炼1层吗？\n难度：★★★\n过关奖励：生命+1500。\n\n[ENTER] 确认进入\n[ESC] 离开");
 				}
 				else if (times==2) {
-					showMessage(L"？？？\t要进入试炼2层吗？\n难度：★★★★\n过关奖励：攻防+10。\n\n[ENTER] 确认进入\n[ESC] 离开");
+					showMessage(L"？？？\t要进入试炼2层吗？\n难度：★★★★\n过关奖励：魔杖+1，对称飞+2。\n\n[ENTER] 确认进入\n[ESC] 离开");
 				}
 				else if (times==3) {
-					showMessage(L"？？？\t要进入试炼3层吗？\n难度：★★★★★\n过关奖励：神秘手镯。\n\n[ENTER] 确认进入\n[ESC] 离开");
+					showMessage(L"？？？\t要进入试炼3层吗？\n难度：★★★★★\n过关奖励：攻防+10。\n\n[ENTER] 确认进入\n[ESC] 离开");
 				}
 			}
 		}
