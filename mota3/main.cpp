@@ -98,7 +98,8 @@ void save(int id)
 }
 void load(int id)
 {
-	consts.uploadAll();
+	if (consts.hard!=0)
+		consts.uploadAll();
 	FILE *loadfile;
 	char s[100]="";
 	sprintf_s(s,"Save/save%d.dat",id);
@@ -111,7 +112,7 @@ void load(int id)
 		consts.map_floornum=consts.nowcnt;
 	consts.nowcnt=0;
 	fclose(loadfile);
-	consts.uploadAll();
+	consts.uploadAll(1500);
 	consts.lastload=-1000;
 	consts.setMsg(L"读档成功！");
 }
@@ -223,11 +224,6 @@ bool frameFunc()
 	if(consts.hge->Input_GetKeyState(HGEK_MINUS) && consts.isFree()) {
 		consts.showdamage=!consts.showdamage;
 		consts.setMsg(consts.showdamage?L"显伤已开启":L"显伤已关闭");
-	}
-
-	if(consts.hge->Input_GetKeyState(HGEK_EQUALS) && consts.isFree()) {
-		consts.shouldUpload=!consts.shouldUpload;
-		consts.setMsg(consts.shouldUpload?L"DEBUG模式关闭。":L"DEBUG模式开启。\n此模式下将对游戏性能进行分析，可\n能会出现部分卡顿情况，非开发环境\n建议关闭。");
 	}
 
 	// 使用魔杖

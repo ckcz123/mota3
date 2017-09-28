@@ -20,7 +20,7 @@ constants::constants()
 	shouldUpload=true;
 	wanttosave=0;
 	lastload=-1000;
-	shouldUpload=false;
+	// shouldUpload=false;
 }
 
 void constants::init()
@@ -461,10 +461,10 @@ void constants::upload()
 	thread t1(&constants::doUpload, this);
 	t1.detach();
 }
-void constants::uploadAll()
+void constants::uploadAll(int delay)
 {
 	if (!shouldUpload) return;
-	thread t1(&constants::doUploadAll, this);
+	thread t1(&constants::doUploadAll, this, delay);
 	t1.detach();
 }
 
@@ -521,8 +521,10 @@ void constants::doUpload()
 		currentmax=-1;
 }
 
-void constants::doUploadAll()
+void constants::doUploadAll(int delay)
 {
+	if (delay>0)
+		Sleep(delay);
 	char url[200];
 	// 开始时间、难度、当前层数、生命、攻击、防御、金钱、黄钥匙、蓝钥匙、魔杖次数、对称飞次数、游戏时间、总时间、步数、结局
 	// 结局1/2传1，结局3传2
