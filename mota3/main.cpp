@@ -55,14 +55,14 @@ bool fileConvert(char* from, char* to, bool encode=true) {
 
 void loadsave()
 {
-	if (consts.lastload>=consts.wanttosave-5 && consts.lastload<=consts.wanttosave+5)
+	if (consts.lastload>=consts.wanttosave-10 && consts.lastload<=consts.wanttosave+10)
 		return;
 
 	FILE *savefile;
 	constants tmpcon;
 	c_hero tmphero;
 	c_map_floor tmpfloor;
-	for (int i=consts.wanttosave-8;i<=consts.wanttosave+8;i++) {
+	for (int i=consts.wanttosave-10;i<=consts.wanttosave+10;i++) {
 		if (i<0) continue;
 		char s[100]="";
 		sprintf_s(s,"Save/save%d.dat",i);
@@ -758,7 +758,7 @@ bool renderFunc()
 		}
 		// 8楼血商人
 		if (id==52) {
-			showMessage(L"徘徊之影\t80金币换取500生命值，要吗？\n\n[ENTER] 我要\n[ESC] 离开");
+			showMessage(L"徘徊之影\t70金币换取500生命值，要吗？\n\n[ENTER] 我要\n[ESC] 离开");
 		}
 		// 13楼血商人
 		if (id==53) {
@@ -768,13 +768,13 @@ bool renderFunc()
 		if (id==54) {
 			if (times>0) {
 				if (times==1) {
-					showMessage(L"？？？\t要进入试炼1层吗？\n难度：★★★\n过关奖励：生命+1500。\n\n[ENTER] 确认进入\n[ESC] 离开");
+					showMessage(L"仙子\t你要进入试炼1层吗？\n难度：★★★\n过关奖励：生命+1500。\n\n[ENTER] 确认进入\n[ESC] 离开");
 				}
 				else if (times==2) {
-					showMessage(L"？？？\t要进入试炼2层吗？\n难度：★★★★\n过关奖励：魔杖+1，对称飞+2。\n\n[ENTER] 确认进入\n[ESC] 离开");
+					showMessage(L"仙子\t要进入试炼2层吗？\n难度：★★★★\n过关奖励：魔杖+1，对称飞+2。\n\n[ENTER] 确认进入\n[ESC] 离开");
 				}
 				else if (times==3) {
-					showMessage(L"？？？\t要进入试炼3层吗？\n难度：★★★★★\n过关奖励：攻防+10。\n\n[ENTER] 确认进入\n[ESC] 离开");
+					showMessage(L"仙子\t要进入试炼3层吗？\n难度：★★★★★\n过关奖励：攻防+10。\n\n[ENTER] 确认进入\n[ESC] 离开");
 				}
 			}
 		}
@@ -790,7 +790,7 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int)
 	consts.hge->System_SetState(HGE_FRAMEFUNC,frameFunc);
 	consts.hge->System_SetState(HGE_RENDERFUNC,renderFunc);
 	consts.hge->System_SetState(HGE_USESOUND,true);
-	consts.hge->System_SetState(HGE_TITLE,"重生塔 By Sky_天空的梦");
+	consts.hge->System_SetState(HGE_TITLE,"重生塔 By 艾之葵");
 	consts.hge->System_SetState(HGE_WINDOWED,true);
 	consts.hge->System_SetState(HGE_HIDEMOUSE,false);
 	consts.hge->System_SetState(HGE_SCREENHEIGHT,32*consts.map_height);

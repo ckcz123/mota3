@@ -437,6 +437,7 @@ void c_hero::beat(c_monster* monster)
 	if (now_floor==20 && !map_floor[now_floor].hasMonster()) {
 		map_floor[now_floor].getinfo(9,6)->init(0);
 		map_floor[now_floor].getinfo(3,6)->openSpecial();
+		consts.upload();
 	}
 
 	consts.lasttime=clock();
@@ -579,11 +580,11 @@ void c_hero::npc(int select)
 		}
 	case 52:
 		{
-			if (money<80) {
+			if (money<70) {
 				consts.setMsg(L"金币不足。");
 				break;
 			}
-			money-=80;
+			money-=70;
 			hp+=500;
 			map_npc->init(0);
 			break;
@@ -605,18 +606,18 @@ void c_hero::npc(int select)
 		{
 			if (npctime==0) {
 				const wchar_t* msg[50]={
-					L"？？？\t少年，你想进行试炼吗？",
+					L"仙子\t少年，你想进行试炼吗？",
 					L"勇士\t试炼？什么是试炼......",
-					L"？？？\t我给你简单介绍一下规则。请听好：",
-					L"？？？\t1. 试炼之地位于异次元空间，共有3\n层。每过一层都可以回来获取我给你\n的奖励。",
-					L"？？？\t2. 试炼之地的怪物都比较特殊：\n(1) 所有怪物的伤害值都是恒定的。\n(2) 所有怪物都拥有分裂属性，打掉\n后会向四个方向进行分裂。\n(3) 怪物打掉后无法获取金币。",
-					L"？？？\t3. 试炼之地拥有钥匙、血瓶和对称飞\n等宝物。所有宝物都是能带出来的。",
-					L"？？？\t警告：试炼之地比较考验路线，需一\n定的智商仔细琢磨才能找到最优解；\n当然直接用对称飞过关也是可以的。",
-					L"？？？\t如果你想挑战一下的话就来找我！"
+					L"仙子\t我给你简单介绍一下规则。请听好：",
+					L"仙子\t1. 试炼之地位于异次元空间，共有3\n层。每过一层都可以回来获取我给你\n的奖励。",
+					L"仙子\t2. 试炼之地的怪物都比较特殊：\n(1) 所有怪物的伤害值都是恒定的。\n(2) 所有怪物都拥有分裂属性，打掉\n后会向四个方向进行分裂。\n(3) 怪物打掉后无法获取金币。",
+					L"仙子\t3. 试炼之地拥有钥匙、血瓶和对称飞\n等道具。所有道具都是能带出来的。",
+					L"仙子\t警告：试炼之地比较考验路线，需一\n定的智商仔细琢磨才能找到最优解；\n当然直接用对称飞过关也是可以的。",
+					L"仙子\t如果你想挑战一下的话就来找我！"
 				};
 				consts.setMsg(msg);
 				map_npc->visitNpc();
-				consts.map_npc=map_npc;
+				// consts.map_npc=map_npc;
 			}
 			else if (npctime<=3) {
 				specialMove(npctime);
@@ -624,7 +625,7 @@ void c_hero::npc(int select)
 				consts.msg=consts.MESSAGE_NONE;		
 			}
 			else {
-				consts.setMsg(L"？？？\t你已通关所有试炼层！");
+				consts.setMsg(L"仙子\t你已通关所有试炼层！");
 			}
 			break;
 		}
@@ -633,7 +634,7 @@ void c_hero::npc(int select)
 			hp+=1500;
 			if (consts.music)
 				consts.hge->Effect_PlayEx(consts.he_GetItem, consts.volume);
-			consts.setMsg(L"？？？\t恭喜通关试炼1层！\n这是你的奖励：生命+1500。");
+			consts.setMsg(L"仙子\t恭喜通关试炼1层！\n这是你的奖励：生命+1500。");
 			consts.map_npc=map_npc;
 			break;
 		}
@@ -642,7 +643,7 @@ void c_hero::npc(int select)
 			consts.wand++; consts.fly+=2;
 			if (consts.music)
 				consts.hge->Effect_PlayEx(consts.he_GetItem, consts.volume);
-			consts.setMsg(L"？？？\t恭喜通关试炼2层！\n这是你的奖励：魔杖+1，对称飞+2。");
+			consts.setMsg(L"仙子\t恭喜通关试炼2层！\n这是你的奖励：魔杖+1，对称飞+2。");
 			consts.map_npc=map_npc;
 			break;
 		}
@@ -651,7 +652,7 @@ void c_hero::npc(int select)
 			atk+=10; def+=10;
 			if (consts.music)
 				consts.hge->Effect_PlayEx(consts.he_GetItem, consts.volume);
-			consts.setMsg(L"？？？\t恭喜通关试炼3层！\n这是你的奖励：攻防+10。");
+			consts.setMsg(L"仙子\t恭喜通关试炼3层！\n这是你的奖励：攻防+10。");
 			consts.map_npc=map_npc;
 			break;
 		}
