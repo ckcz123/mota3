@@ -20,7 +20,7 @@ constants::constants()
 	shouldUpload=true;
 	wanttosave=0;
 	lastload=-1000;
-	// shouldUpload=false;
+	shouldUpload=false;
 }
 
 void constants::init()
@@ -311,12 +311,6 @@ void constants::finishHint()
 					L"ÓÂÊ¿\tºÃµÄ£¬Ð»Ð»Äú£¡"
 				};
 				setMsg(msg);
-				break;
-			}
-		case 53:
-			{
-				map_npc->init(0);
-				msg=MESSAGE_NONE;
 				break;
 			}
 		case 55: case 56: case 57:

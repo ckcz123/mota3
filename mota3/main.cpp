@@ -55,14 +55,14 @@ bool fileConvert(char* from, char* to, bool encode=true) {
 
 void loadsave()
 {
-	if (consts.lastload>=consts.wanttosave-10 && consts.lastload<=consts.wanttosave+10)
+	if (consts.lastload>=consts.wanttosave-5 && consts.lastload<=consts.wanttosave+5)
 		return;
 
 	FILE *savefile;
 	constants tmpcon;
 	c_hero tmphero;
 	c_map_floor tmpfloor;
-	for (int i=consts.wanttosave-10;i<=consts.wanttosave+10;i++) {
+	for (int i=consts.wanttosave-5;i<=consts.wanttosave+5;i++) {
 		if (i<0) continue;
 		char s[100]="";
 		sprintf_s(s,"Save/save%d.dat",i);
@@ -317,8 +317,20 @@ bool frameFunc()
 			loadsave();
 			consts.lasttime=clock();
 		}
+		else if(consts.hge->Input_GetKeyState(HGEK_RIGHT) && clock()-consts.lasttime>200) {
+			consts.wanttosave+=10;
+			if (consts.wanttosave>=1000) consts.wanttosave=999;
+			loadsave();
+			consts.lasttime=clock();
+		}
 		else if(consts.hge->Input_GetKeyState(HGEK_UP) && clock()-consts.lasttime>200) {
 			consts.wanttosave--;
+			if (consts.wanttosave<0) consts.wanttosave=0;
+			loadsave();
+			consts.lasttime=clock();
+		}
+		else if(consts.hge->Input_GetKeyState(HGEK_LEFT) && clock()-consts.lasttime>200) {
+			consts.wanttosave-=10;
 			if (consts.wanttosave<0) consts.wanttosave=0;
 			loadsave();
 			consts.lasttime=clock();
@@ -338,8 +350,20 @@ bool frameFunc()
 			loadsave();
 			consts.lasttime=clock();
 		}
+		else if(consts.hge->Input_GetKeyState(HGEK_RIGHT) && clock()-consts.lasttime>200) {
+			consts.wanttosave+=10;
+			if (consts.wanttosave>=1000) consts.wanttosave=999;
+			loadsave();
+			consts.lasttime=clock();
+		}
 		else if(consts.hge->Input_GetKeyState(HGEK_UP) && clock()-consts.lasttime>200) {
 			consts.wanttosave--;
+			if (consts.wanttosave<0) consts.wanttosave=0;
+			loadsave();
+			consts.lasttime=clock();
+		}
+		else if(consts.hge->Input_GetKeyState(HGEK_LEFT) && clock()-consts.lasttime>200) {
+			consts.wanttosave-=10;
 			if (consts.wanttosave<0) consts.wanttosave=0;
 			loadsave();
 			consts.lasttime=clock();
@@ -579,9 +603,9 @@ bool renderFunc()
 		wchar_t ss[200];
 		savedata* sd=&consts.sd[consts.wanttosave];
 		if (sd->hp<0)
-			wsprintf(ss,L"读取存档 %d\n(无效的存档)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消", consts.wanttosave+1);
+			wsprintf(ss,L"读取存档 %d\n(无效的存档)\n\n[↑][↓][←][→] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消", consts.wanttosave+1);
 		else
-			wsprintf(ss,L"读取存档 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消",
+			wsprintf(ss,L"读取存档 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑][↓][←][→] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消",
 			consts.wanttosave+1, consts.getHardText(sd->hard), hero.getDisplayFloor(sd->now_floor), sd->hp,
 			sd->atk, sd->def);
 		showMessage(ss);
@@ -638,9 +662,9 @@ bool renderFunc()
 			wchar_t ss[200];
 			savedata* sd=&consts.sd[consts.wanttosave];
 			if (sd->hp<0)
-				wsprintf(ss,L"存档到文件 %d\n(空白)\n\n[↑] [↓] 更改存档位置\n[ENTER] 确认存档\n[ESC] 取消", consts.wanttosave+1);
+				wsprintf(ss,L"存档到文件 %d\n(空白)\n\n[↑][↓][←][→] 更改存档位置\n[ENTER] 确认存档\n[ESC] 取消", consts.wanttosave+1);
 			else
-				wsprintf(ss,L"存档到文件 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改存档位置\n[ENTER] 确认存档\n[ESC] 取消",
+				wsprintf(ss,L"存档到文件 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑][↓][←][→] 更改存档位置\n[ENTER] 确认存档\n[ESC] 取消",
 				consts.wanttosave+1, consts.getHardText(sd->hard), hero.getDisplayFloor(sd->now_floor), sd->hp,
 				sd->atk, sd->def);
 			showMessage(ss);
@@ -652,9 +676,9 @@ bool renderFunc()
 			wchar_t ss[200];
 			savedata* sd=&consts.sd[consts.wanttosave];
 			if (sd->hp<0)
-				wsprintf(ss,L"读取存档 %d\n(无效的存档)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消", consts.wanttosave+1);
+				wsprintf(ss,L"读取存档 %d\n(无效的存档)\n\n[↑][↓][←][→] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消", consts.wanttosave+1);
 			else
-				wsprintf(ss,L"读取存档 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑] [↓] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消",
+				wsprintf(ss,L"读取存档 %d\n(%s/F%d/HP%d/A%d/D%d)\n\n[↑][↓][←][→] 更改读档位置\n[ENTER] 确认读档\n[ESC] 取消",
 						consts.wanttosave+1, consts.getHardText(sd->hard), hero.getDisplayFloor(sd->now_floor), sd->hp,
 						sd->atk, sd->def);
 			showMessage(ss);
@@ -753,7 +777,7 @@ bool renderFunc()
 		if (id==51) {
 			int need=50*(times+1);
 			wchar_t s[200];
-			wsprintf(s, L"徘徊之影\t%d金币一个中心对称飞行器，要吗？\n（[C] 键可以使用）\n\n[ENTER] 我要\n[ESC] 离开", need);
+			wsprintf(s, L"徘徊之影\t%d金币一个中心对称飞行器，要吗？\n[C] 键可以使用。\n\n[ENTER] 我要\n[ESC] 离开", need);
 			showMessage(s);
 		}
 		// 8楼血商人

@@ -597,9 +597,7 @@ void c_hero::npc(int select)
 			}
 			money-=180;
 			hp+=2000;
-			// map_npc->init(0);
-			consts.map_npc=map_npc;
-			consts.setMsg(L"徘徊之影\t钥匙尽量不要浪费，到后面有好处的。");
+			map_npc->init(0);
 			break;
 		}
 	case 54:
