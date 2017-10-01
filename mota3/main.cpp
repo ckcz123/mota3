@@ -12,47 +12,6 @@ constants consts;
 // HTTP
 Http http;
 
-
-// encode & decode file
-bool fileConvert(char* from, char* to, bool encode=true) {
-	char* pwd = "f32&*9h=)";
-
-	// 如果文件存在，先删除
-	remove(to);
-
-	FILE *fp1, *fp2;
-	register char ch;
-	int j = 0;
-	int j0 = 0;
-	int err = fopen_s(&fp1, from, "r");
-	if (fp1 == NULL || err!=0) return false;
-	err = fopen_s(&fp2, to, "w");
-	if (fp2 == NULL || err!=0) {
-		fclose(fp1);
-		return false;
-	}
-
-	while (pwd[++j0]);
-
-	ch = fgetc(fp1);
-
-	/*加密/解密算法开始*/
-	while (!feof(fp1)) {
-		if (j0 > 7)
-			j0 = 0;
-		if (encode)
-			ch += pwd[j0++];
-		else
-			ch -= pwd[j0++];
-		fputc(ch, fp2);
-		ch = fgetc(fp1);
-	}
-	fclose(fp1);
-	fclose(fp2);
-	return true;
-}
-
-
 void loadsave()
 {
 	if (consts.lastload>=consts.wanttosave-5 && consts.lastload<=consts.wanttosave+5)
