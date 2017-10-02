@@ -22,7 +22,7 @@ void loadsave()
 	c_hero tmphero;
 	c_map_floor tmpfloor;
 	for (int i=consts.wanttosave-5;i<=consts.wanttosave+5;i++) {
-		if (i<0) continue;
+		if (i<0||i>=1000) continue;
 		char s[100]="";
 		sprintf_s(s,"Save/save%d.dat",i);
 		int err=fopen_s(&savefile,s,"r");
