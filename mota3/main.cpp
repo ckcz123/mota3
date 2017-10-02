@@ -30,7 +30,7 @@ void loadsave()
 			consts.sd[i].hp=-1;
 		else {
 			tmpcon.load(savefile);
-			for (int i=0;i<tmpcon.nowcnt/2;i++) tmpfloor.load(savefile);
+			for (int x=0;x<tmpcon.nowcnt/2;x++) tmpfloor.load(savefile);
 			tmphero.load(savefile);
 			consts.sd[i].init(tmphero.getHP(), tmphero.getAtk(), tmphero.getDef(), tmphero.getNowFloor(), tmpcon.hard);
 			fclose(savefile);
@@ -575,7 +575,6 @@ bool renderFunc()
 	}
 
 	map_floor[hero.getNowFloor()].show();
-	hero.setMaxFloor();
 	hero.show();
 	hero.printInfo();
 	consts.printInfo();

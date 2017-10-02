@@ -49,12 +49,11 @@ public:
 	int blue() {return bluekey;}
 	int getNowFloor() {return now_floor;}
 	int getDisplayFloor(int f=-1) {return f<0?getDisplayFloor(now_floor):(f>20?f-20:f);}
-	void setMaxFloor() {if (max_floor<now_floor && now_floor<30) max_floor=now_floor;}
 	void setFlyFloor(int delta=0);
 	int getFlyFloor() {return fly_floor;}
 	int dir[2][4];
 private:
 	int hp,atk,def,money,redkey,bluekey,yellowkey;
-	int x,y,move,face,now_floor,max_floor,fly_floor;
+	int x,y,move,face,now_floor,fly_floor;
 	hgeSprite* sprites[4][4];
 };

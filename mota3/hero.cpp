@@ -23,7 +23,6 @@ void c_hero::init()
 	face=3;
 	move=0;
 	now_floor=0;
-	max_floor=0;
 	fly_floor=0;
 	for (int i=0; i<4; i++)
 		for (int j=0; j<4; j++)
@@ -700,15 +699,15 @@ void c_hero::save(FILE* f)
 char* c_hero::toString()
 {
 	char* ss=new char[2000];
-	sprintf_s(ss, 2000, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d ",
-		hp/77,hp%77,atk/46,atk%46,def/51,def%51,money/22,money%22,yellowkey,bluekey,redkey,x,y,face,now_floor,max_floor,fly_floor);
+	sprintf_s(ss, 2000, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d ",
+		hp/77,hp%77,atk/46,atk%46,def/51,def%51,money/22,money%22,yellowkey,bluekey,redkey,x,y,face,now_floor);
 	return ss;
 }
 void c_hero::load(FILE* f)
 {
 	int h1,h2,a1,a2,d1,d2,m1,m2;
-	fscanf_s(f,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
-		&h1,&h2,&a1,&a2,&d1,&d2,&m1,&m2,&yellowkey,&bluekey,&redkey,&x,&y,&face,&now_floor,&max_floor,&fly_floor);
+	fscanf_s(f,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
+		&h1,&h2,&a1,&a2,&d1,&d2,&m1,&m2,&yellowkey,&bluekey,&redkey,&x,&y,&face,&now_floor);
 	hp=77*h1+h2; atk=46*a1+a2; def=51*d1+d2; money=22*m1+m2;
 }
 
