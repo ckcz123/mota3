@@ -367,7 +367,7 @@ void constants::finishHint()
 			{
 				delete map_npc;
 				map_npc=NULL;
-				lefttime=60.0-hard;
+				lefttime=56.7-0.3*hard;
 				msg=MESSAGE_NONE;
 				break;
 			}

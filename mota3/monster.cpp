@@ -47,7 +47,7 @@ void c_monster::init(int t)
 	case 30:wcscpy_s(name,L"白衣武士");position=29;hp=735;atk=652;def=100;money=42;break;
 	case 32:wcscpy_s(name,L"铁面人");position=34;hp=748;atk=401;def=354;money=45;break;
 	case 33:wcscpy_s(name,L"近卫骑士");position=39;hp=950;atk=500;def=350;money=48;break;
-	case 34:wcscpy_s(name,L"黑衣魔王");position=36;hp=2017;atk=1013;def=243;money=60;break;
+	case 34:wcscpy_s(name,L"黑衣魔王");position=36;hp=2017;atk=1021;def=243;money=58;break;
 	case 51:wcscpy_s(name,L"绿头怪");position=0;hp=21;atk=0;def=0;money=0;special=4;break;
 	case 52:wcscpy_s(name,L"红头怪");position=1;hp=201;atk=0;def=0;money=0;special=4;break;
 	case 53:wcscpy_s(name,L"青头怪");position=2;hp=401;atk=0;def=0;money=0;special=4;break;
