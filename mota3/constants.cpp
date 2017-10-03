@@ -293,7 +293,7 @@ void constants::finishHint()
 					L"勇士\t好的好的，我记下了。还有吗？",
 					L"徘徊之影\t嗯... 因为我比较弱，没闯几层就挂\n了，因此并不知道其他什么内容。\n不过，在这座塔里，像我这样的徘徊\n者应该还有很多，如果你碰见了他们\n，也许可以问问更多信息呢。",
 					L"勇士\t好的好的，谢谢您！我会加油的！我\n会毁了这座塔，将你们都解脱出来，\n捍卫我大青叶帝国的荣耀！",
-					L"系统提示\t本塔快捷键如下：\nS/L: 存/读档\nZ: 转向\n-: 开启/关闭显伤\nP: 查看当前MAX\nM: 开启/关闭音乐\nQ: 返回主界面\n其他各项道具使用的快捷键在拿到时\n会给予提示。",
+					L"系统提示\t本塔快捷键如下：\nS/L: 存/读档\nZ: 转向\n-: 开启/关闭显伤\nP: 查看当前MAX\nR: 重新开始\nM: 开启/关闭音乐\n其他各项道具使用的快捷键在拿到时\n会给予提示。",
 					L"系统提示\t本塔由艾之葵使用C++编写而成，代\n码开源在：\nhttps://github.com/ckcz123/mota3/\n\n如有问题，请于发布帖下进行回复和\n反馈，谢谢支持！",
 					L"徘徊之影\t加油吧小伙子，我看好你！"
 				};
@@ -419,20 +419,22 @@ void constants::printInfo()
 
 	GfxFont *f=new GfxFont(L"楷体", 24, true);
 	if (hard==1) {
+		// f->SetColor(0xFFFFFFFF);
+		f->SetColor(0xFFAAAAAA);
+		f->Print(64, 356, L"作弊难度");
+	}
+	else if (hard==2) {
 		f->SetColor(0xFF00FF00);
 		f->Print(64, 356, L"简单难度");
 	}
-	else if (hard==2) {
-		f->SetColor(0xFF96CDCD);
-		f->Print(64, 356, L"普通难度");
-	}
 	else if (hard==3) {
-		f->SetColor(0xFFFF0000);
-		f->Print(64, 356, L"困难难度");
+		// f->SetColor(0xFF96CDCD);
+		f->SetColor(0xFF1C86EE);
+		f->Print(64, 356, L"普通难度");
 	}
 	else if (hard==4) {
 		f->SetColor(0xFFFF0000);
-		f->Print(64, 356, L"噩梦难度");
+		f->Print(64, 356, L"困难难度");
 	}
 	delete f;
 

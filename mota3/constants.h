@@ -38,7 +38,7 @@ public:
 	void setMsg(const wchar_t*[50]);
 	void setMsg(const wchar_t*);
 	bool isFree() {return !moving && !opening && !flooring && !ending && msg==MESSAGE_NONE && clock()-lasttime>150;}
-	wchar_t* getHardText(int h) {return h==1?L"简单":h==2?L"普通":h==3?L"困难":h==4?L"噩梦":L"";}
+	wchar_t* getHardText(int h) {return h==1?L"作弊":h==2?L"简单":h==3?L"普通":h==4?L"困难":L"";}
 	void goOn(c_hero*, c_map_floor*, float);
 	void save(FILE*);
 	char* toString();
@@ -63,7 +63,7 @@ public:
 	float playtime, lefttime, totaltime;
 	int step;
 
-	// 难度，1简单2普通3困难4噩梦
+	// 难度，1作弊2简单3普通4困难
 	int hard;
 
 	bool canfly,book;

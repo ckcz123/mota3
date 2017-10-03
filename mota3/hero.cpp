@@ -422,14 +422,14 @@ void c_hero::beat(c_monster* monster)
 	if (now_floor==17 && id==30 && !map_floor[now_floor].hasMonster(30)) {
 		map_floor[now_floor].getinfo(3, 10)->openSpecial();
 	}
-	if (now_floor==17 && id==27 && map_floor[now_floor].getinfo(10,9)->isGround() && map_floor[now_floor].getinfo(10,11)->isGround()) {
+	if (now_floor==17 && id==27 && !map_floor[now_floor].getinfo(10,9)->hasMonster() && !map_floor[now_floor].getinfo(10,11)->hasMonster()) {
 		map_floor[now_floor].getinfo(9,10)->openSpecial();
 	}
 	if (now_floor==19 && id==33) {
-		if (map_floor[now_floor].getinfo(1,5)->isGround() && map_floor[now_floor].getinfo(3,5)->isGround()) {
+		if (!map_floor[now_floor].getinfo(1,5)->hasMonster() && !map_floor[now_floor].getinfo(3,5)->hasMonster()) {
 			map_floor[now_floor].getinfo(2,4)->openSpecial();
 		}
-		if (map_floor[now_floor].getinfo(1,7)->isGround() && map_floor[now_floor].getinfo(3,7)->isGround()) {
+		if (!map_floor[now_floor].getinfo(1,7)->hasMonster() && !map_floor[now_floor].getinfo(3,7)->hasMonster()) {
 			map_floor[now_floor].getinfo(2,8)->openSpecial();
 		}
 	}
@@ -535,7 +535,7 @@ void c_hero::npc(int select)
 	case 47:
 		{
 			const wchar_t* msg[50]={
-				L"作者提示\t作者测试时噩梦难度下的属性：\n生命2103，攻击179，防御159，金币\n97，黄钥匙4，蓝钥匙1，魔杖4次。\n（以上数据仅供参考。）",
+				L"作者提示\t作者测试时困难难度下的属性：\n生命2103，攻击179，防御159，金币\n97，黄钥匙4，蓝钥匙1，魔杖4次。\n（以上数据仅供参考。）",
 				L"作者提示\t另外，三四区怪物伤害较高，请多存\n档多探路，最好先把所有NPC碰一遍。"
 			};
 			consts.setMsg(msg);
