@@ -673,9 +673,10 @@ bool renderFunc()
 					wsprintf(ss, L"当前已有%d人次尝试，%d人次通关。\n\n", consts.tmp[0], consts.tmp[1]);
 					wchar_t tmp[100];
 					for (int i=1;i<=4;i++) {
-						wsprintf(tmp, L"%s难度：%d人次尝试。\n", consts.getHardText(i), consts.tmp[5*i-3]);
+						int j=i%4+1;
+						wsprintf(tmp, L"%s难度：%d人次尝试。\n", consts.getHardText(j), consts.tmp[5*j-3]);
 						wcscat_s(ss, tmp);
-						wsprintf(tmp, L"NE/GE:(%d, %d)  TE:(%d, %d)\n", consts.tmp[5*i-2], consts.tmp[5*i-1], consts.tmp[5*i], consts.tmp[5*i+1]);
+						wsprintf(tmp, L"NE/GE:(%d, %d)  TE:(%d, %d)\n", consts.tmp[5*j-2], consts.tmp[5*j-1], consts.tmp[5*j], consts.tmp[5*j+1]);
 						wcscat_s(ss, tmp);
 					}
 					wcscat_s(ss, L"备注：\n(x, y)代表通关人次x，当前MAX为y；\n“人次”按游戏开始时间进行计算。\n");
@@ -684,18 +685,19 @@ bool renderFunc()
 				}
 
 				else {
-					wsprintf(ss, L"%s难度下MAX数据：\n", consts.getHardText(consts.nowcnt));
+					int j=consts.nowcnt%4+1;
+					wsprintf(ss, L"%s难度下MAX数据：\n", consts.getHardText(j));
 
 					wcscat_s(ss, L"NE/GE：\n");
 					for (int i=0; i<5; i++) {
-						record* r=&consts.rd[2*consts.nowcnt-2][i];
+						record* r=&consts.rd[2*j-2][i];
 						wchar_t tmp[100];
 						wsprintf(tmp, L"TOP%d: [%d, %d, %d, %d, %d, %d]\n", i+1, r->hp, r->atk, r->def, r->money, r->yellow, r->blue);
 						wcscat_s(ss, tmp);
 					}
 					wcscat_s(ss, L"TE：\n");
 					for (int i=0; i<5; i++) {
-						record* r=&consts.rd[2*consts.nowcnt-1][i];
+						record* r=&consts.rd[2*j-1][i];
 						wchar_t tmp[100];
 						wsprintf(tmp, L"TOP%d: [%d, %d, %d, %d, %d, %d]\n", i+1, r->hp, r->atk, r->def, r->money, r->yellow, r->blue);
 						wcscat_s(ss, tmp);
