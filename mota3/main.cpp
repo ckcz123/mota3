@@ -744,7 +744,7 @@ bool renderFunc()
 		if (id==51) {
 			int need=50*(times+1);
 			wchar_t s[200];
-			wsprintf(s, L"徘徊之影\t%d金币一个中心对称飞行器，要吗？\n[C] 键可以使用。\n\n[ENTER] 我要\n[ESC] 离开", need);
+			wsprintf(s, L"徘徊之影\t%d金币一个中心对称飞行器，要吗？\n[C]键可以使用。\n\n[ENTER] 我要\n[ESC] 离开", need);
 			showMessage(s);
 		}
 		// 8楼血商人
