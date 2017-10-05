@@ -233,14 +233,14 @@ bool frameFunc()
 			consts.starttime=time(NULL);
 
 			// 困难难度：所有纯血门均不可开启
-			map_floor[4].getinfo(1,4)->init(84);
-			map_floor[5].getinfo(12,1)->init(84);
-			map_floor[6].getinfo(4,1)->init(84);
-			map_floor[10].getinfo(12,9)->init(84);
-			map_floor[12].getinfo(8,1)->init(84);
-			map_floor[14].getinfo(11,6)->init(84);
-			map_floor[17].getinfo(10,7)->init(84);
-			map_floor[18].getinfo(9,10)->init(84);
+			map_floor[4].getinfo(1,4)->init(5);
+			map_floor[5].getinfo(12,1)->init(5);
+			map_floor[6].getinfo(4,1)->init(5);
+			map_floor[10].getinfo(12,9)->init(5);
+			map_floor[12].getinfo(8,1)->init(5);
+			map_floor[14].getinfo(11,6)->init(5);
+			map_floor[17].getinfo(10,7)->init(5);
+			map_floor[18].getinfo(9,10)->init(5);
 
 		}
 	}
